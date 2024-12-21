@@ -12,3 +12,80 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User{
+  id String @id @default(uuid())
+  roll_number BigInt @unique
+  name String
+  branch branch_options
+  batch String?
+  position position_options?
+  club_dept club_dept_options[]
+  joined DateTime
+  imageURL String?
+  notices Notice[]    @relation(name:"notice-posted")
+  meetings_conducted Meeting[]    @relation(name:"meeting-host")
+  meetings_attended Meeting[] @relation(name:"meeting-attended")
+  workshops_conducted Workshop[]  @relation(name:"workshops-conducted")
+  workshops_attended Workshop[] @relation(name:"workshops-attended")
+}
+
+model Notice{
+  notice_id String @id @default(uuid())
+  headline String
+  body String
+  postedOn DateTime
+  category notice_cat
+  userID String
+  postedBy User @relation(name: "notice-posted",fields: [userID], references: [id])
+}
+
+model Meeting{
+  meeting_id String @id @default(uuid())
+  venue String
+  starts DateTime
+  duration Int?
+  topic_of_discussion String?
+  hostID String
+  conductor User @relation(name: "meeting-host", fields: [hostID], references: [id])
+  attendees User[] @relation(name:"meeting-attended")
+}
+
+model Workshop{
+  workshop_id String @id @default(uuid())
+  guests String[]
+  conducting_members User[]  @relation(name:"workshops-conducted")
+  attending_members User[] @relation(name:"workshops-attended")
+  dates DateTime[]
+  fee Int?
+}
+
+
+
+enum branch_options{
+  AIML
+  MNC
+  MSC
+  CSE
+  IT
+}
+
+enum position_options{
+  Member
+  Coordinator
+  Secretary
+  InCharge
+  President
+}
+
+enum club_dept_options{
+  General
+  Tech
+  PR
+}
+
+enum notice_cat{
+  General
+  Technical
+  Sponsorship
+}
