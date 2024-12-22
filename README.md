@@ -2,7 +2,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Setup databases:
+
+```bash
+docker compose -f ./docker/docker-compose.yml up -d
+```
+Migrate prisma
+```bash
+npx prisma migrate dev --name init
+```
+
+Run the development server:
 
 ```bash
 npm run dev
