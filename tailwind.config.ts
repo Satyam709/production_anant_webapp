@@ -8,6 +8,21 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+
+        'sm': '640px', 
+
+        'md': '768px', 
+
+        'lg': '1024px', 
+
+        'xl': '1280px', 
+
+        'tbs': '868px', // phone overflow protection
+
+        'ld': '1440px' // large
+
+      },
       colors: {
         primary: {
           blue: "#0046FF",
