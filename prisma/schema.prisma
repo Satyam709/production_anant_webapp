@@ -15,19 +15,18 @@ datasource db {
 
 model User{
   id String @id @default(uuid())
-  roll_number BigInt @unique
+  roll_number Int @unique
   name String
-  branch branch_options
+  password String
+  branch branch_options?
   batch String?
   position position_options?
   club_dept club_dept_options[]
-  joined DateTime
+  joined DateTime @default(now())
   imageURL String?
   notices Notice[]    @relation(name:"notice-posted")
   meetings_conducted Meeting[]    @relation(name:"meeting-host")
   meetings_attended Meeting[] @relation(name:"meeting-attended")
-  workshops_conducted Workshop[]  @relation(name:"workshops-conducted")
-  workshops_attended Workshop[] @relation(name:"workshops-attended")
 }
 
 model Notice{
@@ -53,14 +52,13 @@ model Meeting{
 
 model Workshop{
   workshop_id String @id @default(uuid())
-  guests String[]
-  conducting_members User[]  @relation(name:"workshops-conducted")
-  attending_members User[] @relation(name:"workshops-attended")
-  dates DateTime[]
+  conductors String[]
+  details String
   fee Int?
 }
 
-
+// teams (team_id, team_name, team_member_mailid)
+// workshop-participation(workshop_id, team_id/user_id, team_event(Y?N))
 
 enum branch_options{
   AIML
