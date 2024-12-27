@@ -1,4 +1,4 @@
-import nodeMailerConfig from "./nodeMailerConfig.js";
+import nodeMailerConfig from "@/helpers/nodeMailerConfig";
 import nodemailer from "nodemailer";
 export type mailOptions = {
     from: string
