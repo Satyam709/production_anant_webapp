@@ -1,6 +1,5 @@
-const nodemailer = require('nodemailer');
-const nodemailerConfig = require('./nodemailerConfig');
-
+import nodeMailerConfig from "./nodeMailerConfig.js";
+import nodemailer from "nodemailer";
 export type mailOptions = {
     from: string
     to: string
@@ -12,7 +11,7 @@ export type mailOptions = {
 const sendEmail = async(data: mailOptions)=>{
 
     try{
-        const transporter=nodemailer.createTransport(nodemailerConfig);
+        const transporter=nodemailer.createTransport(nodeMailerConfig);
         const msg = await transporter.sendMail(data);
         console.log('Message sent: %s', msg.messageId);
     }
