@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/PrismaClient/db";
 import bcryptjs from "bcryptjs";
 import redis from "@/helpers/redis";
 import z from "zod";
-
-const prisma = new PrismaClient();
 
 const RegistrationSchema = z.object({
   roll_number: z
@@ -19,7 +17,6 @@ const RegistrationSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-
     const body = await req.json();
 
     const result = RegistrationSchema.safeParse(body);
@@ -41,6 +38,14 @@ export async function POST(req: NextRequest) {
     otp = otp.trim();
     username = username.trim();
     roll_number = roll_number.trim();
+
+    // check for registered user
+    const isExisting = await prisma.user.findUnique({
+      where: { roll_number: Number(roll_number) },
+    });
+    if (isExisting) {
+      return NextResponse.json({ status: 400, message: "User already exists" });
+    }
 
     if (password !== confirmpassword) {
       return NextResponse.json({
@@ -76,14 +81,6 @@ export async function POST(req: NextRequest) {
     const isOTPCorrect = await bcryptjs.compare(otp, hashedOTP);
     if (!isOTPCorrect) {
       return NextResponse.json({ status: 400, message: "Invalid OTP!" });
-    }
-
-    // check for registered user
-    const isExisting = await prisma.user.findUnique({
-      where: { roll_number: Number(roll_number) },
-    });
-    if (isExisting) {
-      return NextResponse.json({ status: 400, message: "User already exists" });
     }
 
     // hash password
