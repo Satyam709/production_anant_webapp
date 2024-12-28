@@ -12,6 +12,7 @@
     "@prisma/client": "^6.1.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "gsap": "^3.12.5",
     "ioredis": "^5.4.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.469.0",

@@ -1,14 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { User, LogIn } from "lucide-react";
+import gsap from "gsap";
+import ScrollToPlugin from "gsap/ScrollToPlugin";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession();
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollToPlugin);
+  }, []);
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm z-50 border border-gray-800 rounded-3xl shadow-lg w-[50%] tbs:w-auto px-4 items-center">
@@ -65,14 +70,14 @@ const NavLink = ({
 }: {
   href: string;
   children: React.ReactNode;
-}) => (
-  <a
-    href={href}
+}) => {
+  return <button
     className="text-gray-300 hover:text-white px-3 py-2 rounded-3xl text-sm font-medium transition-all"
+    onClick={() => gsap.to(window, { duration: 1, scrollTo:{y: href, autoKill:true },ease:"power3"})}
   >
     {children}
-  </a>
-);
+  </button>
+};
 
 const MobileNavLink = ({
   href,

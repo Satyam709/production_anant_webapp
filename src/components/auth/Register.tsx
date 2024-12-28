@@ -1,5 +1,4 @@
 "use client";
-import { log } from "node:console";
 import React, { useState } from "react";
 
 function Register() {

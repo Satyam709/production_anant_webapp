@@ -1,4 +1,8 @@
-import React from 'react';
+"use client"
+import React from "react";
+import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
 
 interface GradientButtonProps {
   href?: string;
@@ -6,7 +10,11 @@ interface GradientButtonProps {
   onClick?: () => void;
 }
 
-const GradientButton: React.FC<GradientButtonProps> = ({ href, children, onClick }) => {
+const GradientButton: React.FC<GradientButtonProps> = ({
+  href,
+  children,
+  onClick,
+}) => {
   const className = `
     inline-flex items-center px-6 py-3 
     text-base font-medium rounded-md text-white 
@@ -18,6 +26,8 @@ const GradientButton: React.FC<GradientButtonProps> = ({ href, children, onClick
     group
   `;
 
+  gsap.registerPlugin(ScrollToPlugin);
+
   const content = (
     <>
       <div className="absolute inset-0 bg-gradient-to-r from-primary-blue/10 via-primary-cyan/10 to-primary-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -27,9 +37,18 @@ const GradientButton: React.FC<GradientButtonProps> = ({ href, children, onClick
 
   if (href) {
     return (
-      <a href={href} className={className}>
+      <button
+        onClick={() =>
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: { y: href, autoKill: true },
+            ease: "power3",
+          })
+        }
+        className={className}
+      >
         {content}
-      </a>
+      </button>
     );
   }
 
