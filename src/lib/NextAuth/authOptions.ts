@@ -52,21 +52,20 @@ const authOptions: AuthOptions = {
       baseUrl = "/";
       return baseUrl;
     },
-    async session({ session, user, token }) {
-      if (user) {
+    async session({ session, token }) {
+      if (token) {
         session.user = {
-          id: user.id,
-          image: user.image,
-          name: user.name,
-          rollNo: user.rollNo,
+          id: token.user.id,
           token: token,
         };
       }
+
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.user = { id: user.id, rollNo: user.rollNo };
+        token.picture = user.image;
       }
       return token;
     },
