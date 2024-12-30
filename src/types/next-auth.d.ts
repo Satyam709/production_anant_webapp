@@ -3,9 +3,6 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      rollNo: string;
-      name: string?;
-      image: string?;
       token: JWT;
     };
   }
