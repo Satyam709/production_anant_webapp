@@ -36,7 +36,7 @@ const authOptions: AuthOptions = {
         if (!validPassword) {
           return null;
         }
-
+        
         // Return a user object in the expected format
         return {
           id: gotUser.id,
@@ -47,6 +47,9 @@ const authOptions: AuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: '/auth/signin',
+  },
   callbacks: {
     async redirect({ url, baseUrl }) {
       baseUrl = "/";

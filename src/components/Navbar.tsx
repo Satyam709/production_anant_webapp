@@ -7,13 +7,25 @@ import { useSession } from "next-auth/react";
 import { User, LogIn } from "lucide-react";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     gsap.registerPlugin(ScrollToPlugin);
   }, []);
+
+  const handleLoginClick = () => {
+    if (session?.user) {
+      // Handle user-specific logic if needed
+    } else {
+      router.push('/login');
+    }
+  };
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm z-50 border border-gray-800 rounded-3xl shadow-lg w-[50%] tbs:w-auto px-4 items-center">
@@ -96,15 +108,26 @@ const MobileNavLink = ({
 
 const LoginButton = ({ isMobile = true }) => {
   const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleLoginClick = () => {
+    if (session?.user) {
+      // Handle user-specific logic if needed
+    } else {
+      router.push('/login');
+    }
+  };
+
   return (
     <button
       className={`${
         isMobile ? "block" : "hidden"
       } text-gray-300 hover:text-white px-3 py-2 rounded-3xl text-sm font-medium transition-all`}
-      onClick={() => signIn(undefined, { callbackUrl: "/" })}
+      onClick={handleLoginClick}
     >
       {session?.user ? <User /> : "Login"}
     </button>
   );
 };
+
 export default Navbar;
