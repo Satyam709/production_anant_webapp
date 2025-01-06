@@ -1,9 +1,9 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Events from "@/components/Events";
-import Team from "@/components/Team";
+import LatestNews from "@/components/home/LatestNews";
 import Footer from "@/components/Footer";
+import { latestNews } from "@/constants/news-data";
 
 export default function Home() {
   return (
@@ -12,8 +12,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <About />
-      <Events />
-      <Team />
+      <LatestNews latestNews={latestNews} />
       <Footer />
     </div>
   );

@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 // import customLogo from "/an"; // Adjust the path as necessary
+import Link from "next/link";
 import Image from "next/image";
 
 const Footer = () => {
@@ -9,13 +10,19 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
+            <Link 
+              href="/" 
+              className="flex-shrink-0 mr-4 transform hover:scale-105 transition-all duration-300 ease-out"
+            >
               <Image
                 src='/anant_logo.png' // Adjust the path as necessary
-                alt="Custom Logo"
+                alt="anant_logo"
                 className="h-auto w-auto max-h-12 max-w-12 mr-2"
                 width={150}
                 height={150}
-              />
+               />
+            </Link>
+            
               <span className="text-xl font-bold text-white">Anant</span>
             </div>
             <p className="mb-4">
@@ -30,22 +37,22 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a href="#home" className="hover:text-blue-500">
+                <a href="/" className="hover:text-cyan-500">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#about" className="hover:text-blue-500">
-                  About
+                <a href="/" className="hover:text-cyan-500">
+                  Timeline
                 </a>
               </li>
               <li>
-                <a href="#events" className="hover:text-blue-500">
+                <a href="/events" className="hover:text-cyan-500">
                   Events
                 </a>
               </li>
               <li>
-                <a href="#team" className="hover:text-blue-500">
+                <a href="/team" className="hover:text-cyan-500">
                   Team
                 </a>
               </li>
