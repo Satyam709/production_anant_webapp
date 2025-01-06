@@ -1,209 +1,258 @@
-"use client";
-import React, { useState } from "react";
+'use client';
 
-function Register() {
-  const [rollno, setRollno] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from 'next/navigation';
+import {  UserCircle2,  BookOpen,   KeyRound,  Lock, ShieldCheck } from "lucide-react";
+import GradientButton from "@/components/ui/GradientButton";
+import Navbar from "@/components/Navbar";
+
+export default function Register() {
+  const [username, setUsername] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(""); // To store error messages
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  // Function to handle OTP verification
-  const handleVerify = async (e) => {
+  const handleVerify = async (e: React.MouseEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(""); // Reset any previous errors
+    setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/api/verify", {
+      const res = await fetch("/api/verify", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ roll_number: rollno }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roll_number: rollNumber }),
       });
 
-      // Ensure the response is ok (200 status)
-      if (res.status != 200) {
-        setOtpSent(true);
-        console.log("Failed to send OTP");
+      if (!res.ok) {
+        throw new Error("Failed to send OTP");
       }
 
-      console.log(res.status);
-
-    } catch (error) {
-      console.error("Error during OTP verification:", error);
-      setError(error.message || "An error occurred while sending OTP");
+      setOtpSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send OTP");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Check if passwords match before submitting
+    
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match");
       return;
     }
 
     setIsLoading(true);
+    setError("");
 
     try {
-      const formData = {
-        roll_number: rollno,
-        username: e.target.username.value,
-        password: password,
-        confirmpassword: confirmPassword,
-        otp: otp,
-      };
-
-      // Call your API to submit the form (with OTP)
-      const res = await fetch("http://localhost:3000/api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          roll_number: rollNumber,
+          password,
+          otp,
+        }),
       });
 
       const data = await res.json();
 
-      if (data.success) {
-        alert("Registration successful!");
-        // You can redirect or clear the form, etc.
-      } else {
+      if (!res.ok) {
         throw new Error(data.message || "Registration failed");
       }
-    } catch (error) {
-      console.error("Error during registration:", error);
-      setError(error.message || "An error occurred during registration");
+
+      router.push('/login');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="bg-hero-gradient">
-      <div className="flex justify-center items-center h-screen">
-        <div className="bg-white p-8 rounded-lg shadow-2xl w-96">
-          <h2 className="text-2xl font-bold mb-8">Register</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="rollno"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Roll Number
-              </label>
-              <div className="flex items-center gap-5">
-                <input
-                  type="text"
-                  id="rollno"
-                  name="rollno"
-                  className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                  value={rollno}
-                  onChange={(e) => setRollno(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="bg-green-400 py-2 px-3 rounded-md hover:opacity-80 transition-all"
-                  onClick={handleVerify}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Verifying..." : otpSent ? "OTP Sent" : "Verify"}
-                </button>
-              </div>
-            </div>
-            {(
-              <div>
-                <label
-                  htmlFor="otp"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  OTP
-                </label>
-                <input
-                  type="text"
-                  id="otp"
-                  name="otp"
-                  className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  required
-                />
-              </div>
-            )}
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && (
-              <div className="text-red-500 text-sm mb-4">
-                <p>{error}</p>
-              </div>
-            )}
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white p-2 rounded-md"
-              //disabled={isLoading || !otpSent}
-            >
-              Register
-            </button>
-          </form>
-        </div>
+    <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-white relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="fixed inset-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-blue/10 rounded-full blur-[100px]" />
+        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
       </div>
+
+      <Navbar />
+
+      <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="w-full max-w-md">
+          <div className="backdrop-blur-xl bg-black/40 p-8 rounded-2xl border border-gray-800 shadow-2xl">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-blue via-primary-cyan to-primary-purple">
+                Create Account
+              </h2>
+              <p className="mt-2 text-gray-400">Join The Mathematical Society</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-4">
+                {/* Username Input */}
+                <div>
+                  <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-1.5">
+                    Username
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <UserCircle2 className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="text"
+                      id="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="block w-full pl-10 pr-3 py-2.5 bg-black/30 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50 text-white placeholder-gray-500 transition-colors"
+                      placeholder="Enter your username"
+                      required
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+
+                {/* Roll Number Input */}
+                <div>
+                  <label htmlFor="rollNumber" className="block text-sm font-medium text-gray-300 mb-1.5">
+                    Roll Number
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <BookOpen className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="text"
+                      id="rollNumber"
+                      value={rollNumber}
+                      onChange={(e) => setRollNumber(e.target.value)}
+                      className="block w-full pl-10 pr-24 py-2.5 bg-black/30 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50 text-white placeholder-gray-500 transition-colors"
+                      placeholder="Enter your roll number"
+                      required
+                      disabled={isLoading || otpSent}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleVerify}
+                      disabled={isLoading || otpSent}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-primary-blue/20 hover:bg-primary-blue/30 text-primary-blue rounded-md transition-colors duration-200 disabled:opacity-50"
+                    >
+                      {isLoading ? "Verifying..." : otpSent ? "Verified" : "Verify"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* OTP Input */}
+                {otpSent && (
+                  <div>
+                    <label htmlFor="otp" className="block text-sm font-medium text-gray-300 mb-1.5">
+                      OTP
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <ShieldCheck className="h-5 w-5 text-gray-500" />
+                      </div>
+                      <input
+                        type="text"
+                        id="otp"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        className="block w-full pl-10 pr-3 py-2.5 bg-black/30 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50 text-white placeholder-gray-500 transition-colors"
+                        placeholder="Enter OTP"
+                        required
+                        disabled={isLoading}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Password Input */}
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1.5">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <KeyRound className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="password"
+                      id="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="block w-full pl-10 pr-3 py-2.5 bg-black/30 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50 text-white placeholder-gray-500 transition-colors"
+                      placeholder="Enter your password"
+                      required
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+
+                {/* Confirm Password Input */}
+                <div>
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-1.5">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="block w-full pl-10 pr-3 py-2.5 bg-black/30 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50 text-white placeholder-gray-500 transition-colors"
+                      placeholder="Confirm your password"
+                      required
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {error && (
+                <div className="text-red-400 text-sm text-center bg-red-900/20 py-2 px-3 rounded-lg">
+                  {error}
+                </div>
+              )}
+
+              <div className="pt-2">
+                <GradientButton 
+                  type="submit" 
+                  className="w-full py-2.5" 
+                  disabled={isLoading || !otpSent}
+                >
+                  {isLoading ? "Creating Account..." : "Create Account"}
+                </GradientButton>
+              </div>
+            </form>
+
+            <div className="mt-6 text-center">
+              <Link
+                href="/login"
+                className="text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Already have an account?{" "}
+                <span className="text-primary-cyan hover:text-primary-blue transition-colors">
+                  Sign in
+                </span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
-
-export default Register;
