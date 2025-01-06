@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         if (process.env.JWT_SECRET === undefined) {
             return NextResponse.json({message: "Internal server error! JWT_SECRET not found!"}, {status: 500});
         }
-
+        
         const token = jwt.sign({id: user.id, roll_number: roll_number}, process.env.JWT_SECRET, {expiresIn: "1d"});
 
         return NextResponse.json({token: token});

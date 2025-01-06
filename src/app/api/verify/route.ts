@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse} from "next/server";
 import sendEmail from "@/helpers/mailer";
 import { isValid } from "@/helpers/rollnumber_validity";
 import bcryptjs from "bcryptjs";
@@ -83,12 +83,12 @@ export async function POST(req: NextRequest) {
       await sendEmail(maildata);
     } catch (err) {
       console.log("error occured\n", err);
-      return NextResponse.json({ message: err.message }, { status: 500 });
+      return NextResponse.json({ message: "Internal Server Error: Sending email-failed"}, { status: 500 });
     }
 
     return NextResponse.json({ message: "Email sent successfully" });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: err.message }, { status: 500 });
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }

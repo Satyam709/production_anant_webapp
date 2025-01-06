@@ -33,7 +33,7 @@ model Notice{
   notice_id String @id @default(uuid())
   headline String
   body String
-  postedOn DateTime
+  postedOn DateTime  @default(now())
   category notice_cat
   userID String
   postedBy User @relation(name: "notice-posted",fields: [userID], references: [id])
