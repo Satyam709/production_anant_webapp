@@ -1,8 +1,7 @@
-
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+
 async function main() {
-    
   // Create users
   const user1 = await prisma.user.create({
     data: {
@@ -53,6 +52,144 @@ async function main() {
       position: "Secretary",
       club_dept: ["Tech"],
       imageURL: "https://example.com/bob.jpg",
+    },
+  });
+
+  // Create merchandise
+  const merch1 = await prisma.merchandise.create({
+    data: {
+      name: "Tech Club T-Shirt",
+      description: "A comfortable t-shirt with the tech club logo.",
+      price: 20.0,
+      stock_quantity: 100,
+      category: "Apparel",
+      image_url: "https://example.com/tshirt.jpg",
+    },
+  });
+
+  const merch2 = await prisma.merchandise.create({
+    data: {
+      name: "Tech Club Mug",
+      description: "A ceramic mug with the club's branding.",
+      price: 10.0,
+      stock_quantity: 50,
+      category: "Accessories",
+      image_url: "https://example.com/mug.jpg",
+    },
+  });
+
+  const merch3 = await prisma.merchandise.create({
+    data: {
+      name: "Tech Club Sticker Pack",
+      description: "A pack of cool stickers featuring club logos.",
+      price: 5.0,
+      stock_quantity: 200,
+      category: "Accessories",
+      image_url: "https://example.com/stickers.jpg",
+    },
+  });
+
+  const merch4 = await prisma.merchandise.create({
+    data: {
+      name: "Tech Club Hoodie",
+      description: "A warm hoodie with the club emblem.",
+      price: 35.0,
+      stock_quantity: 75,
+      category: "Apparel",
+      image_url: "https://example.com/hoodie.jpg",
+    },
+  });
+
+  const merch5 = await prisma.merchandise.create({
+    data: {
+      name: "Tech Club Water Bottle",
+      description: "Eco-friendly water bottle with the club logo.",
+      price: 15.0,
+      stock_quantity: 150,
+      category: "Accessories",
+      image_url: "https://example.com/bottle.jpg",
+    },
+  });
+
+  // Create orders and associate with users
+  const order1 = await prisma.order.create({
+    data: {
+      user_id: user1.id,
+      total_price: 55.0,
+      status: "PENDING",
+      payment_method: "UPI",
+      transaction_id: "txn123456",
+      orderItems: {
+        create: [
+          {
+            item_id: merch1.item_id,
+            quantity: 2,
+            price_per_item: 20.0,
+          },
+          {
+            item_id: merch2.item_id,
+            quantity: 1,
+            price_per_item: 10.0,
+          },
+        ],
+      },
+    },
+  });
+
+  const order2 = await prisma.order.create({
+    data: {
+      user_id: user2.id,
+      total_price: 25.0,
+      status: "PENDING",
+      payment_method: "BANK_TRANSFER",
+      transaction_id: "txn654321",
+      orderItems: {
+        create: [
+          {
+            item_id: merch3.item_id,
+            quantity: 5,
+            price_per_item: 5.0,
+          },
+        ],
+      },
+    },
+  });
+
+  const order3 = await prisma.order.create({
+    data: {
+      user_id: user3.id,
+      total_price: 35.0,
+      status: "PENDING",
+      payment_method: "UPI",
+      transaction_id: "txn789123",
+      orderItems: {
+        create: [
+          {
+            item_id: merch4.item_id,
+            quantity: 1,
+            price_per_item: 35.0,
+          },
+        ],
+      },
+    },
+  });
+
+  // Create admin verification for orders
+  const adminVerification1 = await prisma.adminVerification.create({
+    data: {
+      order_id: order1.order_id,
+      admin_id: user1.id,
+      status: "APPROVED",
+      remarks: "Payment verified, order approved.",
+    },
+  });
+
+  const adminVerification2 = await prisma.adminVerification.create({
+    data: {
+      order_id: order2.order_id,
+      admin_id: user2.id,
+      status: "APPROVED",
+      remarks: "Payment confirmed, order approved.",
     },
   });
 
