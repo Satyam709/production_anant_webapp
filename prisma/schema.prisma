@@ -27,6 +27,12 @@ model User{
   notices Notice[]    @relation(name:"notice-posted")
   meetings_conducted Meeting[]    @relation(name:"meeting-host")
   meetings_attended Meeting[] @relation(name:"meeting-attended")
+
+  // Orders placed by the user
+  orders Order[] @relation(name: "orders-placed")
+
+  //payment verification
+  adminVerification AdminVerification[] @relation(name: "verified_by")
 }
 
 model Notice{
@@ -86,4 +92,79 @@ enum notice_cat{
   General
   Technical
   Sponsorship
+}
+
+// Merchandise table
+
+model Merchandise {
+  item_id      Int      @id @default(autoincrement())
+  name         String
+  description  String?
+  price        Float
+  stock_quantity Int
+  category     item_category
+  image_url    String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+
+  orderItems   OrderItem[]
+}
+
+model Order {
+  order_id      Int       @id @default(autoincrement())
+  user_id       String     
+  total_price   Float
+  status        order_status  @default(PENDING)
+  payment_method String?  // UPI, BANK_TRANSFER, etc.
+  transaction_id String?
+  created_at    DateTime  @default(now())
+
+  user          User     @relation(fields: [user_id], references: [id], name: "orders-placed")
+  orderItems    OrderItem[]
+
+  adminVerification AdminVerification? 
+}
+
+
+model OrderItem {
+  order_item_id Int    @id @default(autoincrement())
+  order_id      Int
+  item_id       Int
+  quantity      Int
+  price_per_item Float
+
+  order         Order     @relation(fields: [order_id], references: [order_id])
+  merchandise   Merchandise @relation(fields: [item_id], references: [item_id])
+}
+
+
+model AdminVerification {
+  verification_id Int      @id @default(autoincrement())
+  order_id        Int      @unique
+  admin_id        String
+  status          String  // APPROVED, REJECTED
+  remarks         String?
+  verified_at     DateTime @default(now())
+
+  order           Order    @relation(fields: [order_id], references: [order_id])
+  user            User    @relation(fields: [admin_id], references: [id] , name: "verified_by")
+}
+
+enum category {
+  General
+  Technical
+  Sponsorship
+}
+enum order_status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum item_category {
+  Apparel
+  Accessories
+  Stationery
+  Gadgets
+  Books
 }
