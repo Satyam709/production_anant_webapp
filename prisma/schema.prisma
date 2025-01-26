@@ -14,6 +14,7 @@ datasource db {
 }
 
 model User{
+  // basic user details
   id String @id @default(uuid())
   roll_number Int @unique
   name String
@@ -24,15 +25,26 @@ model User{
   club_dept club_dept_options[]
   joined DateTime @default(now())
   imageURL String?
+  
+  // notice
   notices Notice[]    @relation(name:"notice-posted")
+  
+  // meetings
   meetings_conducted Meeting[]    @relation(name:"meeting-host")
   meetings_attended Meeting[] @relation(name:"meeting-attended")
+
+  // team details
+  team Team[] @relation(name: "team-leaded")
+  team_member Team[] @relation(name: "team-member")
 
   // Orders placed by the user
   orders Order[] @relation(name: "orders-placed")
 
   //payment verification
   adminVerification AdminVerification[] @relation(name: "verified_by")
+
+  // Pending requests
+  pending_requests Pending_requests[]
 }
 
 model Notice{
@@ -56,17 +68,39 @@ model Meeting{
   attendees User[] @relation(name:"meeting-attended")
 }
 
-model Workshop{
-  workshop_id String @id @default(uuid())
-  conductors String[]
-  details String
-  fee Int?
+model Team{
+  team_id String @id @default(uuid())
+  team_name String
+  team_leader_id String
+  team_leader User @relation(name: "team-leaded", fields: [team_leader_id], references: [id])
+  team_members User[] @relation(name: "team-member")
+  participated Competitions[] @relation(name: "participant")
+  // Pending requests
+  pending_requests Pending_requests[]
 }
 
-// teams (team_id, team_name, team_member_mailid)
-// workshop-participation(workshop_id, team_id/user_id, team_event(Y?N))
+model Pending_requests{
+  request_id String @id @default(uuid())
+  user_id String
+  team_id String
+  request_time DateTime @default(now())
+  user User @relation(fields: [user_id], references: [id])
+  team Team @relation(fields: [team_id], references: [team_id])
+}
 
-enum branch_options{
+model Competitions{
+  competition_id String @id @default(uuid())
+  competition_name String
+  conductedOn DateTime
+  venue String
+  prize String
+  description String
+  imageURL String?
+  participants Team[] @relation(name: "participant")
+}
+
+
+enum branch_options {
   AIML
   MNC
   MSC
@@ -74,7 +108,7 @@ enum branch_options{
   IT
 }
 
-enum position_options{
+enum position_options {
   Member
   Coordinator
   Secretary
@@ -82,13 +116,13 @@ enum position_options{
   President
 }
 
-enum club_dept_options{
+enum club_dept_options {
   General
   Tech
   PR
 }
 
-enum notice_cat{
+enum notice_cat {
   General
   Technical
   Sponsorship
