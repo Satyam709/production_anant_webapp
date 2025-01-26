@@ -11,8 +11,8 @@ const RegistrationSchema = z.object({
     .regex(/^\d+$/, "Roll number must be a number"),
   username: z.string().min(1, "Username is required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmpassword: z.string().min(1, "Confirm password is required"),
-  otp: z.string().min(1, "OTP is required"),
+  confirmpassword: z.string().min(8, "Confirm password is required"),
+  otp: z.string().min(6, "OTP is required"),
 });
 
 export async function POST(req: NextRequest) {
@@ -82,6 +82,9 @@ export async function POST(req: NextRequest) {
     if (!isOTPCorrect) {
       return NextResponse.json({ status: 400, message: "Invalid OTP!" });
     }
+
+    // delete OTP from redis
+    await redis.del(roll_number);
 
     // hash password
     const salt = await bcryptjs.genSalt(10);
