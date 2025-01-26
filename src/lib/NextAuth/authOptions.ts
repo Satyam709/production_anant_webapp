@@ -2,6 +2,7 @@ import prisma from "@/lib/PrismaClient/db";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs";
+import { rollNumberSchema } from "@/types/common";
 
 // configurations for the NextAuth
 const authOptions: AuthOptions = {
@@ -13,19 +14,34 @@ const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const rollNo = credentials?.rollNo?.trim();
+        let rollNo = credentials?.rollNo?.trim();
         const password = credentials?.password?.trim();
 
-        if (!rollNo || !password) {
-          return null;
+        const result = rollNumberSchema.safeParse(rollNo);
+
+        if (!result.success) {
+          throw new Error(result.error.errors[0].message);
         }
 
-        const gotUser = await prisma.user.findUnique({
-          where: { roll_number: Number(rollNo) },
-        });
+        rollNo = result.data;
+
+        if (!rollNo || !password) {
+           throw new Error("RollNo and Password is required");;
+        }
+
+        let gotUser;
+        try {
+          gotUser = await prisma.user.findUnique({
+            where: { roll_number: Number(rollNo) },
+          });
+        } catch (error) {
+          console.log("error while sigin : ",error);          
+          throw new Error("Something went wrong");  
+        }
+        
 
         if (!gotUser) {
-          return null;
+          throw new Error("User not found please register");
         }
 
         const validPassword = await bcryptjs.compare(
@@ -34,9 +50,9 @@ const authOptions: AuthOptions = {
         );
 
         if (!validPassword) {
-          return null;
+          throw new Error("Invalid Password");
         }
-        
+
         // Return a user object in the expected format
         return {
           id: gotUser.id,
@@ -48,12 +64,12 @@ const authOptions: AuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/auth/signin',
+    signIn: "/login",
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      baseUrl = "/";
-      return baseUrl;
+      url = baseUrl + "/dashboard"; // Adjusted to use correct baseUrl
+      return url;
     },
     async session({ session, token }) {
       if (token) {
