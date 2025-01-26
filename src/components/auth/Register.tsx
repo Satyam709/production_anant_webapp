@@ -54,7 +54,13 @@ export default function RegisterForm() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, roll_number: rollNumber, password, otp }),
+        body: JSON.stringify({
+          username,
+          roll_number: rollNumber,
+          password,
+          otp,
+          confirmpassword : confirmPassword,
+        }),
       });
 
       const data = await res.json();

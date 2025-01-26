@@ -21,14 +21,20 @@ export async function POST(req: NextRequest) {
 
     const result = RegistrationSchema.safeParse(body);
 
+    console.log("Result: ", result.error?.errors);
+
     // Handle schema validation errors
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
-      return NextResponse.json({
-        status: 400,
-        message: errorMessages.join(", "),
-      });
+      return NextResponse.json(
+        {
+          status: 400,
+          message: errorMessages.join(", "),
+        },
+        { status: 400 }
+      );
     }
+    console.log("hello " + "reached");
 
     let { roll_number, username, password, confirmpassword, otp } = body;
 
@@ -44,27 +50,42 @@ export async function POST(req: NextRequest) {
       where: { roll_number: Number(roll_number) },
     });
     if (isExisting) {
-      return NextResponse.json({ status: 400, message: "User already exists" });
+      return NextResponse.json(
+        {
+          status: 400,
+          message: "User already exists",
+        },
+        { status: 400 }
+      );
     }
 
     if (password !== confirmpassword) {
-      return NextResponse.json({
-        status: 400,
-        message: "Passwords do not match",
-      });
+      return NextResponse.json(
+        {
+          status: 400,
+          message: "Passwords do not match",
+        },
+        { status: 400 }
+      );
     }
     if (password.length < 8) {
-      return NextResponse.json({
-        status: 400,
-        message: "Password must be at least 8 characters",
-      });
+      return NextResponse.json(
+        {
+          status: 400,
+          message: "Password must be at least 8 characters",
+        },
+        { status: 400 }
+      );
     }
     const value = await redis.get(roll_number);
     if (!value) {
-      return NextResponse.json({
-        status: 400,
-        message: "Verification not done!",
-      });
+      return NextResponse.json(
+        {
+          status: 400,
+          message: "Verification not done!",
+        },
+        { status: 400 }
+      );
     }
 
     const { hashedOTP, time } = await JSON.parse(value);
@@ -72,15 +93,24 @@ export async function POST(req: NextRequest) {
 
     // 10 min time limit
     if (time_diff > 600000) {
-      return NextResponse.json({
-        status: 400,
-        message: "Verification expired!",
-      });
+      return NextResponse.json(
+        {
+          status: 400,
+          message: "Verification expired!",
+        },
+        { status: 400 }
+      );
     }
 
     const isOTPCorrect = await bcryptjs.compare(otp, hashedOTP);
     if (!isOTPCorrect) {
-      return NextResponse.json({ status: 400, message: "Invalid OTP!" });
+      return NextResponse.json(
+        {
+          status: 400,
+          message: "Invalid OTP!",
+        },
+        { status: 400 }
+      );
     }
 
     // delete OTP from redis
@@ -99,17 +129,29 @@ export async function POST(req: NextRequest) {
     const newUser = await prisma.user.create({ data: user });
     if (!newUser) {
       console.log("Error in creating user");
-      return NextResponse.json({
-        status: 500,
-        message: "Internal Server Error: Failed saving user details",
-      });
+      return NextResponse.json(
+        {
+          status: 500,
+          message: "Internal Server Error: Failed saving user details",
+        },
+        { status: 500 }
+      );
     }
-    return NextResponse.json({
-      status: 200,
-      message: "Registration Successful!",
-    });
+    return NextResponse.json(
+      {
+        status: 200,
+        message: "Registration Successful!",
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("Error in registration: ", error);
-    return NextResponse.json({ status: 500, message: "Internal Server Error" });
+    return NextResponse.json(
+      {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      { status: 500 }
+    );
   }
 }

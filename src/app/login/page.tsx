@@ -1,54 +1,45 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { User, Lock } from 'lucide-react'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import GradientButton from '@/components/ui/GradientButton'
-import LoginSymbols from '@/components/floating/LoginSymbols'
+import { useState, useEffect } from "react";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { User, Lock } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import GradientButton from "@/components/ui/GradientButton";
+import LoginSymbols from "@/components/floating/LoginSymbols";
 
 export default function LoginPage() {
-  const [rollNumber, setRollNumber] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isClient, setIsClient] = useState(false)
-  const router = useRouter()
+  const [rollNumber, setRollNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
-    try {
-      const response = await fetch('/api/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ roll_number: rollNumber, password }),
-      })
+    // Call signIn with 'credentials' provider
+    const result = await signIn("credentials", {
+      redirect: false,
+      rollNo: rollNumber,
+      password: password,
+    });
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.message)
-      } else {
-        // Save the token and redirect to the dashboard
-        localStorage.setItem('token', data.token)
-        router.push('/dashboard')
-      }
-    } catch (error) {
-      setError('An error occurred. Please try again.')
+    if (result?.error) {
+      setError(result.error);
+    } else if (result?.ok) {
+      // Optional: you can handle redirection or success actions here
+      window.location.href = "/dashboard"; // or use router.push('/dashboard');
     }
-  }
+  };
 
   if (!isClient) {
-    return null
+    return null;
   }
 
   return (
@@ -76,7 +67,10 @@ export default function LoginPage() {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="roll-number" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label
+                    htmlFor="roll-number"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
                     Roll Number
                   </label>
                   <div className="relative">
@@ -97,7 +91,10 @@ export default function LoginPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
                     Password
                   </label>
                   <div className="relative">
@@ -132,11 +129,11 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-6 text-center">
-              <Link 
-                href="/register" 
+              <Link
+                href="/register"
                 className="text-sm text-gray-400 hover:text-white transition-colors"
               >
-                Don't have an account? 
+                Don't have an account?
                 <span className="ml-1 text-primary-cyan hover:text-primary-blue">
                   Sign up
                 </span>
@@ -149,5 +146,5 @@ export default function LoginPage() {
         <Footer />
       </div>
     </div>
-  )
+  );
 }
