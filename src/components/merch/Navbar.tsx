@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
-import { Menu, X, Package } from 'lucide-react';
-import Link from 'next/link';
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Menu, X, Package } from "lucide-react";
+import Link from "next/link";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [pathname, setPathname] = useState("");
+
+  // Set the current pathname after the component mounts
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPathname(window.location.pathname);
+    }
+  }, []);
 
   const navItems = [
-    { name: 'Shop', href: '/shop' },
-    { name: 'Orders', href: '/shop/orders', icon: Package },
+    { name: "Shop", href: "/shop" },
+    { name: "Orders", href: "/shop/orders", icon: Package },
   ];
 
   return (
@@ -30,7 +41,7 @@ const Navbar = () => {
                     key={item.name}
                     href={item.href}
                     className={`flex items-center gap-2 text-gray-300 hover:text-white transition-colors duration-300 ${
-                      location.pathname === item.href ? 'text-white' : ''
+                      pathname === item.href ? "text-white" : ""
                     }`}
                   >
                     {Icon && <Icon className="h-5 w-5" />}
@@ -68,9 +79,9 @@ const Navbar = () => {
                   key={item.name}
                   href={item.href}
                   className={`flex items-center gap-2 px-3 py-2 text-base font-medium rounded-md ${
-                    location.pathname === item.href
-                      ? 'text-white bg-gray-800/50'
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                    pathname === item.href
+                      ? "text-white bg-gray-800/50"
+                      : "text-gray-300 hover:text-white hover:bg-gray-800/50"
                   }`}
                   onClick={() => setIsOpen(false)}
                 >

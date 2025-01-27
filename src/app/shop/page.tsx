@@ -1,15 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import MerchandiseSection from "@/components/merch/shop/MerchandiseSection";
 import Cart from "@/components/merch/shop/Cart";
 import Navbar from "@/components/merch/Navbar";
-import { getProductsSchema, Merchandise } from "@/types/shop";
+import { useMerchandise } from "@/components/merch/hooks/useMerchandise";
 
 export default function Shop() {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const [cartItems, setCartItems] = useState<{ [key: number]: number }>({});
+
+  const { products, loading, error } = useMerchandise();
 
   const handleUpdateQuantity = (productId: number, newQuantity: number) => {
     if (newQuantity <= 0) {
@@ -23,35 +25,6 @@ export default function Shop() {
       }));
     }
   };
-  const [products, setProducts] = useState<Merchandise[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("/api/merch");
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch products");
-        }
-
-        const data = await res.json();
-        const products = getProductsSchema.safeParse(data);
-        if (!products.success) {
-          throw new Error("Invalid data received");
-        }
-        console.log(products.success);
-        setProducts(products.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   const handleRemoveItem = (productId: number) => {
     const updatedItems = { ...cartItems };

@@ -1,6 +1,6 @@
+"use client"
 import { useState, useEffect } from "react";
-import { Order, ApiResponse } from "../../../types/shop";
-import { shopApi } from "../services/api";
+import { Order, OrderSchema } from "@/types/shop";
 
 export function useOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -14,8 +14,17 @@ export function useOrders() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await shopApi.getOrders();
-      setOrders(response.data);
+      const response = await fetch("/api/merch/orders");
+      if (!response.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      // array of orders
+      const validateOrders = OrderSchema.array().safeParse(await response.json());
+      if (!validateOrders.success) {
+        throw new Error("Invalid data received");
+      }
+      setOrders(validateOrders.data);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch orders");

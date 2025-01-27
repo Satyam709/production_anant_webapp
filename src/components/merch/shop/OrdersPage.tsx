@@ -1,31 +1,45 @@
-import React, { use } from 'react';
-import { Package, Clock, CheckCircle, XCircle } from 'lucide-react';
+"use client";
+import React from "react";
+import { Package, Clock, CheckCircle, XCircle } from "lucide-react";
+import { useOrders } from "../hooks/useOrders";
+import Image from "next/image";
+import { OrderStatus } from "@/types/shop";
+import { useMerchandise } from "../hooks/useMerchandise";
 
-const OrderStatusBadge = ({ status }: { status: string }) => {
-  useEffect(() => {
-  };
+interface OrderStatusBadgeProps {
+  status: OrderStatus;
+}
+
+const OrderStatusBadge: React.FC<OrderStatusBadgeProps> = ({ status }) => {
   const statusConfig = {
-    pending: {
+    PENDING: {
       icon: Clock,
-      text: 'Pending',
-      className: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'
+      text: "Pending",
+      className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/30",
     },
-    successful: {
+    APPROVED: {
       icon: CheckCircle,
-      text: 'Successful',
-      className: 'bg-green-500/10 text-green-500 border-green-500/30'
+      text: "Approved",
+      className: "bg-green-500/10 text-green-500 border-green-500/30",
     },
-    failed: {
+    REJECTED: {
       icon: XCircle,
-      text: 'Failed',
-      className: 'bg-red-500/10 text-red-500 border-red-500/30'
-    }
+      text: "Rejected",
+      className: "bg-red-500/10 text-red-500 border-red-500/30",
+    },
   }[status];
+
+  // Ensure the status is valid
+  if (!statusConfig) {
+    return null;
+  }
 
   const Icon = statusConfig.icon;
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm border ${statusConfig.className}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm border ${statusConfig.className}`}
+    >
       <Icon className="w-4 h-4" />
       {statusConfig.text}
     </span>
@@ -33,6 +47,12 @@ const OrderStatusBadge = ({ status }: { status: string }) => {
 };
 
 const OrdersPage = () => {
+  const getMerchandise = (item_id: number) => {
+    return products.find((product) => product.item_id === item_id);
+  };
+
+  const { orders: allOrders, loading, error } = useOrders();
+  const { products } = useMerchandise();
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       {/* Background Elements */}
@@ -50,9 +70,9 @@ const OrdersPage = () => {
         </div>
 
         <div className="space-y-6">
-          {demoOrders.map((order) => (
+          {allOrders.map((order, idx) => (
             <div
-              key={order.id}
+              key={idx}
               className="bg-gray-900/30 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden"
             >
               {/* Order Header */}
@@ -60,22 +80,29 @@ const OrdersPage = () => {
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="space-y-1">
                     <p className="text-sm text-gray-400">Order ID</p>
-                    <p className="font-medium text-white">{order.id}</p>
+                    <p className="font-medium text-white">{idx}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm text-gray-400">Transaction ID</p>
-                    <p className="font-medium text-white">{order.transactionId}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm text-gray-400">Date</p>
                     <p className="font-medium text-white">
-                      {new Date(order.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                      {order.transaction_id}
                     </p>
                   </div>
+                  {order.created_at && (
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-400">Date</p>
+                      <p className="font-medium text-white">
+                        {new Date(order.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
+                      </p>
+                    </div>
+                  )}
                   <div className="space-y-1">
                     <p className="text-sm text-gray-400">Status</p>
                     <OrderStatusBadge status={order.status} />
@@ -85,30 +112,53 @@ const OrdersPage = () => {
 
               {/* Order Items */}
               <div className="divide-y divide-gray-800">
-                {order.items.map((item) => (
-                  <div key={item.id} className="p-6 flex items-center gap-6">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-20 h-20 object-cover rounded-lg"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-medium text-white">{item.name}</h3>
-                      <p className="text-gray-400">Quantity: {item.quantity}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-400">Price per item</p>
-                      <p className="text-lg font-medium text-primary-purple">₹{item.price}</p>
-                    </div>
-                  </div>
-                ))}
+                {order.orderItems &&
+                  order.orderItems.map((item, idx) => {
+                    const product = getMerchandise(item.item_id);
+
+                    return (
+                      <div key={idx} className="p-6 flex items-center gap-6">
+                        {product && (
+                          <>
+                            <Image
+                              src={
+                                product.image_url || "/images/placeholder.png"
+                              }
+                              height={150}
+                              width={150}
+                              alt={product.name}
+                              className="w-20 h-20 object-cover rounded-lg"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-medium text-white">
+                                {product.name}
+                              </h3>
+                              <p className="text-gray-400">
+                                Quantity: {item.quantity}
+                              </p>
+                            </div>
+                          </>
+                        )}
+                        <div className="text-right">
+                          <p className="text-sm text-gray-400">
+                            Price per item
+                          </p>
+                          <p className="text-lg font-medium text-primary-purple">
+                            ₹{item.price_per_item}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
 
               {/* Order Footer */}
               <div className="p-6 bg-gray-900/50 border-t border-gray-800">
                 <div className="flex justify-end items-center gap-4">
                   <span className="text-gray-400">Total Amount:</span>
-                  <span className="text-2xl font-bold text-primary-purple">₹{order.total}</span>
+                  <span className="text-2xl font-bold text-primary-purple">
+                    ₹{order.total_price}
+                  </span>
                 </div>
               </div>
             </div>
