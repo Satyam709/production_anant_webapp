@@ -1,4 +1,14 @@
-import React, { useMemo } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
+
+interface SymbolPosition {
+  symbol: string;
+  color: string;
+  top: string;
+  left: string;
+  rotation: string;
+  delay: string;
+}
 
 const symbols = [
   { symbol: '∫', color: 'text-primary-cyan' },
@@ -11,17 +21,19 @@ const symbols = [
   { symbol: 'λ', color: 'text-primary-pink' },
 ];
 
-const LoginSymbols = () => {
-  const symbolsWithPositions = useMemo(() => 
-    symbols.map((item, index) => ({
+const LoginSymbols: React.FC = () => {
+  const [symbolsWithPositions, setSymbolsWithPositions] = useState<SymbolPosition[]>([]);
+
+  useEffect(() => {
+    const positions = symbols.map((item, index) => ({
       ...item,
       top: `${Math.floor(Math.random() * 100)}%`,
       left: `${Math.floor(Math.random() * 100)}%`,
       rotation: `${Math.floor(Math.random() * 360)}deg`,
       delay: `${index * 0.5}s`
-    })), 
-    [] 
-  );
+    }));
+    setSymbolsWithPositions(positions);
+  }, []);
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">

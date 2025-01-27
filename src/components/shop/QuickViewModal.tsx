@@ -1,5 +1,6 @@
 import React from 'react';
-import { X, ShoppingCart } from 'lucide-react';
+import { X, ShoppingCart,StarsIcon } from 'lucide-react';
+import GradientButton from '../ui/GradientButton';
 
 interface QuickViewModalProps {
   product: {
@@ -29,9 +30,11 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
       <div className="relative bg-gray-900/90 rounded-2xl w-full max-w-4xl mx-4 overflow-hidden border border-gray-800">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white bg-gray-800/50 rounded-full hover:bg-gray-700/50 transition-all duration-300"
+          className="text-gray-300 hover:text-white px-3 py-3 rounded-2xl text-sm font-medium 
+                  transition-all duration-300 ease-out hover:bg-gradient-to-b from-primary-blue/20 to-primary-purple/20
+                  hover:shadow-[0_0_15px_rgba(0,224,255,0.15)] border border-transparent hover:border-gray-700"
         >
-          <X className="h-6 w-6" />
+          <X className="h-5 w-5" />
         </button>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
           <div className="relative aspect-[4/5] rounded-lg overflow-hidden">
@@ -61,17 +64,17 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             </div>
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-primary-purple">₹{product.price}</span>
+                <span className="text-3xl font-bold text-primary-cyan">₹{product.price}</span>
                 <span className="text-sm text-gray-400">Free shipping on orders above ₹999</span>
               </div>
-              <button
-                onClick={onAddToCart}
-                disabled={product.stock === 0}
-                className="w-full py-4 px-6 flex items-center justify-center gap-3 bg-gradient-to-r from-primary-cyan/20 to-primary-purple/20 hover:from-primary-cyan/30 hover:to-primary-purple/30 rounded-lg text-white font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-gray-700"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-              </button>
+              <GradientButton href="" onClick={onAddToCart} className="w-1/2 hover:border-green-400">
+                <ShoppingCart className="h-5 w-15" />
+                Add to Cart
+              </GradientButton>
+              <GradientButton className="w-1/2  hover:border-yellow-400">
+                <StarsIcon className="h-5 w-15" />
+                Wishlist
+              </GradientButton>
             </div>
           </div>
         </div>
