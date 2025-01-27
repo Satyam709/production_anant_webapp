@@ -8,7 +8,7 @@ import { rollNumberSchema } from "@/types/common";
 const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
         rollNo: { label: "Roll No", type: "text", placeholder: "123108031" },
         password: { label: "Password", type: "password" },
