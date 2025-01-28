@@ -7,16 +7,18 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 interface GradientButtonProps {
   href?: string;
   children: React.ReactNode;
+  className?: string; 
   onClick?: () => void;
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
   href,
   children,
+  className,
   onClick,
 }) => {
-  const className = `
-    inline-flex items-center px-6 py-3 
+  const combinedclassName = `
+    inline-flex justify-center px-6 py-3 
     text-base font-medium rounded-md text-white 
     bg-black border border-gray-800
     hover:border-primary-cyan/50 
@@ -24,6 +26,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
     relative
     overflow-hidden
     group
+    ${className}
   `;
 
   gsap.registerPlugin(ScrollToPlugin);
@@ -53,7 +56,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   }
 
   return (
-    <button onClick={onClick} className={className}>
+    <button className={combinedclassName} onClick={onClick}>
       {content}
     </button>
   );

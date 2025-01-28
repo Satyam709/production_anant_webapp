@@ -1,10 +1,13 @@
+import Shop from "@/app/shop/page";
+
 export const navItems = {
     about: {
       label: 'About',
       items: [
         { label: 'Vision', href: '/' },
         { label: 'Team', href: '/team' },
-        { label: 'Timeline', href: '/' }
+        { label: 'Shop', href: '/shop' },
+        { label: 'Timeline', href: '/' },  
       ]
     },
     events: {
@@ -30,5 +33,5 @@ export const navItems = {
         { label: 'Research', href: '/' },
         { label: 'Projects', href: '/' }
       ]
-    }
+    },
   }

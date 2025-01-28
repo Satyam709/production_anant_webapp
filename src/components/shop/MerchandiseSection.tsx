@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Filter, SortDesc, Sparkles, FunctionSquare as Function } from 'lucide-react';
+import { Filter,FunctionSquare as Function } from 'lucide-react';
 import ProductCard from './ProductCard';
 import QuickViewModal from './QuickViewModal';
 
@@ -10,7 +10,7 @@ const products = [
     price: 499,
     image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&auto=format&fit=crop&q=60',
     category: 'Apparel',
-    stock: 50,
+    stock: 0,
     description: 'Premium cotton t-shirt featuring the mesmerizing infinity series pattern. Perfect for mathematics enthusiasts.',
     featured: true
   },
@@ -91,7 +91,7 @@ const MerchandiseSection = () => {
                       onClick={() => setActiveCategory(category)}
                       className={`px-4 py-1.5 rounded-full text-sm transition-all duration-300 ${
                         activeCategory === category
-                          ? 'bg-primary-purple/20 text-white border border-primary-purple/30'
+                          ? 'px-6 rounded-2xl bg-primary-blue/10 text-primary-cyan transition-all'
                           : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                       }`}
                     >
@@ -101,10 +101,6 @@ const MerchandiseSection = () => {
                 </div>
               </div>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/50 text-gray-400 hover:bg-gray-700 transition-all duration-300 border border-gray-700/50 backdrop-blur-sm">
-              <SortDesc className="h-4 w-4" />
-              <span>Sort</span>
-            </button>
           </div>
 
           {/* Products Grid */}

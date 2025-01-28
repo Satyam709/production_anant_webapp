@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       
       {featured && (
         <div className="absolute top-4 right-4 z-10">
-          <span className="px-3 py-1 bg-primary-purple/20 text-primary-purple text-xs rounded-full border border-primary-purple/30 backdrop-blur-sm">
+          <span className="px-3 py-1 bg-primary-cyan/50 text-primary-white text-xs rounded-full border border-primary-cyan backdrop-blur-sm">
             Featured
           </span>
         </div>
@@ -78,8 +78,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {name}
         </h3>
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-xl font-bold text-primary-purple">₹{price}</span>
-          <span className="text-xs text-gray-400">∞ satisfaction</span>
+          <span className="text-xl font-bold text-primary-cyan">₹{price}</span>
         </div>
       </div>
     </div>

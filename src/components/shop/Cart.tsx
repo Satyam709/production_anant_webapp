@@ -1,5 +1,7 @@
 import React from 'react';
 import { ShoppingCart, X } from 'lucide-react';
+import GradientButton from '../ui/GradientButton';
+
 
 interface CartProps {
   isOpen: boolean;
@@ -14,14 +16,14 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <ShoppingCart className="h-6 w-6 text-primary-cyan" />
-              <h2 className="text-xl font-bold text-white">Your Cart</h2>
+              <ShoppingCart className="h-6 w-6 mt-20 text-primary-cyan" />
+              <h2 className="text-xl font-bold mt-20 text-white">Your Cart</h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-800/50 rounded-full transition-colors"
+              className="p-2 rounded-full transition-colors"
             >
-              <X className="h-5 w-5 text-gray-400" />
+              <X className="h-5 w-5 mt-20 text-gray-400" />
             </button>
           </div>
         </div>
@@ -35,11 +37,11 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
         <div className="p-4 border-t border-gray-800">
           <div className="flex justify-between mb-4">
             <span className="text-gray-400">Total</span>
-            <span className="text-xl font-bold text-primary-purple">₹0</span>
+            <span className="text-xl font-bold text-primary-cyan">₹0</span>
           </div>
-          <button className="w-full py-3 px-4 bg-gradient-to-r from-primary-cyan/20 to-primary-purple/20 hover:from-primary-cyan/30 hover:to-primary-purple/30 rounded-lg text-white font-semibold transition-all duration-300 border border-gray-700">
+          <GradientButton className="w-full items-center">
             Checkout
-          </button>
+          </GradientButton>
         </div>
       </div>
     </div>
