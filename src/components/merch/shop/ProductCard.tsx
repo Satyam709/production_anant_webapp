@@ -1,13 +1,9 @@
 import React from 'react';
 import { ShoppingCart, Eye } from 'lucide-react';
+import { Merchandise } from "@/types/shop";
+import Image from 'next/image';
 
-interface ProductCardProps {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  stock: number;
+interface ProductCardProps extends Pick<Merchandise, 'item_id' | 'name' | 'price' | 'image_url' | 'category' | 'stock_quantity'> {
   featured?: boolean;
   onQuickView: () => void;
   onAddToCart: () => void;
@@ -16,9 +12,9 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({
   name,
   price,
-  image,
+  image_url,
   category,
-  stock,
+  stock_quantity,
   featured,
   onQuickView,
   onAddToCart,
@@ -39,9 +35,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       )}
       <div className="relative overflow-hidden aspect-[4/5]">
-        <img
-          src={image}
+        <Image
+          src={image_url||"/images/placeholder.png"}
           alt={name}
+          width={400}
+          height={500}
           className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -70,8 +68,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <span className="text-primary-cyan/70 text-sm px-3 py-1 bg-primary-cyan/10 rounded-full">
             {category}
           </span>
-          <span className={`text-sm ${stock > 0 ? 'text-green-500' : 'text-red-500'}`}>
-            {stock > 0 ? `${stock} in stock` : 'Out of stock'}
+          <span className={`text-sm ${stock_quantity > 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {stock_quantity > 0 ? `${stock_quantity} in stock` : 'Out of stock'}
           </span>
         </div>
         <h3 className="text-white font-semibold text-lg group-hover:text-primary-cyan transition-colors duration-300">

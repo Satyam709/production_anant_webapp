@@ -63,7 +63,8 @@ async function main() {
       price: 20.0,
       stock_quantity: 100,
       category: "Apparel",
-      image_url: "https://example.com/tshirt.jpg",
+      image_url:
+        "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&auto=format&fit=crop&q=60",
     },
   });
 
@@ -74,7 +75,8 @@ async function main() {
       price: 10.0,
       stock_quantity: 50,
       category: "Accessories",
-      image_url: "https://example.com/mug.jpg",
+      image_url:
+        "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&auto=format&fit=crop&q=60",
     },
   });
 
@@ -85,7 +87,8 @@ async function main() {
       price: 5.0,
       stock_quantity: 200,
       category: "Accessories",
-      image_url: "https://example.com/stickers.jpg",
+      image_url:
+        "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&auto=format&fit=crop&q=60",
     },
   });
 
@@ -96,7 +99,8 @@ async function main() {
       price: 35.0,
       stock_quantity: 75,
       category: "Apparel",
-      image_url: "https://example.com/hoodie.jpg",
+      image_url:
+        "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&auto=format&fit=crop&q=60",
     },
   });
 
@@ -107,7 +111,8 @@ async function main() {
       price: 15.0,
       stock_quantity: 150,
       category: "Accessories",
-      image_url: "https://example.com/bottle.jpg",
+      image_url:
+        "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800&auto=format&fit=crop&q=60",
     },
   });
 
