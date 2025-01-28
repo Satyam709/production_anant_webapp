@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Plus, Pencil, Trash2, Search } from 'lucide-react';
-import { Merchandise } from '@/types/shop';
+import React, { useState } from "react";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Merchandise } from "@/types/shop";
 import ProductForm from "@/components/merch/admin/ProductForm";
+import Image from "next/image";
+import { useMerchandise } from "@/components/merch/hooks/useMerchandise";
 
-interface ProductsPageProps {
-  products: Merchandise[];
-}
-
-const ProductsPage: React.FC<ProductsPageProps> = ({ products: initialProducts }) => {
-  const [products, setProducts] = useState<Merchandise[]>(initialProducts);
+const ProductsPage: React.FC = () => {
+  const { products, loading, error, refetch } = useMerchandise();
   const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Merchandise | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [editingProduct, setEditingProduct] = useState<Merchandise | null>(
+    null
+  );
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleEdit = (product: Merchandise) => {
     setEditingProduct(product);
@@ -19,35 +19,77 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ products: initialProducts }
   };
 
   const handleDelete = async (productId: number) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
-    setProducts(products.filter(p => p.item_id !== productId));
+    if (!confirm("Are you sure you want to delete this product?")) return;
+    // for now just set the product quantity to 0
+    const prod = products.find((p) => p.item_id === productId);
+    const res = await fetch("/api/merch/admin/edit", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...prod, stock_quantity: 0 }), // set stock quantity to 0
+    });
+
+    console.log(JSON.stringify(await res.json()));
+
+    if (res.ok) {
+      console.log("Product updated successfully");
+      refetch();
+    } else {
+      console.log("Product update failed");
+    }
   };
 
   const handleSubmit = async (formData: Partial<Merchandise>) => {
     if (editingProduct) {
       // Update existing product
-      setProducts(products.map(p => 
-        p.item_id === editingProduct.item_id 
-          ? { ...p, ...formData, updated_at: new Date().toISOString() }
-          : p
-      ));
+
+      // call api to update product
+      const res = await fetch("/api/merch/admin/edit", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      console.log(JSON.stringify(await res.json()));
+
+      if (res.ok) {
+        console.log("Product updated successfully");
+        refetch();
+      } else {
+        console.log("Product update failed");
+      }
     } else {
-      // Add new product
-      const newProduct: Merchandise = {
-        item_id: Math.max(...products.map(p => p.item_id)) + 1,
-        ...formData as Omit<Merchandise, 'item_id' | 'created_at' | 'updated_at'>,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-      setProducts([...products, newProduct]);
+      // call api to add product
+      const res = await fetch("/api/merch/admin/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      console.log(JSON.stringify(await res.json()));
+
+      if (res.ok) {
+        console.log("Product added successfully");
+        refetch();
+      } else {
+        console.log("Product add failed");
+      }
     }
     setShowForm(false);
     setEditingProduct(null);
   };
 
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (error) return <div className="text-red-300">Error loading products</div>;
+  if (loading) return <div className="text-center">Loading...</div>;
 
   return (
     <div>
@@ -81,27 +123,46 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ products: initialProducts }
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-800">
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Image</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Name</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Category</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Price</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Stock</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Actions</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
+                Image
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
+                Name
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
+                Category
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
+                Price
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
+                Stock
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800">
             {filteredProducts.map((product) => (
-              <tr key={product.item_id} className="hover:bg-gray-800/30 transition-colors">
+              <tr
+                key={product.item_id}
+                className="hover:bg-gray-800/30 transition-colors"
+              >
                 <td className="px-6 py-4">
-                  <img
-                    src={product.image_url || ''}
+                  <Image
+                    src={product.image_url || "/placeholder-image.png"}
                     alt={product.name}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 object-cover rounded-lg"
                   />
                 </td>
                 <td className="px-6 py-4">
                   <div className="font-medium text-white">{product.name}</div>
-                  <div className="text-sm text-gray-400">{product.description}</div>
+                  <div className="text-sm text-gray-400">
+                    {product.description}
+                  </div>
                 </td>
                 <td className="px-6 py-4">
                   <span className="px-3 py-1 bg-primary-cyan/10 text-primary-cyan text-sm rounded-full border border-primary-cyan/30">
@@ -109,16 +170,20 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ products: initialProducts }
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="text-primary-purple font-semibold">₹{product.price}</span>
+                  <span className="text-primary-purple font-semibold">
+                    ₹{product.price}
+                  </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`${
-                    product.stock_quantity > 10
-                      ? 'text-green-500'
-                      : product.stock_quantity > 0
-                      ? 'text-yellow-500'
-                      : 'text-red-500'
-                  }`}>
+                  <span
+                    className={`${
+                      product.stock_quantity > 10
+                        ? "text-green-500"
+                        : product.stock_quantity > 0
+                        ? "text-yellow-500"
+                        : "text-red-500"
+                    }`}
+                  >
                     {product.stock_quantity}
                   </span>
                 </td>

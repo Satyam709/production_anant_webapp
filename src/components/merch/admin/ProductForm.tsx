@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { Merchandise, ItemCategory } from '../../types/shop';
+import { Merchandise, ItemCategory, ItemCategoryEnum, ItemCategorySchema } from "@/types/shop";
 
 interface ProductFormProps {
   product?: Merchandise | null;
@@ -10,11 +10,12 @@ interface ProductFormProps {
 
 const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose }) => {
   const [formData, setFormData] = useState<Partial<Merchandise>>({
+    item_id: product?.item_id,
     name: product?.name || '',
     description: product?.description || '',
     price: product?.price || 0,
     stock_quantity: product?.stock_quantity || 0,
-    category: product?.category || ItemCategory.Apparel,
+    category: product?.category || ItemCategoryEnum.Accessories,
     image_url: product?.image_url || '',
   });
 
@@ -106,7 +107,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
                 className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
                 required
               >
-                {Object.values(ItemCategory).map((category) => (
+                {Object.values(ItemCategorySchema.Enum).map((category) => (
                   <option key={category} value={category}>
                     {category}
                   </option>
