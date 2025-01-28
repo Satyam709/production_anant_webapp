@@ -1,16 +1,11 @@
 import React from 'react';
 import { X, ShoppingCart,StarsIcon } from 'lucide-react';
-import GradientButton from '../ui/GradientButton';
+import GradientButton from '@/components/ui/GradientButton';
+import Image from 'next/image';
+import { Merchandise } from '@/types/shop';
 
 interface QuickViewModalProps {
-  product: {
-    name: string;
-    price: number;
-    image: string;
-    description: string;
-    category: string;
-    stock: number;
-  };
+  product: Merchandise;
   isOpen: boolean;
   onClose: () => void;
   onAddToCart: () => void;
@@ -38,9 +33,11 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         </button>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
           <div className="relative aspect-[4/5] rounded-lg overflow-hidden">
-            <img
-              src={product.image}
+            <Image
+              src={product.image_url || '/images/placeholder.jpg'}
               alt={product.name}
+              width={500}
+              height={500}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent"></div>
@@ -52,14 +49,14 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   {product.category}
                 </span>
                 <span className={`px-3 py-1 rounded-full text-sm border ${
-                  product.stock > 0 
+                  product.stock_quantity > 0 
                     ? 'bg-green-500/10 text-green-500 border-green-500/30'
                     : 'bg-red-500/10 text-red-500 border-red-500/30'
                 }`}>
-                  {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                  {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
                 </span>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4">{product.name}</h2>
+              <h2 className="text-3xl font-bol d text-white mb-4">{product.name}</h2>
               <p className="text-gray-400 leading-relaxed mb-6">{product.description}</p>
             </div>
             <div className="space-y-6">
