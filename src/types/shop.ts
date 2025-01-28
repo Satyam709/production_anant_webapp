@@ -48,6 +48,7 @@ export type OrderItem = z.infer<typeof OrderItemSchema>;
 // Order Schema
 export const OrderSchema = z.object({
   user_id: z.string().optional(),
+  order_id: z.number().optional(),
   total_price: z.number(),
   status: OrderStatusSchema,
   payment_method: z.string().nullable(),

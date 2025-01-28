@@ -1,20 +1,20 @@
-import React from 'react';
-import { Package, ShoppingBag, Settings, LogOut } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Package, ShoppingBag, Settings, LogOut } from "lucide-react";
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const navItems = [
-    { name: 'Products', href: '/admin/products', icon: Package },
-    { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
+    { name: "Products", href: "/admin/products", icon: Package },
+    { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
+    { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    navigate('/admin/login');
+    localStorage.removeItem("adminToken");
+    router.push("/admin/login");
   };
 
   return (
@@ -32,7 +32,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <div className="flex flex-col h-full">
             {/* Logo */}
             <div className="p-6 border-b border-gray-800">
-              <Link to="/admin" className="flex items-center gap-2">
+              <Link href="/admin" className="flex items-center gap-2">
                 <Settings className="h-6 w-6 text-primary-cyan" />
                 <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-cyan to-primary-purple">
                   Admin Panel
@@ -48,11 +48,11 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   return (
                     <li key={item.name}>
                       <Link
-                        to={item.href}
+                        href={item.href}
                         className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
-                          location.pathname === item.href
-                            ? 'bg-primary-purple/20 text-white border border-primary-purple/30'
-                            : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+                          router.pathname === item.href
+                            ? "bg-primary-purple/20 text-white border border-primary-purple/30"
+                            : "text-gray-400 hover:text-white hover:bg-gray-800/50"
                         }`}
                       >
                         <Icon className="h-5 w-5" />

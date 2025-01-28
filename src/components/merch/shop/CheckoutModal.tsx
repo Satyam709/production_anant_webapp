@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { X, Copy, Check, ArrowLeft } from 'lucide-react';
 import { Merchandise ,Order,OrderItem } from '@/types/shop';
 import Image from 'next/image';
-import { a } from 'framer-motion/client';
 
 interface CheckoutModalProps {
   isOpen: boolean;

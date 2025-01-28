@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
-import { X, CheckCircle, XCircle } from 'lucide-react';
-import { Order, OrderStatus } from '../../types/shop';
+import React, { useState } from "react";
+import { X, CheckCircle, XCircle } from "lucide-react";
+import { Order, OrderStatus, OrderStatusSchema } from "@/types/shop";
+import Image from "next/image";
+import { useMerchandise } from "../hooks/useMerchandise";
 
 interface OrderDetailsModalProps {
   order: Order;
   onClose: () => void;
-  onUpdateStatus: (orderId: number, status: OrderStatus, remarks?: string) => void;
+  onUpdateStatus: (
+    orderId: number,
+    status: OrderStatus,
+    remarks?: string
+  ) => void;
 }
 
 const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
@@ -13,21 +19,34 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   onClose,
   onUpdateStatus,
 }) => {
-  const [remarks, setRemarks] = useState('');
+  const [remarks, setRemarks] = useState("");
 
   const handleApprove = () => {
-    onUpdateStatus(order.order_id, OrderStatus.APPROVED, remarks);
+    if (!order.order_id) {
+      alert("Order ID not found");
+      return;
+    }
+    onUpdateStatus(order.order_id, OrderStatusSchema.enum.APPROVED, remarks);
     onClose();
   };
 
   const handleReject = () => {
-    onUpdateStatus(order.order_id, OrderStatus.REJECTED, remarks);
+    if (!order.order_id) {
+      alert("Order ID not found");
+      return;
+    }
+    onUpdateStatus(order.order_id, OrderStatusSchema.enum.REJECTED, remarks);
     onClose();
   };
 
+  const { products } = useMerchandise();
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div className="relative w-full max-w-3xl bg-gray-900/90 rounded-xl border border-gray-800 overflow-hidden">
         <div className="p-6 border-b border-gray-800 flex justify-between items-center">
           <h2 className="text-xl font-bold">Order Details #{order.order_id}</h2>
@@ -49,16 +68,22 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
             <div>
               <p className="text-sm text-gray-400">Order Date</p>
               <p className="font-medium text-white">
-                {new Date(order.created_at).toLocaleString()}
+                {(order.created_at &&
+                  new Date(order.created_at).toLocaleString()) ||
+                  "N/A"}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-400">Payment Method</p>
-              <p className="font-medium text-white">{order.payment_method || 'N/A'}</p>
+              <p className="font-medium text-white">
+                {order.payment_method || "N/A"}
+              </p>
             </div>
             <div>
               <p className="text-sm text-gray-400">Transaction ID</p>
-              <p className="font-medium text-white">{order.transaction_id || 'N/A'}</p>
+              <p className="font-medium text-white">
+                {order.transaction_id || "N/A"}
+              </p>
             </div>
           </div>
 
@@ -66,30 +91,42 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4">Order Items</h3>
             <div className="space-y-4">
-              {order.orderItems.map((item) => (
-                <div
-                  key={item.order_item_id}
-                  className="flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700"
-                >
-                  <img
-                    src={item.merchandise.image_url || ''}
-                    alt={item.merchandise.name}
-                    className="w-16 h-16 object-cover rounded-lg"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-medium text-white">{item.merchandise.name}</h4>
-                    <p className="text-sm text-gray-400">
-                      Quantity: {item.quantity} × ₹{item.price_per_item}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-400">Subtotal</p>
-                    <p className="font-semibold text-primary-purple">
-                      ₹{item.quantity * item.price_per_item}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              {(order.orderItems &&
+                order.orderItems.map((item) => {
+                  const product = products.find(
+                    (p) => p.item_id === item.item_id
+                  );
+
+                  return (
+                    <div
+                      key={item.order_item_id}
+                      className="flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700"
+                    >
+                      <Image
+                        src={product?.image_url || "/images/placeholder.png"}
+                        alt={product?.name || "NA"}
+                        width={64}
+                        height={64}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-white">
+                          {product?.name || "NA"}
+                        </h4>
+                        <p className="text-sm text-gray-400">
+                          Quantity: {item.quantity} × ₹{item.price_per_item}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-400">Subtotal</p>
+                        <p className="font-semibold text-primary-purple">
+                          ₹{item.quantity * item.price_per_item}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })) ||
+                "No items found"}
             </div>
           </div>
 
@@ -106,7 +143,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
           </div>
 
           {/* Admin Actions */}
-          {order.status === OrderStatus.PENDING && (
+          {order.status === OrderStatusSchema.enum.PENDING && (
             <>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-400 mb-1">
