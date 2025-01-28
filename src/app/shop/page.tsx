@@ -8,7 +8,7 @@ import LoginSymbols from "@/components/floating/LoginSymbols";
 import Cart from "@/components/merch/shop/Cart";
 import "@/styles/bganimations.css";
 import Footer from "@/components/Footer";
-
+import { ShoppingCart } from "lucide-react";
 import { useMerchandise } from "@/components/merch/hooks/useMerchandise";
 
 export default function Shop() {
@@ -62,10 +62,10 @@ export default function Shop() {
       <Navbar />
 
       {/* Content */}
-      <div className="relative">
+      <div className="relative  pt-16">
         {/* Floating Cart Button */}
-        {/* <button
-          onClick={toggleCart}
+        <button
+          onClick={() => setIsCartOpen(true)}
           className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-primary-cyan/30 to-primary-purple/30 hover:from-primary-cyan/50 hover:to-primary-purple/60 rounded-full shadow-lg backdrop-blur-md border border-gray-700 transition-all duration-300 hover:scale-110 group"
         >
           <ShoppingCart className="h-6 w-6 text-primary-cyan group-hover:scale-110 transition-transform duration-300" />
@@ -75,7 +75,7 @@ export default function Shop() {
               0
             )}
           </span>
-        </button> */}
+        </button>
 
         <ShopHeader />
 
