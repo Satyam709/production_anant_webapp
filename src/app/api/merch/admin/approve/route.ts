@@ -3,6 +3,7 @@ import { z } from "zod";
 import prisma from "@/lib/PrismaClient/db"; // Ensure this points to the correct instance of Prisma client
 import { OrderStatusSchema } from "@/types/shop"; // Import your OrderStatus schema if needed
 import isAdmin from "@/lib/actions/Admin";
+import { getSession } from "@/lib/actions/Sessions";
 
 // Schema for validating the approval request
 const ApprovalSchema = z.object({
@@ -16,9 +17,10 @@ export async function PUT(req: NextRequest) {
     // Parse the body of the request
     const body = await req.json();
     const result = ApprovalSchema.safeParse(body);
+    const session = await getSession()
 
     const checkAdmin = await isAdmin();
-    if (!checkAdmin) {
+    if (!session || !checkAdmin) {
       return NextResponse.json(
         { error: "You are not authorized to perform this action" },
         { status: 403 }
@@ -61,7 +63,7 @@ export async function PUT(req: NextRequest) {
       },
       create: {
         order_id: result.data.order_id,
-        admin_id: user.id,
+        admin_id: session.user.id,
         status: result.data.status,
         remarks: result.data.remarks,
       },
