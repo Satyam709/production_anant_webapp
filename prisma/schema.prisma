@@ -45,6 +45,9 @@ model User{
 
   // Pending requests
   pending_requests Pending_requests[]
+
+  //compitition
+  compititions_created Competitions[]
 }
 
 model Notice{
@@ -93,12 +96,16 @@ model Competitions{
   competitionName String @unique
   conductedBy String
   conductedOn DateTime
+  registration_deadline DateTime
   venue String
   prize String
   description String
   imageURL String?
   min_team_size Int
   max_team_size Int
+  creator_id String
+
+  createdBy User @relation(fields: [creator_id], references: [id])
   participants Team[] @relation(name: "participant")
 }
 
