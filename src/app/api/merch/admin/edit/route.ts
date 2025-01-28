@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/PrismaClient/db";
 import { ItemCategorySchema } from "@/types/shop";
+import isAdmin from "@/lib/actions/Admin";
 
 const MerchEditSchema = z.object({
   item_id: z.number().nonnegative(),
   name: z.string().min(1, "Name is required"),
   price: z.number().nonnegative("Price must be non-negative"),
   description: z.string().optional(),
-  category:ItemCategorySchema,
+  category: ItemCategorySchema,
   image_url: z.string().url("Invalid image URL").optional(),
   stock_quantity: z.number().int().min(0, "Stock must be non-negative"),
 });
@@ -17,6 +18,14 @@ export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
     const result = MerchEditSchema.safeParse(body);
+
+    const checkAdmin = await isAdmin();
+    if (!checkAdmin) {
+      return NextResponse.json(
+        { error: "You are not authorized to perform this action" },
+        { status: 403 }
+      );
+    }
 
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
@@ -34,7 +43,7 @@ export async function PUT(req: NextRequest) {
         description: result.data.description,
         image_url: result.data.image_url,
         stock_quantity: result.data.stock_quantity,
-        category:result.data.category
+        category: result.data.category,
       },
     });
 

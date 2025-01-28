@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/PrismaClient/db"; // Ensure this points to the correct instance of Prisma client
 import { OrderStatusSchema } from "@/types/shop"; // Import your OrderStatus schema if needed
-import { getSession } from "@/lib/actions/Sessions"; // Ensure session handler works properly
+import isAdmin from "@/lib/actions/Admin";
 
 // Schema for validating the approval request
 const ApprovalSchema = z.object({
@@ -17,22 +17,12 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const result = ApprovalSchema.safeParse(body);
 
-    // Check if user is authenticated
-    const session = await getSession();
-    if (!session?.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    // Find the user in the database
-    const user = await prisma.user.findUnique({
-      where: {
-        id: session.user.id,
-      },
-    });
-
-    // Verify user position for authorization
-    if (!user?.position || user.position === "Member") {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    const checkAdmin = await isAdmin();
+    if (!checkAdmin) {
+      return NextResponse.json(
+        { error: "You are not authorized to perform this action" },
+        { status: 403 }
+      );
     }
 
     // If validation fails, return validation errors

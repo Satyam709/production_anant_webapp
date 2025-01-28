@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/actions/Sessions";
+import isAdmin from "@/lib/actions/Admin";
 import prisma from "@/lib/PrismaClient/db";
 import { ItemCategorySchema } from "@/types/shop";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,23 +16,13 @@ const MerchandiseSchema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const session = await getSession();
 
-    // Check if user is authenticated
-    if (!session?.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    // Find the user in the database
-    const user = await prisma.user.findUnique({
-      where: {
-        id: session.user.id,
-      },
-    });
-
-    // Verify user position
-    if (!user?.position || user.position === "Member") {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    const checkAdmin = await isAdmin();
+    if (!checkAdmin) {
+      return NextResponse.json(
+        { error: "You are not authorized to perform this action" },
+        { status: 403 }
+      );
     }
 
     // Validate the data against the schema
