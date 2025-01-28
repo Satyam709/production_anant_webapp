@@ -33,6 +33,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({status: 400, message: "User not found!"});
         }
 
+        const findName = await prisma.team.findUnique({
+            where: { team_name: team_name },
+        });
+
+        if(findName){
+            return NextResponse.json({status: 400, message: "Team name already exists!"});
+        }
+
         const team = await prisma.team.create({
             data: {
                 team_name: team_name,
