@@ -1,10 +1,9 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 
 interface TechPosition {
   name: string;
-  color: string;
+  color: string; 
   top: string;
   left: string;
   delay: string;
@@ -12,12 +11,12 @@ interface TechPosition {
 
 const TechStack = () => {
   const technologies = [
-    { name: 'Python', color: 'text-primary-blue' },
-    { name: 'R', color: 'text-primary-cyan' },
-    { name: 'Julia', color: 'text-primary-purple' },
-    { name: 'MATLAB', color: 'text-primary-pink' },
-    { name: 'LaTeX', color: 'text-primary-blue' },
-    { name: 'Jupyter', color: 'text-primary-cyan' }
+    { name: 'Python', color: '#0046FF' }, // Blue
+    { name: 'R', color: '#00E0FF' },     // Cyan
+    { name: 'Julia', color: '#A259FF' }, // Purple
+    { name: 'MATLAB', color: '#FF59E6' }, // Pink
+    { name: 'LaTeX', color: '#0046FF' }, // Blue
+    { name: 'Jupyter', color: '#00E0FF' }, // Cyan
   ];
 
   const [techWithPositions, setTechWithPositions] = useState<TechPosition[]>([]);
@@ -37,11 +36,12 @@ const TechStack = () => {
       {techWithPositions.map((tech, index) => (
         <div
           key={tech.name}
-          className={`absolute text-sm font-mono ${tech.color}/20 animate-float`}
+          className="absolute text-sm font-mono animate-float opacity-20"
           style={{
             top: tech.top,
             left: tech.left,
-            animationDelay: tech.delay
+            animationDelay: tech.delay,
+            color: tech.color,
           }}
         >
           {tech.name}

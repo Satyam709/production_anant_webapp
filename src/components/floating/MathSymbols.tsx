@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 
 interface SymbolPosition {
@@ -13,14 +12,13 @@ interface SymbolPosition {
 
 const MathSymbols = () => {
   const symbols = [
-    { symbol: '∫', color: 'text-primary-cyan' },
-    { symbol: 'Σ', color: 'text-primary-purple' },
-    { symbol: 'π', color: 'text-primary-blue' },
-    { symbol: '∂', color: 'text-primary-pink' },
-    { symbol: '√', color: 'text-primary-cyan' },
-    { symbol: '∞', color: 'text-primary-purple' },
+    { symbol: '∫', color: '#00E0FF' }, // Cyan
+    { symbol: 'Σ', color: '#A259FF' }, // Purple
+    { symbol: 'π', color: '#0046FF' }, // Blue
+    { symbol: '∂', color: '#FF59E6' }, // Pink
+    { symbol: '√', color: '#00E0FF' }, // Cyan
+    { symbol: '∞', color: '#A259FF' }, // Purple
   ];
-
 
   const [symbolsWithPositions, setSymbolsWithPositions] = useState<SymbolPosition[]>([]);
 
@@ -40,12 +38,13 @@ const MathSymbols = () => {
       {symbolsWithPositions.map((item, index) => (
         <div
           key={index}
-          className={`absolute ${item.color}/20 text-4xl font-math animate-float`}
+          className="absolute text-4xl font-math animate-float opacity-20"
           style={{
             top: item.top,
             left: item.left,
             transform: `rotate(${item.rotation})`,
-            animationDelay: item.delay
+            animationDelay: item.delay,
+            color: item.color, 
           }}
         >
           {item.symbol}
