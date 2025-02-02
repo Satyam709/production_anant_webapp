@@ -3,7 +3,7 @@ import React from 'react'
 const ShopHeader = () => {
   return (
     <div className="text-center mb-6">
-      <h1 className="text-5xl font-bold mt-14 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-blue via-primary-cyan to-primary-purple">
+      <h1 className="text-5xl font-bold mb-6 mt-12 bg-clip-text text-transparent bg-gradient-to-r from-primary-blue via-primary-cyan to-primary-purple">
         Infi-Shop
       </h1>
       <p className="text-gray-400 max-w-2xl mx-auto">

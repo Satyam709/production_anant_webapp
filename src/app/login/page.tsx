@@ -122,7 +122,7 @@ export default function LoginPage() {
               )}
 
               <div>
-                <GradientButton type="submit" className="w-full">
+                <GradientButton type="submit" className="w-full justify-center">
                   Sign in
                 </GradientButton>
               </div>

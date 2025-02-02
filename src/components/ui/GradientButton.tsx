@@ -1,24 +1,35 @@
 "use client"
-import React from "react";
-import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-
+import React, { useEffect, useState } from "react";
 
 interface GradientButtonProps {
   href?: string;
   children: React.ReactNode;
-  className?: string; 
   onClick?: () => void;
+  className?: string;
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
   href,
   children,
-  className,
   onClick,
+  className = "",
 }) => {
-  const combinedclassName = `
-    inline-flex justify-center px-6 py-3 
+  const [gsap, setGsap] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      import("gsap").then((module) => {
+        const gsapInstance = module.default;
+        import("gsap/ScrollToPlugin").then((plugin) => {
+          gsapInstance.registerPlugin(plugin.ScrollToPlugin);
+          setGsap(gsapInstance);
+        });
+      });
+    }
+  }, []);
+
+  const buttonClassName = `
+    inline-flex items-center px-6 py-3 
     text-base font-medium rounded-md text-white 
     bg-black border border-gray-800
     hover:border-primary-cyan/50 
@@ -29,8 +40,6 @@ const GradientButton: React.FC<GradientButtonProps> = ({
     ${className}
   `;
 
-  gsap.registerPlugin(ScrollToPlugin);
-
   const content = (
     <>
       <div className="absolute inset-0 bg-gradient-to-r from-primary-blue/10 via-primary-cyan/10 to-primary-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -38,25 +47,20 @@ const GradientButton: React.FC<GradientButtonProps> = ({
     </>
   );
 
-  if (href) {
-    return (
-      <button
-        onClick={() =>
-          gsap.to(window, {
-            duration: 1,
-            scrollTo: { y: href, autoKill: true },
-            ease: "power3",
-          })
-        }
-        className={className}
-      >
-        {content}
-      </button>
-    );
-  }
+  const handleClick = () => {
+    if (href && gsap) {
+      gsap.to(window, {
+        duration: 1,
+        scrollTo: { y: href, autoKill: true },
+        ease: "power3",
+      });
+    } else if (onClick) {
+      onClick();
+    }
+  };
 
   return (
-    <button className={combinedclassName} onClick={onClick}>
+    <button onClick={handleClick} className={buttonClassName}>
       {content}
     </button>
   );

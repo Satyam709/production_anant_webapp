@@ -1,37 +1,56 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
+
+interface SymbolPosition {
+  symbol: string;
+  color: string;
+  top: string;
+  left: string;
+  rotation: string;
+  delay: string;
+}
 
 const MathSymbols = () => {
+  const symbols = [
+    { symbol: '∫', color: 'text-primary-cyan' },
+    { symbol: 'Σ', color: 'text-primary-purple' },
+    { symbol: 'π', color: 'text-primary-blue' },
+    { symbol: '∂', color: 'text-primary-pink' },
+    { symbol: '√', color: 'text-primary-cyan' },
+    { symbol: '∞', color: 'text-primary-purple' },
+  ];
+
+
+  const [symbolsWithPositions, setSymbolsWithPositions] = useState<SymbolPosition[]>([]);
+
+  useEffect(() => {
+    const positions = symbols.map((item, index) => ({
+      ...item,
+      top: `${Math.floor(Math.random() * 100)}%`,
+      left: `${Math.floor(Math.random() * 100)}%`,
+      rotation: `${Math.floor(Math.random() * 360)}deg`,
+      delay: `${index * 0.5}s`
+    }));
+    setSymbolsWithPositions(positions);
+  }, []);
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Integration Symbol */}
-      <div className="absolute top-1/4 left-1/4 text-4xl text-primary-cyan/20 animate-float">
-        ∫
-      </div>
-      
-      {/* Sigma */}
-      <div className="absolute top-1/3 right-1/4 text-4xl text-primary-purple/20 animate-float-delayed">
-        Σ
-      </div>
-      
-      {/* Pi */}
-      <div className="absolute bottom-1/4 left-1/3 text-4xl text-primary-blue/20 animate-float">
-        π
-      </div>
-      
-      {/* Partial Derivative */}
-      <div className="absolute top-2/3 right-1/3 text-4xl text-primary-pink/20 animate-float-delayed">
-        ∂
-      </div>
-      
-      {/* Square Root */}
-      <div className="absolute bottom-1/3 left-1/5 text-4xl text-primary-cyan/20 animate-float">
-        √
-      </div>
-      
-      {/* Infinity */}
-      <div className="absolute top-1/2 right-1/5 text-4xl text-primary-purple/20 animate-float-delayed">
-        ∞
-      </div>
+      {symbolsWithPositions.map((item, index) => (
+        <div
+          key={index}
+          className={`absolute ${item.color}/20 text-4xl font-math animate-float`}
+          style={{
+            top: item.top,
+            left: item.left,
+            transform: `rotate(${item.rotation})`,
+            animationDelay: item.delay
+          }}
+        >
+          {item.symbol}
+        </div>
+      ))}
     </div>
   );
 };
