@@ -1,29 +1,30 @@
-import React from 'react'
-import Image from 'next/image'
-import { Calendar, Clock, MapPin } from 'lucide-react'
-import GradientButton from '../ui/GradientButton'
+import React from 'react';
+import Image from 'next/image';
+import { Calendar, Users, Trophy, ArrowRight } from 'lucide-react';
+import GradientButton from '@/components/ui/GradientButton';
 
-interface EventCardProps {
-  title: string
-  date: string
-  time: string
-  venue: string
-  description: string
-  image: string
-  registrationLink?: string
+interface CompCardProps {
+  id: string;
+  title: string;
+  date: string;
+  teamSize: string;
+  prize: string;
+  description: string;
+  image: string;
 }
 
-const EventCard: React.FC<EventCardProps> = ({
+const CompCard: React.FC<CompCardProps> = ({
+  id,
   title,
   date,
-  time,
-  venue,
+  teamSize,
+  prize,
   description,
   image,
-  registrationLink
 }) => {
   return (
     <div className="bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all flex flex-col">
+      {/* Image Section */}
       <div className="relative h-48">
         <Image
           src={image}
@@ -32,6 +33,8 @@ const EventCard: React.FC<EventCardProps> = ({
           className="object-cover"
         />
       </div>
+
+      {/* Content Section */}
       <div className="p-6 flex-1 flex flex-col">
         <div className="flex-grow">
           <h3 className="text-xl font-semibold mb-3">{title}</h3>
@@ -41,25 +44,26 @@ const EventCard: React.FC<EventCardProps> = ({
               <span>{date}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-400">
-              <Clock size={16} />
-              <span>{time}</span>
+              <Users size={16} />
+              <span>{teamSize}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-400">
-              <MapPin size={16} />
-              <span>{venue}</span>
+              <Trophy size={16} />
+              <span>{prize}</span>
             </div>
           </div>
           <p className="text-gray-400">{description}</p>
         </div>
-        {registrationLink && (
-          <div className="mt-4">
-            <GradientButton href={registrationLink}>
-              Register Now
-            </GradientButton>
-          </div>
-        )}
+
+        {/* View Details Button */}
+        <div className="mt-4">
+          <GradientButton >
+            View Details
+          </GradientButton>
+        </div>
       </div>
     </div>
-  )
-}
-export default EventCard
+  );
+};
+
+export default CompCard;

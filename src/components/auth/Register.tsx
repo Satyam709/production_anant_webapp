@@ -74,7 +74,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="backdrop-blur-xl bg-black/40 p-8 rounded-2xl border border-gray-800 shadow-2xl">
+    <div className="backdrop-blur-xl bg-black/40 p-8 rounded-2xl border border-gray-800 shadow-2xl mt-12">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-blue via-primary-cyan to-primary-purple">
           Create Account
@@ -169,7 +169,7 @@ export default function RegisterForm() {
         <div className="pt-2">
           <GradientButton 
             type="submit" 
-            className="w-full py-2.5" 
+            className="w-full py-2.5 justify-center" 
             disabled={isLoading || !otpSent}
           >
             {isLoading ? "Creating Account..." : "Create Account"}

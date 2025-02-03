@@ -6,11 +6,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import NavDropdown from "./navigation/NavDropdown";
-import { navItems } from "@/constants/navigation";
+import { navItems, shopNavItems } from "@/constants/navigation";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const isShopPage = pathname?.startsWith("/shop");
+
+  //navbar selector
+  const currentNavItems = isShopPage ? shopNavItems : navItems;
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm z-50 border border-gray-800 rounded-3xl shadow-lg w-[90%] max-w-7xl transition-all duration-300">
@@ -36,7 +42,7 @@ const Navbar = () => {
             </Link>
             
             <div className="hidden lg:flex items-center space-x-1 flex-1 justify-center">
-              {Object.values(navItems).map((item) => (
+              {Object.values(currentNavItems).map((item) => (
                 <NavDropdown 
                   key={item.label}
                   label={item.label}
@@ -91,7 +97,7 @@ const Navbar = () => {
             ${isOpen ? 'max-h-[32rem] border-t border-gray-800' : 'max-h-0'}`}
         >
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {Object.values(navItems).map((section) => (
+            {Object.values(currentNavItems).map((section) => (
               <div key={section.label} className="px-3 py-2">
                 <div className="text-gray-400 text-sm font-medium mb-2">
                   {section.label}
