@@ -1,8 +1,11 @@
+import { branch_options, position_options} from "@prisma/client";
 import { JWT } from "jsonwebtoken";
+import { User } from "next-auth";
 declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      info?: User;
       token: JWT;
     };
   }
@@ -11,14 +14,13 @@ declare module "next-auth" {
     rollNo: string;
     image: string?;
     name: string?;
+    branch: branch_options?,
+    position: position_options?,
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    user: {
-      id: string;
-      rollNo: string;
-    };
+    user: User;
   }
 }

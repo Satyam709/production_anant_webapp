@@ -59,6 +59,8 @@ const authOptions: AuthOptions = {
           rollNo: String(gotUser.roll_number),
           name: gotUser.name || null,
           image: gotUser.imageURL || null,
+          position: gotUser.position || null,
+          branch: gotUser.branch || null
         };
       },
     }),
@@ -71,11 +73,12 @@ const authOptions: AuthOptions = {
       url = baseUrl + "/dashboard"; // Adjusted to use correct baseUrl
       return url;
     },
-    async session({ session, token }) {
+    async session({ session, token}) {
       if (token) {
         session.user = {
           id: token.user.id,
           token: token,
+          info: token.user,
         };
       }
 
@@ -83,7 +86,7 @@ const authOptions: AuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        token.user = { id: user.id, rollNo: user.rollNo };
+        token.user = user;
         token.picture = user.image;
       }
       return token;
