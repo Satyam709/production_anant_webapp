@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const session = await getSession();
   console.log(session);
-  
+
   const token = req.nextUrl.searchParams.get("token");
   console.log("found token", token);
 
@@ -19,11 +19,13 @@ export async function GET(req: NextRequest) {
   }
 
   if (!session?.user) {
-    return NextResponse.json({ error: "Login first!!" }, { status: 400 });
+    return NextResponse.redirect(new URL("/login", req.url));
+    // return NextResponse.json({ error: "Login first!!" }, { status: 400 });
   }
 
   const userId = session.user.id;
   let parseToken: attendanceData;
+  const timeoutSeconds = 300; // Set timeout (e.g., 300 seconds = 5 minutes)
 
   try {
     const decodedToken = await decodeAttendanceJwt(token);
@@ -39,6 +41,14 @@ export async function GET(req: NextRequest) {
       { error: "Invalid token or unable to decode it!" },
       { status: 400 }
     );
+  }
+
+  // Validate Expiry
+  const generatedTime = new Date(parseToken.generated_time).getTime() / 1000; 
+  const currentTime = Math.floor(Date.now() / 1000); 
+
+  if (currentTime - generatedTime > timeoutSeconds) {
+    return NextResponse.json({ error: "Token has expired!" }, { status: 400 });
   }
 
   try {
