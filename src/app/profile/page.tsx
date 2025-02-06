@@ -1,8 +1,7 @@
-'use client';
-import React from 'react';
-import Navbar from '@/components/Navbar';
-import ProfileLayout from '@/components/profile/ProfileLayout';
-import Footer from '@/components/Footer';
+import React from "react";
+import Navbar from "@/components/Navbar";
+import ProfileLayout from "@/components/profile/ProfileLayout";
+import Footer from "@/components/Footer";
 
 const Profile = () => {
   return (
@@ -11,17 +10,15 @@ const Profile = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-blue/10 rounded-full blur-[100px]" />
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
       </div>
-      
-      <div className="fixed inset-0 pointer-events-none">
-     
-      </div>
-      
+
+      <div className="fixed inset-0 pointer-events-none"></div>
+
       <Navbar />
-      
+
       <main className="relative z-10 container mx-auto px-4 py-20">
-        <ProfileLayout />
+        <ProfileLayout/>
       </main>
-      
+
       <div className="relative z-10">
         <Footer />
       </div>
@@ -29,4 +26,4 @@ const Profile = () => {
   );
 };
 
-export default Profile
+export default Profile;

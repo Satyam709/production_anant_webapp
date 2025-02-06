@@ -7,7 +7,7 @@ import { ChevronDown } from "lucide-react";
 interface FormDropdownProps {
   label: string;
   options: string[];
-  value: string;
+  value: string|null|undefined;
   onSelect: (option: string) => void;
 }
 

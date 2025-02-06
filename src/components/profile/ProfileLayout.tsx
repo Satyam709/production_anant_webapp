@@ -5,6 +5,7 @@ import ProfileStats from './ProfileStats';
 import ProfileTabs from './ProfileTabs';
 import EditProfile from './EditProfile';
 import AchievementCard from './AchievementCard';
+import {  useSession } from 'next-auth/react';
 
 const tabs = [
   { id: 'profile', label: 'Profile' },
@@ -14,8 +15,11 @@ const tabs = [
 
 ];
 
-const ProfileLayout = () => {
+
+const ProfileLayout =  () => {
   const [activeTab, setActiveTab] = useState('profile');
+
+  const userInfo = useSession().data?.user.info;
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -70,9 +74,10 @@ const ProfileLayout = () => {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <ProfileHeader
-          name="Xyz"
-          email="example@nitkkr.ac.in"
+          name={userInfo?.name || "Name"}
+          email={`${userInfo?.rollNo}@nitkkr.ac.in`}
           location="NIT Kurukshetra"
+          avatarUrl={userInfo?.image || undefined}
         />
         <ProfileStats />
         <ProfileTabs

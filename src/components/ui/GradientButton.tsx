@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-
+import GSAP from "gsap";
 interface GradientButtonProps {
   href?: string;
   children: React.ReactNode;
@@ -13,8 +13,9 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   children,
   onClick,
   className = "",
+  
 }) => {
-  const [gsap, setGsap] = useState<any>(null);
+  const [gsap, setGsap] = useState<typeof GSAP>();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
