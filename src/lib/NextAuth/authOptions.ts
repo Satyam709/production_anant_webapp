@@ -26,7 +26,7 @@ const authOptions: AuthOptions = {
         rollNo = result.data;
 
         if (!rollNo || !password) {
-           throw new Error("RollNo and Password is required");;
+          throw new Error("RollNo and Password is required");
         }
 
         let gotUser;
@@ -35,10 +35,9 @@ const authOptions: AuthOptions = {
             where: { roll_number: Number(rollNo) },
           });
         } catch (error) {
-          console.log("error while sigin : ",error);          
-          throw new Error("Something went wrong");  
+          console.log("error while sigin : ", error);
+          throw new Error("Something went wrong");
         }
-        
 
         if (!gotUser) {
           throw new Error("User not found please register");
@@ -60,7 +59,10 @@ const authOptions: AuthOptions = {
           name: gotUser.name || null,
           image: gotUser.imageURL || null,
           position: gotUser.position || null,
-          branch: gotUser.branch || null
+          branch: gotUser.branch || null,
+          clubDept: gotUser.club_dept || null,
+          joinedAt: gotUser.joined || null,
+          batch: gotUser.batch || null,
         };
       },
     }),
@@ -73,7 +75,7 @@ const authOptions: AuthOptions = {
       url = baseUrl + "/dashboard"; // Adjusted to use correct baseUrl
       return url;
     },
-    async session({ session, token}) {
+    async session({ session, token }) {
       if (token) {
         session.user = {
           id: token.user.id,
@@ -81,10 +83,17 @@ const authOptions: AuthOptions = {
           info: token.user,
         };
       }
-
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update" && session) {
+        // Merge the updates with existing token data
+        token.user = {
+          ...token.user,
+          ...session.user,
+        };
+        token.picture = token.user.image;
+      }
       if (user) {
         token.user = user;
         token.picture = user.image;
