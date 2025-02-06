@@ -2,8 +2,16 @@ import Link from "next/link";
 import { Settings } from "lucide-react";
 import LogoutButton from "@/components/merch/clientUi/LogoutButton";
 import SideBar from "@/components/merch/clientUi/SideBar";
+import isAdmin from "@/lib/actions/Admin";
+import { redirect } from "next/navigation";
 
-const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AdminLayout: React.FC<{ children: React.ReactNode }> = async ({
+  children,
+}) => {
+  if (!await isAdmin()) {
+    redirect("/");
+  }
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
       {/* Background Elements */}

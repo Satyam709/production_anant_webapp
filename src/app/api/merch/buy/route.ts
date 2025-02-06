@@ -1,4 +1,4 @@
-import { getSession, isAuthenticated } from "@/lib/actions/Sessions";
+import { getSession } from "@/lib/actions/Sessions";
 import prisma from "@/lib/PrismaClient/db";
 import { OrderSchema } from "@/types/shop";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,17 +12,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid data" }, { status: 400 });
   }
 
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  // Get the user ID from the session
-  const userId = (await getSession())?.user.id;
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // if (!(await isAuthenticated())) {
+  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // }
 
   try {
+    // Get the user ID from the session
+    const userId = (await getSession())?.user.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const order = await prisma.order.create({
       data: {
         user_id: userId,
