@@ -22,7 +22,7 @@ model User{
   branch branch_options?
   batch String?
   position position_options?
-  club_dept club_dept_options?
+  club_dept club_dept_options[]
   joined DateTime @default(now())
   imageURL String?
   
