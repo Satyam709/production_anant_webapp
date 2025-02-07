@@ -10,8 +10,16 @@ export async function GET(
         const notice = await prisma.notice.findUnique({
             where: {
                 notice_id: id
+            },
+            include:{
+                postedBy: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         });
+        console.log("Notice: ", notice);
         let status = 200;
         if(!notice)
             status = 404;

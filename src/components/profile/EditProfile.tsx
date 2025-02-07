@@ -18,9 +18,9 @@ const EditProfile = () => {
 
   const router = useRouter();
   const { data: session, update } = useSession();
-  console.log(
-    getSession().then((res) => console.log("resolved seesion ", res))
-  );
+  // console.log(
+  //   getSession().then((res) => console.log("resolved seesion ", res))
+  // );
 
   const userInfo = session?.user.info;
 

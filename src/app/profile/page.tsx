@@ -1,9 +1,50 @@
+"use client";
+
 import React from "react";
 import Navbar from "@/components/Navbar";
 import ProfileLayout from "@/components/profile/ProfileLayout";
 import Footer from "@/components/Footer";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Profile = () => {
+
+    const [user, setUser] = useState({});
+    const [activities, setActivities] = useState({});
+
+    useEffect(()=>{
+        async function fetchData(){
+            try{
+                const response = await axios.get("/api/profile");
+                const data = await response.data;
+                const user_data = {
+                    name: data.profile.name,
+                    roll_number: data.profile.roll_number,
+                    branch: data.profile.branch,
+                    batch: data.profile.batch,
+                    position: data.profile.position,
+                    club_dept: data.profile.club_dept,
+                    joined: data.profile.joined,
+                    imageURL: data.profile.imageURL
+                }
+                const user_act = {
+                    meetings_attended: data.profile.meetings_attended,
+                    meetings_conducted: data.profile.meetings_conducted,
+                    compititions_created: data.profile.compititions_created,
+                    notice_created: data.profile.notices
+                }
+
+                setUser(user_data);
+                setActivities(user_act);
+
+            }
+            catch(error){
+                console.log(error);
+            }
+        }
+        fetchData();
+    },[]);
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
       <div className="fixed inset-0">

@@ -22,7 +22,7 @@ model User{
   branch branch_options?
   batch String?
   position position_options?
-  club_dept club_dept_options[]
+  club_dept club_dept_options?
   joined DateTime @default(now())
   imageURL String?
   
@@ -78,6 +78,9 @@ model Team{
   team_leader User @relation(name: "team-leaded", fields: [team_leader_id], references: [id])
   team_members User[] @relation(name: "team-member")
   participated Competitions[] @relation(name: "participant")
+  first_prize Competitions[] @relation(name: "first_prize")
+  second_prize Competitions[] @relation(name: "second_prize")
+  third_prize Competitions[] @relation(name: "third_prize")
   // Pending requests
   pending_requests Pending_requests[]
 }
@@ -104,9 +107,15 @@ model Competitions{
   min_team_size Int
   max_team_size Int
   creator_id String
+  first_prize_id String
+  second_prize_id String
+  third_prize_id String
 
   createdBy User @relation(fields: [creator_id], references: [id])
   participants Team[] @relation(name: "participant")
+  first_prize Team @relation(name: "first_prize", fields: [first_prize_id], references: [team_id])
+  second_prize Team @relation(name: "second_prize", fields: [second_prize_id], references: [team_id])
+  third_prize Team @relation(name: "third_prize", fields: [third_prize_id], references: [team_id])
 }
 
 
@@ -116,6 +125,11 @@ enum branch_options {
   MSC
   CSE
   IT
+  ECE
+  EE 
+  ME
+  CE
+  IIOT
 }
 
 enum position_options {
@@ -130,6 +144,7 @@ enum club_dept_options {
   General
   Tech
   PR
+  Design
 }
 
 enum notice_cat {
