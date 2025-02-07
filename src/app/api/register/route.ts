@@ -3,6 +3,11 @@ import prisma from "@/lib/PrismaClient/db";
 import bcryptjs from "bcryptjs";
 import redis from "@/helpers/redis";
 import z from "zod";
+import fs from "fs";
+import path from "path";
+import { b } from "framer-motion/client";
+import { branch_options, club_dept_options, position_options, Prisma } from "@prisma/client";
+import { use } from "react";
 
 const RegistrationSchema = z.object({
   roll_number: z
@@ -14,6 +19,25 @@ const RegistrationSchema = z.object({
   confirmpassword: z.string().min(8, "Confirm password is required"),
   otp: z.string().min(6, "OTP is required"),
 });
+
+async function parseCSV(rno: Number){
+  const filePath = path.join(process.cwd(), "src/data/users.csv");
+  const csvData = fs.readFileSync(filePath, "utf8");
+  
+  // windows line endings
+  const rows = csvData.replace(/\r/g, "").split("\n").map((row) => row.split(","));
+  // const rows = csvData.split("\n").map((row) => row.split(",")); 
+  const headers = rows[0];
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    if (row[0] === rno.toString()) {
+      const user = Object.fromEntries(headers.map((h, idx) => [h, row[idx]]));
+      return user;
+    }
+  }
+  return null;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -120,12 +144,31 @@ export async function POST(req: NextRequest) {
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
-    const user = {
-      roll_number: Number(roll_number),
-      name: username,
-      password: hashedPassword,
-      club_dept: [],
-    };
+    // get user_details
+    const user_details = await parseCSV(Number(roll_number));
+
+    let user;
+    // not a member of Anant
+    if (!user_details){
+      user = {
+        roll_number: Number(roll_number),
+        name: username,
+        password: hashedPassword,
+        club_dept: []
+      };
+    }
+    else{
+      console.log("User details: ", user_details);
+      user = {
+        roll_number: Number(roll_number),
+        name: username,
+        password: hashedPassword,
+        branch: branch_options[user_details["branch"] as keyof typeof branch_options],
+        position: position_options[user_details["position"] as keyof typeof position_options],
+        club_dept: [club_dept_options[user_details["club_dept"] as keyof typeof club_dept_options]],
+      };
+    }
+    
     const newUser = await prisma.user.create({ data: user });
     if (!newUser) {
       console.log("Error in creating user");
