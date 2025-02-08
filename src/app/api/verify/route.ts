@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     };
 
     try {
-      // await sendEmail(maildata);
+      await sendEmail(maildata);
       console.log(OTP);
     } catch (err) {
       console.log("error occured\n", err);

@@ -3,10 +3,15 @@ import prisma from "@/lib/PrismaClient/db";
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { roll_number: string } }
+    { params }: { params: Promise<{ id: string }> }
 ){
     try{
-        const {roll_number} = await params;
+        console.log("params",params);
+        
+        const {id:roll_number} = await params;
+
+        console.log("r=",roll_number);
+        
 
         const profile = await prisma.user.findUnique({
             where:{
