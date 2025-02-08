@@ -25,6 +25,9 @@ model User{
   club_dept club_dept_options[]
   joined DateTime @default(now())
   imageURL String?
+  linkedIn String?
+  github String?
+  instagram String?
   
   // notice
   notices Notice[]    @relation(name:"notice-posted")
