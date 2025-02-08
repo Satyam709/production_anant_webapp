@@ -3,8 +3,11 @@ import Navbar from "@/components/Navbar";
 import ProfileLayout from "@/components/profile/ProfileLayout";
 import Footer from "@/components/Footer";
 import { getUserInfo } from "@/lib/actions/Profile";
+import { isAuthenticated } from "@/lib/actions/Sessions";
+import { redirect } from "next/navigation";
 
 const Profile = async () => {
+  if(!await isAuthenticated()){redirect("/login");}
   const user = await getUserInfo();
 
   return (
@@ -19,7 +22,14 @@ const Profile = async () => {
       <Navbar />
 
       <main className="relative z-10 container mx-auto px-4 py-20">
-        <ProfileLayout userInfo={user} />
+        {user ? (
+          <ProfileLayout userInfo={user} />
+        ) : (
+          <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
+            <h1 className="text-3xl font-semibold text-white">User Not Found</h1>
+            <p className="text-lg mt-2 text-gray-500">The profile you are looking for does not exist.</p>
+          </div>
+        )}
       </main>
 
       <div className="relative z-10">
