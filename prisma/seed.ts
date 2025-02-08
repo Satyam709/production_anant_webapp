@@ -215,7 +215,7 @@ async function main() {
   const meeting2 = await prisma.meeting.create({
     data: {
       venue: "Zoom Online Meeting",
-      starts: new Date("2024-01-12T14:00:00Z"),
+      starts: new Date("2025-04-12T14:00:00Z"),
       duration: 60, // 1 hour
       topic_of_discussion: "Workshop Organization",
       hostID: user2.id, // Jane Smith as the host
@@ -228,7 +228,7 @@ async function main() {
   const meeting3 = await prisma.meeting.create({
     data: {
       venue: "Auditorium",
-      starts: new Date("2024-01-15T11:00:00Z"),
+      starts: new Date("2025-06-15T11:00:00Z"),
       duration: 120, // 2 hours
       topic_of_discussion: "Annual Budget Discussion",
       hostID: user3.id, // Alice Brown as the host
@@ -241,7 +241,7 @@ async function main() {
   const meeting4 = await prisma.meeting.create({
     data: {
       venue: "Library Meeting Room",
-      starts: new Date("2024-01-20T09:00:00Z"),
+      starts: new Date("2025-05-20T09:00:00Z"),
       duration: 75, // 1 hour 15 minutes
       topic_of_discussion: "Club Strategy and Growth",
       hostID: user4.id, // Bob White as the host
@@ -263,6 +263,52 @@ async function main() {
       },
     },
   });
+
+  // Create notices
+const notice1 = await prisma.notice.create({
+  data: {
+    headline: "Club Meeting Rescheduled",
+    body: "The upcoming Tech Club meeting has been rescheduled to Friday at 5 PM in Conference Room 2.",
+    category: "General",
+    userID: user1.id,
+  },
+});
+
+const notice2 = await prisma.notice.create({
+  data: {
+    headline: "Workshop on AI & ML",
+    body: "Join us for an exclusive workshop on AI and Machine Learning this Saturday. Registrations are open!",
+    category: "Technical",
+    userID: user2.id,
+  },
+});
+
+const notice3 = await prisma.notice.create({
+  data: {
+    headline: "Hackathon Sponsorship",
+    body: "We are looking for sponsors for the upcoming inter-college hackathon. Interested parties, please contact us.",
+    category: "Sponsorship",
+    userID: user3.id,
+  },
+});
+
+const notice4 = await prisma.notice.create({
+  data: {
+    headline: "Tech Fest Volunteers Needed",
+    body: "We need volunteers for the upcoming Tech Fest. Interested students can sign up by Wednesday.",
+    category: "General",
+    userID: user4.id,
+  },
+});
+
+const notice5 = await prisma.notice.create({
+  data: {
+    headline: "Blockchain Seminar Registration",
+    body: "Registrations for the Blockchain Seminar are now open! Secure your spot before the deadline.",
+    category: "Technical",
+    userID: user1.id,
+  },
+});
 
   console.log("Seed data inserted successfully!");
 }

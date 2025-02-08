@@ -5,7 +5,7 @@ import {notice_cat} from "@prisma/client";
 
 export async function GET(req: NextRequest) {
     try{
-        const size = 5;
+        const size = 3;
         const url = new URL(req.url);
         const searchParams = url.searchParams;
         const pageNumber = parseInt(searchParams.get("page") || "1", 10);
