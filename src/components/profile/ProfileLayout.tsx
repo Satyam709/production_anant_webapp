@@ -1,30 +1,27 @@
 'use client';
 import React, { useState } from 'react';
-import ProfileHeader from './ProfileHeader';
-import ProfileStats from './ProfileStats';
-import ProfileTabs from './ProfileTabs';
-import EditProfile from './EditProfile';
+import ProfileHeader from "@/components/profile/ProfileHeader"
+import ProfileStats from "@/components/profile/ProfileStats"
+import ProfileTabs from "@/components/profile/ProfileTabs"
+import ProfileInfo from "@/components/profile/ProfileInfo"
 import AchievementCard from './AchievementCard';
-import {  useSession } from 'next-auth/react';
-
+import { getUserInfoType } from '@/lib/actions/Profile';
 const tabs = [
   { id: 'profile', label: 'Profile' },
   { id: 'achievements', label: 'Achievements' },
   { id: 'competitions', label: 'Competitions' },
   { id: 'contributions', label: 'Contributions' },
-
 ];
 
 
-const ProfileLayout =  () => {
-  const [activeTab, setActiveTab] = useState('profile');
 
-  const userInfo = useSession().data?.user.info;
+const ProfileLayout =  ({userInfo}:{userInfo:getUserInfoType}) => {
+  const [activeTab, setActiveTab] = useState('profile');
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'profile':
-        return <EditProfile />;
+        return <ProfileInfo userInfo={userInfo}/>;
       case 'achievements':
         return (
           <div className="space-y-4 animate-fadeIn">
@@ -75,9 +72,9 @@ const ProfileLayout =  () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <ProfileHeader
           name={userInfo?.name || "Name"}
-          email={`${userInfo?.rollNo}@nitkkr.ac.in`}
+          email={`${userInfo?.roll_number}@nitkkr.ac.in`}
           location="NIT Kurukshetra"
-          avatarUrl={userInfo?.image || undefined}
+          avatarUrl={userInfo?.imageURL || undefined}
         />
         <ProfileStats />
         <ProfileTabs

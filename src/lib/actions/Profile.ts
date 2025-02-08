@@ -1,7 +1,8 @@
 "use server";
 import { getSession, isAuthenticated } from "@/lib/actions/Sessions";
 import prisma from "@/lib/PrismaClient/db";
-import { branch_options, club_dept_options } from "@prisma/client";
+import { rollNumberSchema } from "@/types/common";
+import { branch_options, club_dept_options, position_options } from "@prisma/client";
 
 export async function UpdateProfile(
   name: string | undefined,
@@ -35,8 +36,19 @@ export async function UpdateProfile(
   return false;
 }
 
+export type getUserInfoType = {
+    id: string | undefined;
+    roll_number: number | undefined;
+    name: string | undefined;
+    imageURL: string | null | undefined;
+    position: position_options | null | undefined;
+    branch: branch_options| undefined;
+    club_dept: club_dept_options[] | undefined;
+    joined: Date | undefined;
+    batch: string | undefined;
+} | null
 
-export async function getUserInfo(){
+export async function getUserInfo() : Promise<getUserInfoType>{
   try {
     if (!(await isAuthenticated())) return null;
     const userId = (await getSession())?.user.id;
@@ -52,10 +64,44 @@ export async function getUserInfo(){
       name: user?.name,
       imageURL: user?.imageURL,
       position: user?.position,
-      branch: user?.branch,
+      branch: user?.branch || undefined,
       club_dept: user?.club_dept,
       joined: user?.joined,
-      batch: user?.batch,
+      batch: user?.batch || undefined,
+    }
+  } catch (error) {
+    console.log("error while getting user info", error);
+    return null;
+  }
+}
+
+export async function getUserInfoById(roll_number:string) : Promise<getUserInfoType>{
+  try {
+
+    const data = rollNumberSchema.safeParse(roll_number)
+
+    if(!data.success){
+      console.log(data.error.message);
+      return null;
+    }
+
+    const rollNo = data.data
+    const user = await prisma.user.findUnique({
+      where: {
+        roll_number:Number(rollNo)
+      },
+    });
+    // remove pass 
+    return {
+      id: user?.id,
+      roll_number: user?.roll_number,
+      name: user?.name,
+      imageURL: user?.imageURL,
+      position: user?.position,
+      branch: user?.branch || undefined,
+      club_dept: user?.club_dept,
+      joined: user?.joined,
+      batch: user?.batch || undefined,
     }
   } catch (error) {
     console.log("error while getting user info", error);

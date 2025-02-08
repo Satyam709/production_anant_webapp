@@ -1,51 +1,12 @@
-"use client";
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import ProfileLayout from "@/components/profile/ProfileLayout";
 import Footer from "@/components/Footer";
-import axios from "axios";
-import {useState, useEffect} from "react";
-import {useParams} from "next/navigation";
+import { getUserInfoById } from "@/lib/actions/Profile";
 
-const Profile = () => {
-
-  const [user, setUser] = useState({});
-  const [activities, setActivities] = useState({});
-  const {id} = useParams();
-
-  useEffect(()=>{
-    async function fetchData(){
-        try{
-            const response = await axios.get(`/api/profile/${id}`);
-            const data = await response.data;
-            const user_data = {
-                name: data.profile.name,
-                roll_number: data.profile.roll_number,
-                branch: data.profile.branch,
-                batch: data.profile.batch,
-                position: data.profile.position,
-                club_dept: data.profile.club_dept,
-                joined: data.profile.joined,
-                imageURL: data.profile.imageURL
-            }
-            const user_act = {
-                meetings_attended: data.profile.meetings_attended,
-                meetings_conducted: data.profile.meetings_conducted,
-                compititions_created: data.profile.compititions_created,
-                notice_created: data.profile.notices
-            }
-
-            setUser(user_data);
-            setActivities(user_act);
-
-        }
-        catch(error){
-            console.log(error);
-        }
-    }
-    fetchData();
-},[]);
+const Profile = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;  
+  const user = await getUserInfoById(id);
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
@@ -54,12 +15,17 @@ const Profile = () => {
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
       </div>
 
-      <div className="fixed inset-0 pointer-events-none"></div>
-
       <Navbar />
 
       <main className="relative z-10 container mx-auto px-4 py-20">
-        <ProfileLayout/>
+        {user ? (
+          <ProfileLayout userInfo={user} />
+        ) : (
+          <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
+            <h1 className="text-3xl font-semibold text-white">User Not Found</h1>
+            <p className="text-lg mt-2 text-gray-500">The profile you are looking for does not exist.</p>
+          </div>
+        )}
       </main>
 
       <div className="relative z-10">

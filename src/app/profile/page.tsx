@@ -2,8 +2,10 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import ProfileLayout from "@/components/profile/ProfileLayout";
 import Footer from "@/components/Footer";
+import { getUserInfo } from "@/lib/actions/Profile";
 
-const Profile = () => {
+const Profile = async () => {
+  const user = await getUserInfo();
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
@@ -17,7 +19,7 @@ const Profile = () => {
       <Navbar />
 
       <main className="relative z-10 container mx-auto px-4 py-20">
-        <ProfileLayout/>
+        <ProfileLayout userInfo={user} />
       </main>
 
       <div className="relative z-10">
