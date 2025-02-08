@@ -45,8 +45,6 @@ export async function POST(req: NextRequest) {
 
     const result = RegistrationSchema.safeParse(body);
 
-    console.log("Result: ", result.error?.errors);
-
     // Handle schema validation errors
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
@@ -58,7 +56,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log("hello " + "reached");
 
     let { roll_number, username, password, confirmpassword, otp } = body;
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
+import { position_options } from "@prisma/client";
 import { getSession } from "@/lib/actions/Sessions";
 import z from "zod"
 
@@ -18,7 +19,6 @@ const competitionSchema = z.object({
 
 export async function POST(req: NextRequest) {
     try{
-        // add auth & admin check too
         const body = await req.json();
         const schema = competitionSchema.safeParse(body);
         const session = await getSession();
@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
             where:{ id: userId}
         });
 
-        const cat = user?.position;
-        if (!(String(cat) == 'President' || String(cat) == 'Secretary' || String(cat) == 'Coordinator')){
+        const position = user?.position;
+        if (position != position_options["President"] && position != position_options["Secretary"] && position != position_options["Coordinator"]){
             return NextResponse.json({status: 400, message: "You don't have rights!"});
         }
 
