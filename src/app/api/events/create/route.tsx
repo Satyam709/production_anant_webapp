@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
 import { position_options } from "@prisma/client";
 import { getSession } from "@/lib/actions/Sessions";
+import isAdmin from "@/lib/actions/Admin";
 import z from "zod";
 
 const eventSchema = z.object({
@@ -21,23 +22,8 @@ export async function POST(req:NextRequest){
         const scehma = eventSchema.safeParse(body);
         const session = await getSession();
 
-        if(!session?.user){
-            return NextResponse.json({status: 400, message: "User not logged in!"});
-        }
-
-        const userId = session.user.id;
-        const user = await prisma.user.findUnique({
-            where: {id: userId},
-            select: {position: true}
-        });
-
-        if (!user){
-            return NextResponse.json({status: 400, message: "User not found!"});
-        }
-
-        const position = user?.position;
-        if (position != position_options["President"] && position != position_options["Secretary"] && position != position_options["Coordinator"]){
-            return NextResponse.json({status: 400, message: "You don't have rights!"});
+        if (!session?.user || !(await isAdmin())) {
+            return NextResponse.json({ error: "Failed to create meeting! Unauthenticated" },{ status: 400 });
         }
 
         if(!scehma.success){
@@ -64,7 +50,7 @@ export async function POST(req:NextRequest){
                 venue,
                 prize,
                 createdBy: {
-                    connect: {id: userId}
+                    connect: {id: session.user.id}
                 }
             }
         });
