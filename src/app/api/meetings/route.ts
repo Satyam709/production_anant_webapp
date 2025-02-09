@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const pageSize = 3;
+    const pageSize = 5;
     const url = new URL(req.url);
     const searchParams = url.searchParams;
 
