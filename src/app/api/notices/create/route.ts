@@ -31,14 +31,6 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // const user = await prisma.user.findUnique({
-    //   where: { id: schema.data.userID },
-    //   select: { id: true },
-    // });
-    // if (!user) {
-    //   return NextResponse.json({ error: "User not found!" }, { status: 404 });
-    // }
-
     const notice = {
       headline: schema.data.headline,
       body: schema.data.body,
