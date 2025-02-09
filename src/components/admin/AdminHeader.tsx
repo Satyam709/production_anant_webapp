@@ -9,7 +9,7 @@ const AdminHeader = () => {
         <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
       </div>
       <p className="text-gray-400 max-w-2xl text-center mx-auto">
-        Manage notices, meetings, and competitions
+        Manage Notices, Events, Meetings and Competitions
       </p>
     </div>
   );

@@ -1,20 +1,25 @@
-import React, { useState, useRef } from 'react';
-import { CalendarClock, Users, Link as LinkIcon, Loader } from 'lucide-react';
+import React, { useState, useRef, type RefObject } from 'react';
+import { Users, CalendarClock, Loader } from 'lucide-react';
 import axios from 'axios';
 import GradientButton from '@/components/ui/GradientButton';
+import type { Prisma } from '@prisma/client';
+
+type MeetFormInput = Omit<Prisma.MeetingCreateInput, 'hostID' | 'conductor' | 'attendees'>;
 
 const MeetForm = () => {
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [meetLink, setMeetLink] = useState('');
-  const [description, setDescription] = useState('');
+  const [formData, setFormData] = useState<MeetFormInput>({
+    venue: '',
+    starts: new Date(),
+    duration: 60,
+    topic_of_discussion: '',
+  });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const dateRef = useRef<HTMLInputElement>(null);
-  const timeRef = useRef<HTMLInputElement>(null);
+  const startsDateRef = useRef<HTMLInputElement | null>(null);
 
-  const handlePickerClick = (ref: React.RefObject<HTMLInputElement>) => {
+  const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
       if (typeof ref.current.showPicker === 'function') {
         ref.current.showPicker();
@@ -27,24 +32,48 @@ const MeetForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
+    setSuccess('');
+
     try {
-      const response = await axios.post('/api/meetings', {
-        title,
-        date,
-        time,
-        meetLink,
-        description
-      });
-      console.log('Meeting created:', response.data);
-      setTitle('');
-      setDate('');
-      setTime('');
-      setMeetLink('');
-      setDescription('');
-    } catch (err) {
-      console.error(err);
+      const payload = {
+        ...formData,
+        starts: new Date(formData.starts).toISOString(),
+        duration: parseInt(String(formData.duration)),
+      };
+
+      const response = await axios.post('/api/meetings/create', payload);
+
+      if (response.data.error) {
+        setError(response.data.error);
+      } else {
+        setSuccess(response.data.response || 'Meeting scheduled successfully!');
+        // Reset form 
+        setFormData({
+          venue: '',
+          starts: new Date(),
+          duration: 60,
+          topic_of_discussion: '',
+        });
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to schedule meeting');
+      console.error('Error scheduling meeting:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    if (name === 'duration') {
+      setFormData(prev => ({ ...prev, [name]: parseInt(value) }));
+    } else if (name === 'starts') {
+      setFormData(prev => ({ ...prev, starts: new Date(e.target.value) }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
@@ -55,116 +84,104 @@ const MeetForm = () => {
         <h2 className="text-xl font-semibold text-white">Schedule Meeting</h2>
       </div>
 
+      {error && (
+        <div className="mb-4 p-3 rounded bg-red-500/10 border border-red-500/50 text-red-500">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-4 p-3 rounded bg-green-500/10 border border-green-500/50 text-green-500">
+          {success}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Meeting Title */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Meeting Title
+            Venue
           </label>
           <input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            name="venue"
+            value={formData.venue}
+            onChange={handleInputChange}
             className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm"
-            placeholder="Enter meeting title"
+              focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+              text-white placeholder-gray-500 backdrop-blur-sm"
+            placeholder="Enter meeting venue"
             required
           />
         </div>
 
-        {/* Date & Time */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Date Selector */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-              Date
+              Start Date & Time
             </label>
             <div
               className="relative cursor-pointer"
-              onClick={() => handlePickerClick(dateRef)}
+              onClick={() => handleDateClick(startsDateRef)}
             >
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <CalendarClock className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                type="date"
-                ref={dateRef}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                type="datetime-local"
+                ref={startsDateRef}
+                name="starts"
+                value={
+                  formData.starts instanceof Date
+                    ? formData.starts.toISOString().slice(0, 16)
+                    : ''
+                }
+                onChange={handleInputChange}
                 className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                           focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                           text-white placeholder-gray-500 backdrop-blur-sm"
+                  appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                  text-white placeholder-gray-500 backdrop-blur-sm"
                 required
               />
             </div>
           </div>
 
-          {/* Time Selector */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-              Time
+              Duration (minutes)
             </label>
-            <div
-              className="relative cursor-pointer"
-              onClick={() => handlePickerClick(timeRef)}
-            >
-              <input
-                type="time"
-                ref={timeRef}
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                           focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                           text-white placeholder-gray-500 backdrop-blur-sm"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Meeting Link */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-300">
-            Meeting Link
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <LinkIcon className="h-5 w-5 text-gray-400" />
-            </div>
             <input
-              type="url"
-              value={meetLink}
-              onChange={(e) => setMeetLink(e.target.value)}
-              className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm"
-              placeholder="Enter meeting link (Google Meet, Zoom, etc.)"
+              type="number"
+              name="duration"
+              value={String(formData.duration)}
+              onChange={handleInputChange}
+              min="15"
+              step="15"
+              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                text-white placeholder-gray-500 backdrop-blur-sm"
               required
             />
           </div>
         </div>
 
-        {/* Description */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Description
+            Topic of Discussion
           </label>
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
+            name="topic_of_discussion"
+            value={formData.topic_of_discussion || ''}
+            onChange={handleInputChange}
+            rows={3}
             className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm"
-            placeholder="Enter meeting description"
+              focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+              text-white placeholder-gray-500 backdrop-blur-sm"
+            placeholder="Enter topic of discussion"
             required
           />
         </div>
 
-        {/* Submit Button */}
         <div className="flex justify-end">
-          <GradientButton type="submit" disabled={loading}>
+          <GradientButton disabled={loading}>
             <div className="flex items-center space-x-2">
               {loading ? (
                 <Loader className="h-5 w-5 animate-spin" />
