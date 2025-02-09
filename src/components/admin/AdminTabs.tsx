@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import NoticeForm from './forms/NoticeForm';
 import MeetingForm from './forms/MeetForm';
 import CompetitionForm from './forms/CompForm';
+import EventForm from './forms/EventForm';
 
 const tabs = [
   { id: 'notices', label: 'Notices' },
+  { id: 'events', label: 'Events' },
   { id: 'meetings', label: 'Meetings' },
-  { id: 'competitions', label: 'Competitions' }
+  { id: 'competitions', label: 'Competitions' },
 ];
 
 const AdminTabs = () => {
@@ -16,6 +18,8 @@ const AdminTabs = () => {
     switch (activeTab) {
       case 'notices':
         return <NoticeForm />;
+      case 'events':
+        return <EventForm />;
       case 'meetings':
         return <MeetingForm />;
       case 'competitions':
