@@ -6,6 +6,7 @@ interface GradientButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
@@ -13,7 +14,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   children,
   onClick,
   className = "",
-  
+  disabled = false,
 }) => {
   const [gsap, setGsap] = useState<typeof GSAP>();
 
@@ -61,7 +62,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   };
 
   return (
-    <button onClick={handleClick} className={buttonClassName}>
+    <button onClick={handleClick} className={buttonClassName} disabled={disabled}>
       {content}
     </button>
   );
