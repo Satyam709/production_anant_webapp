@@ -57,6 +57,12 @@ model User{
   first_prize Events[] @relation(name: "first_prize")
   second_prize Events[] @relation(name: "second_prize")
   third_prize Events[] @relation(name: "third_prize")
+
+  //compitition
+  compititions_participated Competitions[] @relation(name: "participant_member")
+  first_prize_comp Competitions[] @relation(name: "first_prize_comp")
+  second_prize_comp Competitions[] @relation(name: "second_prize_comp")
+  third_prize_comp Competitions[] @relation(name: "third_prize_comp")
 }
 
 model Notice{
@@ -86,10 +92,7 @@ model Team{
   team_leader_id String
   team_leader User @relation(name: "team-leaded", fields: [team_leader_id], references: [id])
   team_members User[] @relation(name: "team-member")
-  participated Competitions[] @relation(name: "participant")
-  first_prize Competitions[] @relation(name: "first_prize")
-  second_prize Competitions[] @relation(name: "second_prize")
-  third_prize Competitions[] @relation(name: "third_prize")
+  participated Competitions[] @relation(name: "participant_team")
   // Pending requests
   pending_requests Pending_requests[]
 }
@@ -121,10 +124,12 @@ model Competitions{
   third_prize_id String?
 
   createdBy User @relation(fields: [creator_id], references: [id])
-  participants Team[] @relation(name: "participant")
-  first_prize Team? @relation(name: "first_prize", fields: [first_prize_id], references: [team_id])
-  second_prize Team? @relation(name: "second_prize", fields: [second_prize_id], references: [team_id])
-  third_prize Team? @relation(name: "third_prize", fields: [third_prize_id], references: [team_id])
+  teams_participated Team[] @relation(name: "participant_team")
+  users_participated User[] @relation(name: "participant_member")
+
+  first_prize User[] @relation(name: "first_prize_comp")
+  second_prize User[] @relation(name: "second_prize_comp")
+  third_prize User[] @relation(name: "third_prize_comp")
 }
 
 model Events{
