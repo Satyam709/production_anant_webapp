@@ -7,17 +7,71 @@ export async function GET(req: NextRequest) {
         const url = new URL(req.url);
         const searchParams = url.searchParams;
         const pageNumber = parseInt(searchParams.get("page") || "1", 10);
+        const time = searchParams.get("time");
         
-        const allcomp = await prisma.competitions.findMany({
-            take: size,
-            skip: (pageNumber - 1) * size,
-            orderBy: {
-                conductedOn: "desc"
-            }
-        });
+        let upcoming_comp, past_comp;
+
+        if(!time || time=='upcoming'){
+            console.log("here");
+            upcoming_comp = await prisma.competitions.findMany({
+                where: {
+                    conductedOn: {
+                        gte: new Date()
+                    }
+                },
+                take: size,
+                skip: (pageNumber - 1) * size,
+                orderBy: {
+                    registration_deadline: "desc"
+                },
+                select:{
+                    competition_id: true,
+                    competitionName: true,
+                    conductedOn: true,
+                    registration_deadline: true,
+                    prize: true,
+                    imageURL: true,
+                    venue: true
+                }
+            });
+        }
+        if(!time || time=='past'){
+            console.log("back");
+            past_comp = await prisma.competitions.findMany({
+                where: {
+                    conductedOn: {
+                        lt: new Date()
+                    }
+                },
+                take: size,
+                skip: (pageNumber - 1) * size,
+                orderBy: {
+                    registration_deadline: "desc"
+                },
+                select:{
+                    competition_id: true,
+                    competitionName: true,
+                    conductedOn: true,
+                    registration_deadline: true,
+                    prize: true,
+                    imageURL: true,
+                    venue: true
+                }
+            });
+        }
 
 
-        return NextResponse.json({ competitions: allcomp });
+        if (!upcoming_comp && !past_comp) {
+            return NextResponse.json({status: 404, message:"No competitions found"});
+        }
+        if(!upcoming_comp){
+            return NextResponse.json({ staus:200, past_comp: past_comp });
+        }
+        if(!past_comp){
+            return NextResponse.json({ status: 200, upcoming_comp: upcoming_comp });
+        }
+
+        return NextResponse.json({ status:200, upcoming_comp:upcoming_comp, past_comp: past_comp });
 
     }
     catch(err){
