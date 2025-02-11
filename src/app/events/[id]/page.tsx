@@ -18,7 +18,7 @@ async function getEvent(id: string): Promise<Events | null> {
       throw new Error("Failed to fetch event");
     }
     const data: Events = (await response.json()).data;
-    console.log("Event Data:", data);
+    // console.log("Event Data:", data);
   
     return data;
   } catch (error) {

@@ -14,7 +14,7 @@ interface EventDetailsProps {
 }
 
 const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
-  console.log('Event:', event);
+  // console.log('Event:', event);
   
   const isRegistrationOpen = new Date(event.registration_deadline) > new Date();
 
