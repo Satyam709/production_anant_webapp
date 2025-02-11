@@ -1,7 +1,14 @@
 import React from 'react'
 import { Calendar } from 'react-feather'
 
-const LatestNews = ({ latestNews = [] }) => {
+interface News {
+  date: string
+  title: string
+  description: string
+  link?: string
+}
+
+const LatestNews = ({ latestNews }:{latestNews:News[]} ) => {
   if (!Array.isArray(latestNews)) {
     return null; // or handle the error appropriately
   }
