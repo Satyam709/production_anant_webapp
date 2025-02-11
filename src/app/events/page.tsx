@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { Events } from "@prisma/client";
 
 export default async function EventsPage() {
-  const {upcomingEvents,pastEvents} = await getEvents();
+  const { upcomingEvents, pastEvents } = await getEvents();
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
       <div className="fixed inset-0">
@@ -32,39 +32,30 @@ export default async function EventsPage() {
 export async function getEvents() {
   try {
     // Fetch data for both upcoming and past events from the API
-    const response = await fetch(
-      `${process.env.API_URL}/api/events`
-    );
+    const response = await fetch(`${process.env.API_URL}/api/events`);
     if (!response.ok) throw new Error("Failed to fetch events");
 
     const data = await response.json();
-    const events = data.events as Events[];
-    console.log(events);
-    
-    if (!events) {
+
+    console.log("events Data:", data);
+
+    if (!data) {
       return {
         upcomingEvents: [],
         pastEvents: [],
       };
     }
-    const now = new Date();
-    const upcomingEvents = events.filter(
-      (event: Events) => new Date(event.conductedOn) > now
-    );
-    const pastEvents = events.filter(
-      (event: Events) => new Date(event.conductedOn) <= now
-    );
 
     return {
-        upcomingEvents,
-        pastEvents,
+      upcomingEvents: data.upcomingEvents as Events[],
+      pastEvents: data.pastEvents as Events[],
     };
   } catch (error) {
     console.error("Error fetching events:", error);
 
     return {
-        upcomingEvents: [],
-        pastEvents: [],
+      upcomingEvents: [],
+      pastEvents: [],
     };
   }
 }
