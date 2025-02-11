@@ -1,74 +1,79 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { Calendar, Clock, MapPin } from 'lucide-react'
-import GradientButton from '../ui/GradientButton'
+import React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Calendar, Clock, MapPin } from "lucide-react";
+import GradientButton from "../ui/GradientButton";
+import { Events } from "@prisma/client";
 
-interface EventCardProps {
-  id: string
-  title: string
-  date: string
-  time: string
-  venue: string
-  description: string
-  image: string
-  registrationDeadline: Date
-}
-
-const EventCard: React.FC<EventCardProps> = ({
-  id,
-  title,
-  date,
-  time,
-  venue,
-  description,
-  image,
-  registrationDeadline
-}) => {
-  const router = useRouter()
-  const isRegistrationOpen = new Date(registrationDeadline) > new Date()
+const EventCard: React.FC<Events> = (event) => {
+  const router = useRouter();
+  const isRegistrationOpen = new Date(event.registration_deadline) > new Date();
 
   return (
     <div className="bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all flex flex-col">
-      <div className="relative h-48 cursor-pointer" onClick={() => router.push(`/events/${id}`)}>
+      {/* Event Image */}
+      <div
+        className="relative h-48 cursor-pointer"
+        onClick={() => router.push(`/events/${event.event_id}`)}
+      >
         <Image
-          src={image}
-          alt={title}
+          src={event.imageURL || "/images/event-default.jpg"}
+          alt={event.eventName}
           fill
           className="object-cover"
         />
       </div>
+
+      {/* Event Details */}
       <div className="p-6 flex-1 flex flex-col">
         <div className="flex-grow">
-          <h3 className="text-xl font-semibold mb-3 cursor-pointer hover:text-primary-blue" 
-              onClick={() => router.push(`/events/${id}`)}>{title}</h3>
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-gray-400">
+          {/* Event Title */}
+          <h3
+            className="text-xl font-semibold mb-3 cursor-pointer hover:text-primary-blue"
+            onClick={() => router.push(`/events/${event.event_id}`)}
+          >
+            {event.eventName}
+          </h3>
+
+          {/* Event Info */}
+          <div className="space-y-2 mb-4 text-gray-400">
+            <div className="flex items-center gap-2">
               <Calendar size={16} />
-              <span>{date}</span>
+              <span>{new Date(event.conductedOn).toLocaleDateString()}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2">
               <Clock size={16} />
-              <span>{time}</span>
+              <span>
+                {new Date(event.conductedOn).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
             </div>
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2">
               <MapPin size={16} />
-              <span>{venue}</span>
+              <span>{event.venue || "Venue not specified"}</span>
             </div>
           </div>
-          <p className="text-gray-400 mb-4 line-clamp-2">{description}</p>
+
+          {/* Event Description */}
+          <p className="text-gray-400 mb-4 line-clamp-2">
+            {event.description || "No description available."}
+          </p>
         </div>
-        <GradientButton 
-          onClick={() => router.push(`/events/${id}`)} 
+
+        {/* View Details Button */}
+        <GradientButton
+          onClick={() => router.push(`/events/${event.event_id}`)}
           disabled={!isRegistrationOpen}
         >
-          {isRegistrationOpen ? 'View Details' : 'Registration Closed'}
+          {isRegistrationOpen ? "View Details" : "Registration Closed"}
         </GradientButton>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EventCard
+export default EventCard;
