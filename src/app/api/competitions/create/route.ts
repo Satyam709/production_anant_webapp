@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
-import { position_options } from "@prisma/client";
 import { getSession } from "@/lib/actions/Sessions";
 import isAdmin from "@/lib/actions/Admin";
 import z from "zod"
@@ -32,20 +31,20 @@ export async function POST(req: NextRequest) {
         }
 
         if(!schema.success){
-            return NextResponse.json({status: 400, message: "Bad Request"});
+            return NextResponse.json({error: "Bad Request"}, {status: 400});
         }
         const {competitionName, conductedOn, conductedBy, registration_deadline, venue, description, prize, min_team_size, max_team_size, imageURL} = schema.data;
 
         if (max_team_size<min_team_size){
-            return NextResponse.json({status: 400, message: "Max team size should be greater equal to min team size"});
+            return NextResponse.json({error: "Max team size should be greater equal to min team size"},{status: 400});
         }
 
         if(isNaN(Date.parse(conductedOn))){
-            return NextResponse.json({status: 400, message: "Invalid date format"});
+            return NextResponse.json({error: "Invalid date format"}, {status: 400});
         }
 
         if(isNaN(Date.parse(registration_deadline))){
-            return NextResponse.json({status: 400, message: "Invalid date format on registration-deadline"});
+            return NextResponse.json({error: "Invalid date format on registration-deadline"}, {status: 400});
         }
 
         const conductedOn_dt = new Date(conductedOn);
@@ -59,7 +58,7 @@ export async function POST(req: NextRequest) {
 
         if (findName){
             console.log(findName);
-            return NextResponse.json({status: 400, message: "Competition already exists"});
+            return NextResponse.json({error: "Competition already exists"},{status: 400});
         }
 
         const competition = await prisma.competitions.create({
@@ -81,7 +80,7 @@ export async function POST(req: NextRequest) {
         });
 
         if(!competition){
-            return NextResponse.json({status: 500, message: "Failed to create competition"});
+            return NextResponse.json({error: "Failed to create competition"}, {status: 500});
         }
         
         return NextResponse.json({status: 200, message: "Competition created successfully"});
@@ -89,6 +88,6 @@ export async function POST(req: NextRequest) {
     }
     catch(err){
         console.log(err);
-        return NextResponse.json({status: 500, message: "Internal Server Error"});
+        return NextResponse.json({error: "Internal Server Error"},{status: 500});
     }
 }

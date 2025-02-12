@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
 
 
         if (!upcoming_comp && !past_comp) {
-            return NextResponse.json({status: 404, message:"No competitions found"});
+            return NextResponse.json({ error:"No competitions found"},{status: 404});
         }
         if(!upcoming_comp){
             return NextResponse.json({ staus:200, past_comp: past_comp });
@@ -75,6 +75,6 @@ export async function GET(req: NextRequest) {
 
     }
     catch(err){
-        return NextResponse.json({status: 500, message:"Internal Server Error"});
+        return NextResponse.json({error :"Internal Server Error"},{status: 500});
     }
 }

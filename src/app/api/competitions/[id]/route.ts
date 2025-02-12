@@ -17,7 +17,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         });
 
         if(!competition){
-            return NextResponse.json({status: 404, message:"Not Found"});
+            return NextResponse.json({error:"Compitition not Found!"},{status: 404});
         }
 
         const user = session?.user;
@@ -52,6 +52,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         return NextResponse.json({ status:200, competition: competition });
     }
     catch(e){
-        return NextResponse.json({status: 500, message:"Internal Server Error"});
+        return NextResponse.json({error:"Internal Server Error"},{status: 500});
     }
 }

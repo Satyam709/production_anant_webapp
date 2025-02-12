@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/actions/Sessions";
 import prisma from "@/lib/PrismaClient/db";
+import { error } from "console";
 
 export async function POST(req: NextRequest, { params }: { params: { id: string }}){
     try{
@@ -10,10 +11,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         const session = await getSession();
             
         if(!team_id){
-            return NextResponse.json({status: 400, message: "Team_ID missing"});
+            return NextResponse.json({error: "Team_ID missing"},{status: 400});
         }
         if(!session?.user){
-            return NextResponse.json({status: 400, message:"User not logged in!"});
+            return NextResponse.json({error:"User not logged in!"},{status: 401});
         }
 
         const userId = session.user.id; 
@@ -28,10 +29,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         });
 
         if(!team){
-            return NextResponse.json({status:400, message: "Invalid Team_ID / No team found"});
+            return NextResponse.json({error: "Invalid Team_ID / No team found"},{status: 404});
         }
         if(team.team_leader_id != userId){
-            return NextResponse.json({status:400, message: "You are not the team leader. "});
+            return NextResponse.json({error: "You are not the team leader. "},{status: 400});
         }
 
         const comp = await prisma.competitions.findUnique({
@@ -47,24 +48,24 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         });
 
         if(!comp){
-            return NextResponse.json({status: 400, message:"Compitition not found!"});
+            return NextResponse.json({error:"Compitition not found!"},{status: 404});
         }
         const dt_now = new Date();
         if (dt_now>comp.registration_deadline){
-            return NextResponse.json({status: 400, message: "Registrations are closed now!"});
+            return NextResponse.json({error: "Registrations are closed now!"},{status: 400});
         }
 
         const team_size = team.team_members.length+1;    // leader + members
         if(team_size<comp.min_team_size){
-            return NextResponse.json({status: 400, message: `Minimum of ${comp.min_team_size} required!`});
+            return NextResponse.json({error: `Minimum of ${comp.min_team_size} required!`},{status: 400});
         }
         if(team_size>comp.max_team_size){
-            return NextResponse.json({status: 400, message: `Maximum of ${comp.max_team_size} required!`});
+            return NextResponse.json({error: `Maximum of ${comp.max_team_size} required!`}, {status: 400});
         }
 
         const is_team_registered = comp.teams_participated.some((team) => team.team_id == team_id);
         if(is_team_registered){
-            return NextResponse.json({status: 400, message: "Team already registered!"});
+            return NextResponse.json({error: "Team already registered!"},{status: 400});
         }
 
         let users_registered = [];
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         }
 
         if(users_registered.length>0){
-            return NextResponse.json({status: 400, message: "Some members already registered!", users_registered: users_registered});
+            return NextResponse.json({error: "Some members already registered!", users_registered: users_registered},{status: 400});
         }
 
         let members = team.team_members.map(member => member.id);
@@ -100,12 +101,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         });
         
         if(!register_team){
-            return NextResponse.json({status: 500, message: "Failed to register"});
+            return NextResponse.json({error: "Failed to register"},{status: 500});
         }
 
         return NextResponse.json({status: 200, message: `Team ${team.team_name} successfully registered to ${comp.competitionName}`});
     }
     catch(e){
-        return NextResponse.json({status: 500, message: "Internal Server Error"});
+        return NextResponse.json({error: "Internal Server Error"},{status: 500});
     }
 }
