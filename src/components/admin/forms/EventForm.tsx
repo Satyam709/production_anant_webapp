@@ -1,34 +1,35 @@
-import React, { useState, useRef, type RefObject } from 'react'; 
-import { Events } from '@prisma/client';
-import type { Prisma } from '@prisma/client';
-import { Calendar, CalendarClock, Clock, Loader } from 'lucide-react';
-import axios from 'axios';
-import GradientButton from '@/components/ui/GradientButton';
+import React, { useState, useRef, type RefObject } from "react";
+import { Calendar, CalendarClock, Clock, Loader } from "lucide-react";
+import axios from "axios";
+import GradientButton from "@/components/ui/GradientButton";
+import type { Prisma } from "@prisma/client";
+import { uploadServerSideFile } from "@/lib/actions/uploadthing";
 
 //type for formData that makes createdBy optional for the form
-type EventFormInput = Omit<Prisma.EventsCreateInput, 'createdBy'>;
+type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
 
 const EventForm = () => {
-  const [formData, setFormData] = useState<EventFormInput>({ 
-    eventName: '',
-    conductedBy: '',
+  const [formData, setFormData] = useState<EventFormInput>({
+    eventName: "",
+    conductedBy: "",
     conductedOn: new Date(),
     registration_deadline: new Date(),
-    venue: '',
-    prize: '',
-    description: '',
-    imageURL: '',
+    venue: "",
+    prize: "",
+    description: "",
+    imageURL: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
   const conductedOnRef = useRef<HTMLInputElement | null>(null);
   const deadlineRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => { 
+  const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
-      if (typeof ref.current.showPicker === 'function') {
+      if (typeof ref.current.showPicker === "function") {
         ref.current.showPicker();
       } else {
         ref.current.focus();
@@ -38,37 +39,58 @@ const EventForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!file) {
+      setError("Please upload an image");
+      return;
+    }
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      const response = await axios.post('/api/events/create', {
+      const res = await uploadServerSideFile(file);
+      if (!res) {
+        setError("Failed to upload image");
+        return;
+      }
+      console.log("Image uploaded:", res);
+
+      const response = await axios.post("/api/events/create", {
         ...formData,
+        imageURL: res.ufsUrl,
         conductedOn: new Date(formData.conductedOn).toISOString(),
-        registration_deadline: new Date(formData.registration_deadline).toISOString(),
+        registration_deadline: new Date(
+          formData.registration_deadline
+        ).toISOString(),
       });
 
-      console.log('Event created:', response.data);
-      setSuccess('Event created successfully!');
+      console.log("Event created:", response.data);
+      setSuccess("Event created successfully!");
 
       // Reset form
-      setFormData({ 
-        eventName: '',
-        conductedBy: '',
+      setFormData({
+        eventName: "",
+        conductedBy: "",
         conductedOn: new Date(),
         registration_deadline: new Date(),
-        venue: '',
-        prize: '',
-        description: '',
-        imageURL: '',
+        venue: "",
+        prize: "",
+        description: "",
+        imageURL: "",
       });
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to create event');
+      setError(err.response?.data?.message || "Failed to create event");
       console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -98,8 +120,9 @@ const EventForm = () => {
             </label>
             <input
               type="text"
+              name="eventName"
               value={formData.eventName}
-              onChange={(e) => setFormData(prev => ({ ...prev, eventName: e.target.value }))}
+              onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                        focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
                        text-white placeholder-gray-500 backdrop-blur-sm"
@@ -114,8 +137,9 @@ const EventForm = () => {
             </label>
             <input
               type="text"
+              name="conductedBy"
               value={formData.conductedBy}
-              onChange={(e) => setFormData(prev => ({ ...prev, conductedBy: e.target.value }))}
+              onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                        focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
                        text-white placeholder-gray-500 backdrop-blur-sm"
@@ -140,8 +164,18 @@ const EventForm = () => {
               <input
                 type="datetime-local"
                 ref={conductedOnRef}
-                value={formData.conductedOn instanceof Date ? formData.conductedOn.toISOString().slice(0, 16) : ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, conductedOn: new Date(e.target.value) }))}
+                name="conductedOn"
+                value={
+                  formData.conductedOn instanceof Date
+                    ? formData.conductedOn.toISOString().slice(0, 16)
+                    : ""
+                }
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    conductedOn: new Date(e.target.value),
+                  }))
+                }
                 className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
                          text-white placeholder-gray-500 backdrop-blur-sm"
@@ -164,8 +198,18 @@ const EventForm = () => {
               <input
                 type="datetime-local"
                 ref={deadlineRef}
-                value={formData.registration_deadline instanceof Date ? formData.registration_deadline.toISOString().slice(0, 16) : ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, registration_deadline: new Date(e.target.value) }))}
+                name="registration_deadline"
+                value={
+                  formData.registration_deadline instanceof Date
+                    ? formData.registration_deadline.toISOString().slice(0, 16)
+                    : ""
+                }
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    registration_deadline: new Date(e.target.value),
+                  }))
+                }
                 className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
                          text-white placeholder-gray-500 backdrop-blur-sm"
@@ -182,8 +226,9 @@ const EventForm = () => {
             </label>
             <input
               type="text"
+              name="venue"
               value={formData.venue}
-              onChange={(e) => setFormData(prev => ({ ...prev, venue: e.target.value }))}
+              onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                        focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
                        text-white placeholder-gray-500 backdrop-blur-sm"
@@ -198,8 +243,9 @@ const EventForm = () => {
             </label>
             <input
               type="text"
-              value={formData.prize ?? ''}
-              onChange={(e) => setFormData(prev => ({ ...prev, prize: e.target.value }))}
+              name="prize"
+              value={formData.prize ?? ""}
+              onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                        focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
                        text-white placeholder-gray-500 backdrop-blur-sm"
@@ -213,8 +259,9 @@ const EventForm = () => {
             Description
           </label>
           <textarea
+            name="description"
             value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            onChange={handleInputChange}
             rows={4}
             className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                      focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -226,24 +273,29 @@ const EventForm = () => {
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Image URL
+            Event Image
           </label>
           <input
-            type="url"
-            value={formData.imageURL ?? ''}
-            onChange={(e) => setFormData(prev => ({ ...prev, imageURL: e.target.value }))}
-            className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                     focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                     text-white placeholder-gray-500 backdrop-blur-sm"
-            placeholder="Enter image URL"
+            type="file"
+            accept="image/png, image/jpeg, image/jpg"
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setFile(e.target.files[0]);
+              }
+            }}
+            className="w-full text-white file:bg-primary-blue file:border-none file:rounded-md file:p-2 file:text-sm file:font-bold cursor-pointer"
           />
         </div>
 
         <div className="flex justify-end">
-          <GradientButton disabled={loading} > 
+          <GradientButton disabled={loading}>
             <div className="flex items-center space-x-2">
-              {loading ? <Loader className="h-5 w-5 animate-spin" /> : <Calendar className="h-5 w-5" />}
-              <span>{loading ? 'Creating...' : 'Create Event'}</span>
+              {loading ? (
+                <Loader className="h-5 w-5 animate-spin" />
+              ) : (
+                <Calendar className="h-5 w-5" />
+              )}
+              <span>{loading ? "Creating..." : "Create Event"}</span>
             </div>
           </GradientButton>
         </div>

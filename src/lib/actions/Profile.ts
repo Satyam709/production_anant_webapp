@@ -3,7 +3,7 @@ import { getSession, isAuthenticated } from "@/lib/actions/Sessions";
 import prisma from "@/lib/PrismaClient/db";
 import { rollNumberSchema } from "@/types/common";
 import { branch_options, club_dept_options, position_options } from "@prisma/client";
-
+import { uploadServerSideFile } from "@/lib/actions/uploadthing";
 export async function UpdateProfile(
   name: string | undefined,
   branch: branch_options | undefined,
@@ -105,6 +105,57 @@ export async function getUserInfoById(roll_number:string) : Promise<getUserInfoT
     }
   } catch (error) {
     console.log("error while getting user info", error);
+    return null;
+  }
+}
+
+export async function UpdateProfileImage(file: File) {
+  try {
+    if (!(await isAuthenticated())) return null;
+
+    const userId = (await getSession())?.user.id;
+
+    // Check if the user already has an image URL
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (user?.imageURL) {
+      console.log("User already has an image URL.  Update not allowed.");
+      return null; // Or throw an error, depending on your desired behavior
+    }
+
+    // Upload the image
+    const uploadResult = await uploadServerSideFile(file);
+
+    if (!uploadResult) {
+      console.error("Failed to upload image.");
+      return null;
+    }
+
+    const imageURL = uploadResult.ufsUrl;
+
+    // Update the user's profile with the new image URL
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        imageURL: imageURL,
+      },
+    });
+
+    if (updatedUser) {
+      console.log("Profile image updated successfully.");
+      return updatedUser.imageURL;
+    } else {
+      console.log("Failed to update profile image.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error updating profile image:", error);
     return null;
   }
 }
