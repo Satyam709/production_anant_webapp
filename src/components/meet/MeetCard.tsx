@@ -3,14 +3,16 @@ import Image from 'next/image';
 import { Calendar, Clock, MapPin, Video, QrCode } from 'lucide-react';
 import GradientButton from '@/components/ui/GradientButton';
 import { Meeting } from '@prisma/client';
+import { placeholder } from '@/lib/images/placeholder';
 
 const MeetCard: React.FC<Meeting> = (meet) => {
   return (
     <div className="bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all flex flex-col">
       {/* Image Section */}
       <div className="relative h-48 flex justify-center">
+        {/* remaining */}
         <Image
-          src={"/anant_logo.png"}
+          src={placeholder}
           alt={meet.topic_of_discussion || "Meet"}
           width={200}
           height={200}

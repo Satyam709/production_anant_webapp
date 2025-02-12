@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "wdzdm1owwr.ufs.sh",
+        pathname: "/f/*",
+      },
     ],
   },
 };

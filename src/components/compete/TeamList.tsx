@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Team, User } from '@prisma/client'
 import { Users } from 'lucide-react'
+import { placeholder } from '@/lib/images/placeholder'
 
 type TeamWithMembers = Team & {
   team_leader: User
@@ -74,7 +75,7 @@ export default function TeamList() {
             <div className="relative w-8 h-8 rounded-full border-2 border-black/30 overflow-hidden">
               {team.team_leader.imageURL ? (
                 <Image
-                  src={team.team_leader.imageURL}
+                  src={team.team_leader.imageURL || placeholder}
                   alt={team.team_leader.name}
                   fill
                   className="object-cover"
@@ -94,7 +95,7 @@ export default function TeamList() {
               >
                 {member.imageURL ? (
                   <Image
-                    src={member.imageURL}
+                    src={member.imageURL || placeholder}
                     alt={member.name}
                     fill
                     className="object-cover"

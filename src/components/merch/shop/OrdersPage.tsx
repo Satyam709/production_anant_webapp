@@ -5,6 +5,7 @@ import { useOrders } from "../hooks/useOrders";
 import Image from "next/image";
 import { OrderStatus } from "@/types/shop";
 import { useMerchandise } from "../hooks/useMerchandise";
+import { placeholder } from "@/lib/images/placeholder";
 
 interface OrderStatusBadgeProps {
   status: OrderStatus;
@@ -122,7 +123,7 @@ const OrdersPage = () => {
                           <>
                             <Image
                               src={
-                                product.image_url || "/images/placeholder.png"
+                                product.image_url || placeholder
                               }
                               height={150}
                               width={150}

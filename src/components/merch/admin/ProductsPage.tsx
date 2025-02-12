@@ -4,6 +4,7 @@ import { Merchandise } from "@/types/shop";
 import ProductForm from "@/components/merch/admin/ProductForm";
 import Image from "next/image";
 import { useMerchandise } from "@/components/merch/hooks/useMerchandise";
+import { placeholder } from "@/lib/images/placeholder";
 
 const ProductsPage: React.FC = () => {
   const { products, loading, error, refetch } = useMerchandise();
@@ -151,7 +152,7 @@ const ProductsPage: React.FC = () => {
               >
                 <td className="px-6 py-4">
                   <Image
-                    src={product.image_url || "/placeholder-image.png"}
+                    src={product.image_url || placeholder}
                     alt={product.name}
                     width={64}
                     height={64}

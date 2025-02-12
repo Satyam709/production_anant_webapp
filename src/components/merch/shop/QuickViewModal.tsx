@@ -3,6 +3,7 @@ import { X, ShoppingCart,StarsIcon } from 'lucide-react';
 import GradientButton from '@/components/ui/GradientButton';
 import Image from 'next/image';
 import { Merchandise } from '@/types/shop';
+import { placeholder } from '@/lib/images/placeholder';
 
 interface QuickViewModalProps {
   product: Merchandise;
@@ -34,7 +35,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
           <div className="relative aspect-[4/5] rounded-lg overflow-hidden">
             <Image
-              src={product.image_url || '/images/placeholder.jpg'}
+              src={product.image_url || placeholder}
               alt={product.name}
               width={500}
               height={500}

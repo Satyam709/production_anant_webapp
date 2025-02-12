@@ -2,6 +2,7 @@ import React from 'react';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { Merchandise } from "@/types/shop";
 import Image from 'next/image';
+import { placeholder } from '@/lib/images/placeholder';
 
 interface ProductCardProps extends Pick<Merchandise, 'item_id' | 'name' | 'price' | 'image_url' | 'category' | 'stock_quantity'> {
   featured?: boolean;
@@ -36,7 +37,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       )}
       <div className="relative overflow-hidden aspect-[4/5]">
         <Image
-          src={image_url||"/images/placeholder.png"}
+          src={image_url||placeholder}
           alt={name}
           width={400}
           height={500}

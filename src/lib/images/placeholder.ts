@@ -1,0 +1,1 @@
+export const placeholder = "https://wdzdm1owwr.ufs.sh/f/H2sGOLmYCTuBPIe4C8093icAJdPl4aZGLksETSuKIoWyRD6O";

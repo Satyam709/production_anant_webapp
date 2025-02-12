@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Calendar, Users, Trophy, MapPin } from 'lucide-react';
 import GradientButton from '@/components/ui/GradientButton';
-
+import { placeholder } from '@/lib/images/placeholder';
 interface CompetitionCardProps {
   id: string;
   title: string;
@@ -36,7 +36,7 @@ const CompCard: React.FC<CompetitionCardProps> = ({
     <div className="bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all flex flex-col">
       <div className="relative h-48 cursor-pointer" onClick={() => router.push(`/compete/${id}`)}>
         <Image
-          src={image}
+          src={image || placeholder}
           alt={title}
           fill
           className="object-cover"

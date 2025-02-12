@@ -5,6 +5,7 @@ import CheckoutModal from "./CheckoutModal";
 import { Merchandise } from "@/types/shop";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { placeholder } from "@/lib/images/placeholder";
 
 interface CartProps {
   isOpen: boolean;
@@ -90,7 +91,7 @@ const Cart: React.FC<CartProps> = ({
                       className="flex gap-4 p-3 bg-gray-800/30 rounded-lg border border-gray-700"
                     >
                       <Image
-                        src={product.image_url || "/images/placeholder.png"}
+                        src={product.image_url || placeholder}
                         alt={product.name}
                         height={80}
                         width={80}

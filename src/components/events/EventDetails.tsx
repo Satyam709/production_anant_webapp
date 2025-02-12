@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { Events, User } from '@prisma/client';
 import GradientButton from '../ui/GradientButton';
+import { placeholder } from '@/lib/images/placeholder';
 
 interface EventDetailsProps {
   event: Events & {
@@ -24,7 +25,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
         {/* Event Image */}
         <div className="relative h-64 w-full">
           <Image
-            src={event.imageURL || '/event-default.jpg'}
+            src={event.imageURL || placeholder}
             alt={event.eventName || 'Event Image'}
             fill
             className="object-cover"

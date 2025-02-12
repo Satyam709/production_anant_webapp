@@ -1,12 +1,12 @@
 import React from "react";
 import CompCard from "./CompCard";
 import { Competitions } from "@prisma/client";
-
+export const dynamic = "force-dynamic";
 async function fetchActiveCompetitions(): Promise<Competitions[]> {
   const response = await fetch(
     `${process.env.API_URL}/api/competitions`,
     {
-      next: { revalidate: 300 }, // Revalidate every hour
+      next: { revalidate: 300 }, // Revalidate every 5min
     }
   );
 

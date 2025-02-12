@@ -3,6 +3,7 @@ import { X, CheckCircle, XCircle } from "lucide-react";
 import { Order, OrderStatus, OrderStatusSchema } from "@/types/shop";
 import Image from "next/image";
 import { useMerchandise } from "../hooks/useMerchandise";
+import { placeholder } from "@/lib/images/placeholder";
 
 interface OrderDetailsModalProps {
   order: Order;
@@ -103,7 +104,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                       className="flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700"
                     >
                       <Image
-                        src={product?.image_url || "/images/placeholder.png"}
+                        src={product?.image_url || placeholder}
                         alt={product?.name || "NA"}
                         width={64}
                         height={64}

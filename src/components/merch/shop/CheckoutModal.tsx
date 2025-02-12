@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Copy, Check, ArrowLeft } from 'lucide-react';
 import { Merchandise ,Order,OrderItem } from '@/types/shop';
 import Image from 'next/image';
+import { placeholder } from '@/lib/images/placeholder';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -132,7 +133,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       className="flex items-center gap-4 p-3 bg-gray-800/30 rounded-xl border border-gray-800"
                     >
                       <Image
-                        src={product.image_url || "/images/placeholder.png"}
+                        src={product.image_url || placeholder}
                         height={80}
                         width={80}
                         alt={product.name}
@@ -192,8 +193,9 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </h3>
                   <div className="flex justify-center mb-4">
                     <div className="bg-white p-4 rounded-lg">
+                      {/* remaining */}
                       <Image
-                        src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg"
+                        src={placeholder}
                         height={200}
                         width={200}
                         alt="QR Code"

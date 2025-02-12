@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import GradientButton from "../ui/GradientButton";
 import { Events } from "@prisma/client";
+import { placeholder } from "@/lib/images/placeholder";
 
 const EventCard: React.FC<Events> = (event) => {
   const router = useRouter();
@@ -19,7 +20,7 @@ const EventCard: React.FC<Events> = (event) => {
         onClick={() => router.push(`/events/${event.event_id}`)}
       >
         <Image
-          src={event.imageURL || "/images/event-default.jpg"}
+          src={event.imageURL || placeholder}
           alt={event.eventName}
           fill
           className="object-cover"
