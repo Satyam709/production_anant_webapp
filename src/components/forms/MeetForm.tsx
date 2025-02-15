@@ -1,87 +1,121 @@
-import React, { useState } from 'react';
-import { Users, Loader, Plus, Pencil, Trash2 } from 'lucide-react';
-import GradientButton from '../ui/GradientButton';
-import Modal from '../ui/Modal';
+import React, {
+  useState,
+  useRef,
+  type RefObject,
+  useCallback,
+  useEffect,
+} from "react";
+import { Suspense } from "react";
+import {
+  Users,
+  Loader,
+  Plus,
+  Pencil,
+  Trash2,
+  CalendarClock,
+  QrCode,
+  Eye,
+} from "lucide-react";
+import GradientButton from "../ui/GradientButton";
+import Modal from "../ui/Modal";
+import { Prisma } from "@prisma/client";
+import { Meeting } from "@prisma/client";
+import axios from "axios";
+import { getAttendies } from "@/lib/actions/MeetAction";
+import Image from "next/image";
 
-type Meeting = {
-  id: string;
-  venue: string;
-  starts: Date;
-  duration: number;
-  topic_of_discussion: string;
-  attendees: string[];
-};
-
-// Mock data
-const mockMeetings: Meeting[] = [
-  {
-    id: '1',
-    venue: 'Conference Room A',
-    starts: new Date('2025-03-15T10:00:00'),
-    duration: 60,
-    topic_of_discussion: 'Project Planning Meeting',
-    attendees: ['John Doe', 'Jane Smith', 'Bob Johnson'],
-  },
-  {
-    id: '2',
-    venue: 'Virtual Meeting Room',
-    starts: new Date('2025-03-16T14:30:00'),
-    duration: 45,
-    topic_of_discussion: 'Technical Review',
-    attendees: ['Alice Brown', 'Charlie Wilson'],
-  },
-];
+type MeetFormInput = Omit<
+  Prisma.MeetingCreateInput,
+  "hostID" | "conductor" | "attendees"
+>;
 
 const MeetForm = () => {
-  const [meetings, setMeetings] = useState<Meeting[]>(mockMeetings);
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAttendeesModalOpen, setIsAttendeesModalOpen] = useState(false);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [editingMeeting, setEditingMeeting] = useState<Meeting | null>(null);
-  const [formData, setFormData] = useState<Omit<Meeting, 'id' | 'attendees'>>({
-    venue: '',
+  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
+  const [formData, setFormData] = useState<MeetFormInput>({
+    venue: "",
     starts: new Date(),
     duration: 60,
-    topic_of_discussion: '',
+    topic_of_discussion: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [loadingMeetings, setLoadingMeetings] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const startsDateRef = useRef<HTMLInputElement | null>(null);
+
+  const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
+    if (ref.current) {
+      if (typeof ref.current.showPicker === "function") {
+        ref.current.showPicker();
+      } else {
+        ref.current.focus();
+      }
+    }
+  };
+
+  const refetchMeetings = useCallback(async () => {
+    setLoadingMeetings(true);
+    try {
+      const res = await axios.get("/api/meetings");
+      if (!res.data || !res.data.meetings) {
+        setMeetings([]);
+        throw new Error("Failed to fetch meetings");
+      }
+      setMeetings(res.data.meetings.upcoming);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to fetch meetings");
+    } finally {
+      setLoadingMeetings(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refetchMeetings();
+  }, [refetchMeetings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const payload = {
+        ...formData,
+        starts: new Date(formData.starts).toISOString(),
+        duration: parseInt(String(formData.duration)),
+      };
+
       if (editingMeeting) {
-        setMeetings(meetings.map(meeting => 
-          meeting.id === editingMeeting.id 
-            ? { ...formData, id: meeting.id, attendees: meeting.attendees } 
-            : meeting
-        ));
-        setSuccess('Meeting updated successfully!');
+        await axios.put(`/api/meetings/${editingMeeting.meeting_id}`, payload);
+        setSuccess("Meeting updated successfully!");
       } else {
-        const newMeeting = {
-          ...formData,
-          id: Date.now().toString(),
-          attendees: [],
-        };
-        setMeetings([...meetings, newMeeting]);
-        setSuccess('Meeting scheduled successfully!');
+        await axios.post("/api/meetings/create", payload);
+        setSuccess("Meeting scheduled successfully!");
       }
 
       setFormData({
-        venue: '',
+        venue: "",
         starts: new Date(),
         duration: 60,
-        topic_of_discussion: '',
+        topic_of_discussion: "",
       });
       setIsModalOpen(false);
       setEditingMeeting(null);
+      refetchMeetings();
     } catch (err: any) {
-      setError(editingMeeting ? 'Failed to update meeting' : 'Failed to schedule meeting');
+      setError(
+        err.response?.data?.error ||
+          (editingMeeting
+            ? "Failed to update meeting"
+            : "Failed to schedule meeting")
+      );
     } finally {
       setLoading(false);
     }
@@ -100,11 +134,12 @@ const MeetForm = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setMeetings(meetings.filter(meeting => meeting.id !== id));
-      setSuccess('Meeting deleted successfully!');
-    } catch (err) {
-      setError('Failed to delete meeting');
+      await axios.delete(`/api/meetings/${id}`);
+
+      setSuccess("Meeting deleted successfully!");
+      refetchMeetings();
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to delete meeting");
     }
   };
 
@@ -112,32 +147,42 @@ const MeetForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === 'starts') {
-      setFormData(prev => ({ ...prev, starts: new Date(value) }));
-    } else if (name === 'duration') {
-      setFormData(prev => ({ ...prev, duration: parseInt(value) }));
+    if (name === "starts") {
+      setFormData((prev) => ({ ...prev, starts: new Date(value) }));
+    } else if (name === "duration") {
+      setFormData((prev) => ({ ...prev, duration: parseInt(value) }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
   const openCreateModal = () => {
     setEditingMeeting(null);
     setFormData({
-      venue: '',
+      venue: "",
       starts: new Date(),
       duration: 60,
-      topic_of_discussion: '',
+      topic_of_discussion: "",
     });
     setIsModalOpen(true);
   };
 
   const formatTime = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
       hour12: true,
     }).format(date);
+  };
+
+  const handleShowAttendees = (meeting: Meeting) => {
+    setSelectedMeeting(meeting);
+    setIsAttendeesModalOpen(true);
+  };
+
+  const handleGenerateQR = (meeting: Meeting) => {
+    setSelectedMeeting(meeting);
+    setIsQRModalOpen(true);
   };
 
   return (
@@ -148,7 +193,7 @@ const MeetForm = () => {
           <Users className="h-6 w-6 text-primary-cyan" />
           <h2 className="text-xl font-semibold text-white">Meetings</h2>
         </div>
-        <GradientButton onClick={openCreateModal} type="button">
+        <GradientButton onClick={openCreateModal}>
           <div className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
             <span>Schedule Meeting</span>
@@ -169,76 +214,113 @@ const MeetForm = () => {
       )}
 
       {/* Meetings Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {meetings.map(meeting => (
-          <div
-            key={meeting.id}
-            className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
-          >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-primary-blue/20 rounded-lg">
-                    <Users className="h-5 w-5 text-primary-cyan" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-white">{meeting.topic_of_discussion}</h3>
-                </div>
-              </div>
-              <div className="space-y-3 text-sm text-gray-300">
-                <p>
-                  <span className="text-gray-400">Date:</span>{' '}
-                  {meeting.starts.toLocaleDateString()}
-                </p>
-                <p>
-                  <span className="text-gray-400">Time:</span>{' '}
-                  {formatTime(meeting.starts)}
-                </p>
-                <p>
-                  <span className="text-gray-400">Duration:</span>{' '}
-                  {meeting.duration} minutes
-                </p>
-                <p>
-                  <span className="text-gray-400">Venue:</span>{' '}
-                  {meeting.venue}
-                </p>
-                <div>
-                  <span className="text-gray-400">Attendees:</span>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {meeting.attendees.map((attendee, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 text-xs bg-gray-800 rounded-full text-gray-300"
-                      >
-                        {attendee}
-                      </span>
-                    ))}
+      {loadingMeetings ? (
+        <div className="flex justify-center">
+          <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+        </div>
+      ) : meetings.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {meetings.map((meeting) => (
+            <div
+              key={meeting.meeting_id}
+              className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-primary-blue/20 rounded-lg">
+                      <Users className="h-5 w-5 text-primary-cyan" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">
+                      {meeting.topic_of_discussion}
+                    </h3>
                   </div>
                 </div>
-              </div>
-              <div className="mt-4 flex justify-end space-x-2 border-t border-gray-800 pt-4">
-                <button
-                  onClick={() => handleEdit(meeting)}
-                  className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                >
-                  <Pencil className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(meeting.id)}
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
+                <div className="space-y-3 text-sm text-gray-300">
+                  <p>
+                    <span className="text-gray-400">Date:</span>{" "}
+                    {meeting.starts.toLocaleDateString()}
+                  </p>
+                  <p>
+                    <span className="text-gray-400">Time:</span>{" "}
+                    {formatTime(meeting.starts)}
+                  </p>
+                  <p>
+                    <span className="text-gray-400">Duration:</span>{" "}
+                    {meeting.duration} minutes
+                  </p>
+                  <p>
+                    <span className="text-gray-400">Venue:</span>{" "}
+                    {meeting.venue}
+                  </p>
+                  {/* <div>
+                    <span className="text-gray-400">Attendees:</span>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {meeting.attendees && meeting.attendees.length > 0 ? (
+                        meeting.attendees.map((attendee, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 text-xs bg-gray-800 rounded-full text-gray-300"
+                          >
+                            {attendee}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-gray-500">No attendees yet</span>
+                      )}
+                    </div>
+                  </div> */}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-6 flex flex-col gap-3">
+                  {/* QR Code Button - Highlighted */}
+                  <button
+                    onClick={() => handleGenerateQR(meeting)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-primary-blue/20 hover:scale-[1.02] group"
+                  >
+                    <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+                    <span>Generate QR Code</span>
+                  </button>
+
+                  {/* Show Attendees Button */}
+                  <button
+                    onClick={() => handleShowAttendees(meeting)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-lg transition-colors duration-200"
+                  >
+                    <Eye className="h-5 w-5" />
+                    <span>Show Attendees</span>
+                  </button>
+
+                  {/* Edit and Delete */}
+                  <div className="flex justify-end space-x-2 border-t border-gray-800 pt-4">
+                    <button
+                      onClick={() => handleEdit(meeting)}
+                      className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                    >
+                      <Pencil className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(meeting.meeting_id)}
+                      className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-gray-400">No meetings scheduled.</div>
+      )}
 
       {/* Create/Edit Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingMeeting ? 'Edit Meeting' : 'Schedule Meeting'}
+        title={editingMeeting ? "Edit Meeting" : "Schedule Meeting"}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
@@ -263,16 +345,29 @@ const MeetForm = () => {
               <label className="block text-sm font-medium text-gray-300">
                 Start Date & Time
               </label>
-              <input
-                type="datetime-local"
-                name="starts"
-                value={formData.starts instanceof Date ? formData.starts.toISOString().slice(0, 16) : ''}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                required
-              />
+              <div
+                className="relative cursor-pointer"
+                onClick={() => handleDateClick(startsDateRef)}
+              >
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <CalendarClock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="datetime-local"
+                  ref={startsDateRef}
+                  name="starts"
+                  value={
+                    formData.starts instanceof Date
+                      ? formData.starts.toISOString().slice(0, 16)
+                      : ""
+                  }
+                  onChange={handleInputChange}
+                  className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                         appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                         text-white placeholder-gray-500 backdrop-blur-sm"
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -282,7 +377,7 @@ const MeetForm = () => {
               <input
                 type="number"
                 name="duration"
-                value={formData.duration}
+                value={formData.duration || ""}
                 onChange={handleInputChange}
                 min="15"
                 step="15"
@@ -300,11 +395,11 @@ const MeetForm = () => {
             </label>
             <textarea
               name="topic_of_discussion"
-              value={formData.topic_of_discussion}
+              value={formData.topic_of_discussion || ""}
               onChange={handleInputChange}
               rows={3}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary- ring-primary-blue/50
+                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
                        text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
               placeholder="Enter topic of discussion"
               required
@@ -329,17 +424,143 @@ const MeetForm = () => {
                 <span>
                   {loading
                     ? editingMeeting
-                      ? 'Updating...'
-                      : 'Scheduling...'
+                      ? "Updating..."
+                      : "Scheduling..."
                     : editingMeeting
-                    ? 'Update Meeting'
-                    : 'Schedule Meeting'}
+                    ? "Update Meeting"
+                    : "Schedule Meeting"}
                 </span>
               </div>
             </GradientButton>
           </div>
         </form>
       </Modal>
+
+      {/* Attendees Modal */}
+      <Modal
+        isOpen={isAttendeesModalOpen}
+        onClose={() => setIsAttendeesModalOpen(false)}
+        title={`Attendees - ${selectedMeeting?.topic_of_discussion}`}
+      >
+        <RenderAttendies id={selectedMeeting?.meeting_id || ""} />
+        <Suspense fallback={"Loading..."}></Suspense>
+      </Modal>
+
+      {/* QR Code Modal */}
+      <Modal
+        isOpen={isQRModalOpen}
+        onClose={() => setIsQRModalOpen(false)}
+        title="Attendance QR Code"
+      >
+        <div className="text-center space-y-6">
+          <div className="bg-white p-8 rounded-lg inline-block mx-auto">
+            <Image
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=meeting-attendance-demo"
+              alt="QR Code"
+              className="w-48 h-48"
+            />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-medium text-white">
+              {selectedMeeting?.topic_of_discussion}
+            </h3>
+            <p className="text-gray-400">
+              Scan this QR code to mark your attendance
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <button
+              onClick={() => setIsQRModalOpen(false)}
+              className="px-6 py-2.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+const RenderAttendies = async ({ id }: { id: string }) => {
+  const attendies = await getAttendies(id);
+  return (
+    <div className="space-y-6">
+      {/* Search and Filter */}
+      {/* <div className="relative">
+            <input
+              type="text"
+              placeholder="Search attendees..."
+              className="w-full px-4 py-2.5 pl-10 bg-black/30 border border-gray-700 rounded-lg
+                     focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                     text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
+            />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </div> */}
+
+      {/* Attendance Stats */}
+      {/* <div className="grid grid-cols-3 gap-4">
+            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-green-400">
+                {mockAttendees.filter((a) => a.checkInTime).length}
+              </div>
+              <div className="text-sm text-green-300">Present</div>
+            </div>
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-red-400">
+                {mockAttendees.filter((a) => !a.checkInTime).length}
+              </div>
+              <div className="text-sm text-red-300">Absent</div>
+            </div>
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-blue-400">
+                {mockAttendees.length}
+              </div>
+              <div className="text-sm text-blue-300">Total</div>
+            </div>
+          </div> */}
+
+      {/* Attendees List */}
+      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        {attendies &&
+          attendies.map((attendee) => (
+            <div
+              key={attendee.id}
+              className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 hover:border-primary-blue/50 transition-all duration-200"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary-blue to-primary-cyan flex items-center justify-center text-white font-medium">
+                  {attendee.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </div>
+                <div>
+                  <h4 className="text-white font-medium">{attendee.name}</h4>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-gray-400">{attendee.rollNumber}</span>
+                    <span className="text-gray-600">•</span>
+                    <span className="text-gray-400">{attendee.department}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };

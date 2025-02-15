@@ -4,7 +4,10 @@ import axios from 'axios';
 import GradientButton from '@/components/ui/GradientButton';
 import type { Prisma } from '@prisma/client';
 
-type MeetFormInput = Omit<Prisma.MeetingCreateInput, 'hostID' | 'conductor' | 'attendees'>;
+type MeetFormInput = Omit<
+  Prisma.MeetingCreateInput,
+  "hostID" | "conductor" | "attendees"
+>;
 
 const MeetForm = () => {
   const [formData, setFormData] = useState<MeetFormInput>({
