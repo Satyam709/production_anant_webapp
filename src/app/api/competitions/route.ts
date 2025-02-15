@@ -29,6 +29,10 @@ export async function GET(req: NextRequest) {
                     competitionName: true,
                     conductedOn: true,
                     registration_deadline: true,
+                    max_team_size: true,
+                    conductedBy: true,
+                    min_team_size: true,
+                    description: true,
                     prize: true,
                     imageURL: true,
                     venue: true
