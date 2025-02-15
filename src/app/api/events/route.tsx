@@ -38,6 +38,8 @@ export async function GET(req: NextRequest) {
           conductedOn: true,
           imageURL: true,
           prize: true,
+          venue: true,
+          description: true,
         },
       });
     }
