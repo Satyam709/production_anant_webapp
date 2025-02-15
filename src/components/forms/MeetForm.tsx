@@ -4,6 +4,7 @@ import React, {
   type RefObject,
   useCallback,
   useEffect,
+  useMemo,
 } from "react";
 import { Suspense } from "react";
 import {
@@ -18,7 +19,7 @@ import {
 } from "lucide-react";
 import GradientButton from "../ui/GradientButton";
 import Modal from "../ui/Modal";
-import { Prisma } from "@prisma/client";
+import { branch_options, Prisma } from "@prisma/client";
 import { Meeting } from "@prisma/client";
 import axios from "axios";
 import { getAttendies } from "@/lib/actions/MeetAction";
@@ -239,11 +240,11 @@ const MeetForm = () => {
                 <div className="space-y-3 text-sm text-gray-300">
                   <p>
                     <span className="text-gray-400">Date:</span>{" "}
-                    {meeting.starts.toLocaleDateString()}
+                    {new Date(meeting.starts).toLocaleDateString()}
                   </p>
                   <p>
                     <span className="text-gray-400">Time:</span>{" "}
-                    {formatTime(meeting.starts)}
+                    {formatTime(new Date(meeting.starts))}
                   </p>
                   <p>
                     <span className="text-gray-400">Duration:</span>{" "}
@@ -442,8 +443,10 @@ const MeetForm = () => {
         onClose={() => setIsAttendeesModalOpen(false)}
         title={`Attendees - ${selectedMeeting?.topic_of_discussion}`}
       >
-        <RenderAttendies id={selectedMeeting?.meeting_id || ""} />
-        <Suspense fallback={"Loading..."}></Suspense>
+        
+        <Suspense fallback={"Loading..."}>
+        <RenderAttendees id={selectedMeeting?.meeting_id || ""} />
+        </Suspense>
       </Modal>
 
       {/* QR Code Modal */}
@@ -482,62 +485,34 @@ const MeetForm = () => {
   );
 };
 
-const RenderAttendies = async ({ id }: { id: string }) => {
-  const attendies = await getAttendies(id);
+const RenderAttendees = async ({ id }: { id: string }) => {
+
+  interface att  {
+    name: string;
+    id: string;
+    roll_number: number;
+    branch: branch_options | null;
+    batch: string | null;
+};
+
+  const [attendees, setAttendees] = useState<att[]>([]);
+
+  useEffect(() => {
+    const fetchAttendees = async () => {
+      if (id) {
+        const data = await getAttendies(id);
+        setAttendees(data);
+      }
+    };
+    fetchAttendees();
+  }, [id]);
+
   return (
     <div className="space-y-6">
-      {/* Search and Filter */}
-      {/* <div className="relative">
-            <input
-              type="text"
-              placeholder="Search attendees..."
-              className="w-full px-4 py-2.5 pl-10 bg-black/30 border border-gray-700 rounded-lg
-                     focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                     text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-            />
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-          </div> */}
-
-      {/* Attendance Stats */}
-      {/* <div className="grid grid-cols-3 gap-4">
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-400">
-                {mockAttendees.filter((a) => a.checkInTime).length}
-              </div>
-              <div className="text-sm text-green-300">Present</div>
-            </div>
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-red-400">
-                {mockAttendees.filter((a) => !a.checkInTime).length}
-              </div>
-              <div className="text-sm text-red-300">Absent</div>
-            </div>
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-blue-400">
-                {mockAttendees.length}
-              </div>
-              <div className="text-sm text-blue-300">Total</div>
-            </div>
-          </div> */}
-
       {/* Attendees List */}
       <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-        {attendies &&
-          attendies.map((attendee) => (
+        {attendees.length > 0 ? (
+          attendees.map((attendee) => (
             <div
               key={attendee.id}
               className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 hover:border-primary-blue/50 transition-all duration-200"
@@ -552,17 +527,19 @@ const RenderAttendies = async ({ id }: { id: string }) => {
                 <div>
                   <h4 className="text-white font-medium">{attendee.name}</h4>
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-400">{attendee.rollNumber}</span>
+                    <span className="text-gray-400">{attendee.roll_number}</span>
                     <span className="text-gray-600">•</span>
-                    <span className="text-gray-400">{attendee.department}</span>
+                    <span className="text-gray-400">{attendee.branch}</span>
                   </div>
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <p className="text-gray-400">No attendees found.</p>
+        )}
       </div>
     </div>
   );
 };
-
 export default MeetForm;

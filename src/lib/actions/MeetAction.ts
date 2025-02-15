@@ -20,13 +20,14 @@ export async function getAttendies(id: string) {
                 name:true,
                 batch:true,
                 roll_number:true,
-                id:true
+                id:true,
+                branch:true,
             }
         }
       }
     });
 
-    if (!events) {
+    if (!attendies) {
       return [];
     }
 
