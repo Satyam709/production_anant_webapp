@@ -31,12 +31,12 @@ async function fetchActiveCompetitions(): Promise<Competitions[]> {
     }
 
     // Filter for active competitions (registration deadline not passed)
-    const now = new Date();
-    const filteredCompetitions = activeCompetitions.filter(
-      (comp: Competitions) => new Date(comp.registration_deadline) > now
-    );
+    // const now = new Date();
+    // const filteredCompetitions = activeCompetitions.filter(
+    //   (comp: Competitions) => new Date(comp.registration_deadline) > now
+    // );
 
-    return filteredCompetitions;
+    return activeCompetitions;
   } catch (error) {
     console.error("Error parsing competitions data:", error);
     return []; // Return an empty array on error

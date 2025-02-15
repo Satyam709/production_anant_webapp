@@ -1,119 +1,193 @@
-import React, { useState } from 'react';
-import { Trophy, Loader, Upload, Pencil, Trash2, Plus } from 'lucide-react';
-import GradientButton from '../ui/GradientButton';
-import Modal from '../ui/Modal';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  type RefObject,
+  useCallback,
+} from "react";
+import {
+  Trophy,
+  Loader,
+  Pencil,
+  Trash2,
+  Plus,
+  CalendarClock,
+  Clock,
+} from "lucide-react";
+import GradientButton from "../ui/GradientButton";
+import Modal from "../ui/Modal";
+import { Competitions, Prisma } from "@prisma/client";
+import Image from "next/image";
+import { placeholder } from "@/lib/images/placeholder";
+import axios from "axios";
+import { uploadServerSideFile } from "@/lib/actions/uploadthing";
+import { deleteCompetition } from "@/lib/actions/Competitions";
+import { th } from "framer-motion/client";
 
-type Competition = {
-  id: string;
-  competitionName: string;
-  conductedBy: string;
-  conductedOn: Date;
-  registration_deadline: Date;
-  venue: string;
-  prize: string;
-  description: string;
-  min_team_size: number;
-  max_team_size: number;
-  imageURL: string;
-};
 
-// Mock data
-const mockCompetitions: Competition[] = [
-  {
-    id: '1',
-    competitionName: 'Code Wars 2025',
-    conductedBy: 'Programming Club',
-    conductedOn: new Date('2025-04-15'),
-    registration_deadline: new Date('2025-04-01'),
-    venue: 'Computer Lab',
-    prize: '$2000 in prizes',
-    description: 'Annual competitive programming contest',
-    min_team_size: 1,
-    max_team_size: 3,
-    imageURL: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: '2',
-    competitionName: 'AI Challenge',
-    conductedBy: 'AI/ML Club',
-    conductedOn: new Date('2025-05-20'),
-    registration_deadline: new Date('2025-05-10'),
-    venue: 'Innovation Hub',
-    prize: '$1500 for winners',
-    description: 'Build innovative AI solutions',
-    min_team_size: 2,
-    max_team_size: 4,
-    imageURL: 'https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&q=80&w=1000',
-  },
-];
+type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, "createdBy">;
+
+async function fetchActiveCompetitions(): Promise<Competitions[]> {
+  try {
+    const response = await fetch(`/api/competitions`);
+
+    if (!response.ok) {
+      console.error("Failed to fetch competitions:", response.status);
+      return [];
+    }
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if (!data || (!data.upcoming_comp && !data.past_comp)) {
+      return [];
+    }
+
+    let activeCompetitions: Competitions[] = [];
+
+    if (data.upcoming_comp) {
+      activeCompetitions = data.upcoming_comp;
+    }
+
+    return activeCompetitions;
+  } catch (error) {
+    console.error("Error parsing competitions data:", error);
+    return [];
+  }
+}
+
 
 const CompForm = () => {
-  const [competitions, setCompetitions] = useState<Competition[]>(mockCompetitions);
+  const [competitions, setCompetitions] = useState<Competitions[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCompetition, setEditingCompetition] = useState<Competition | null>(null);
-  const [formData, setFormData] = useState<Omit<Competition, 'id'>>({
-    competitionName: '',
-    conductedBy: '',
+  const [editingCompetition, setEditingCompetition] =
+    useState<Competitions | null>(null);
+  const [formData, setFormData] = useState<CompetitionFormInput>({
+    competitionName: "",
+    conductedBy: "",
     conductedOn: new Date(),
     registration_deadline: new Date(),
-    venue: '',
-    prize: '',
-    description: '',
+    venue: "",
+    prize: "",
+    description: "",
     min_team_size: 1,
     max_team_size: 4,
-    imageURL: '',
+    imageURL: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [loadingCompetitions, setLoadingCompetitions] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+
+  const conductedOnRef = useRef<HTMLInputElement | null>(null);
+  const deadlineRef = useRef<HTMLInputElement | null>(null);
+
+  const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
+    if (ref.current) {
+      if (typeof ref.current.showPicker === "function") {
+        ref.current.showPicker();
+      } else {
+        ref.current.focus();
+      }
+    }
+  };
+
+  const refetchCompetitions = useCallback(async () => {
+    setLoadingCompetitions(true);
+    try {
+      const data = await fetchActiveCompetitions();
+      setCompetitions(data);
+    } catch (error) {
+      console.error("Error refetching competitions:", error);
+      setError("Failed to refetch competitions.");
+    } finally {
+      setLoadingCompetitions(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refetchCompetitions();
+  }, [refetchCompetitions]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      if (!file && !editingCompetition?.imageURL) {
+        setError("Please upload an image");
+        return;
+      }
+
+      let imageURL: string | undefined;
+
+      if (file) {
+        const res = await uploadServerSideFile(file);
+        if (!res) {
+          setError("Failed to upload image");
+          return;
+        }
+        imageURL = res.ufsUrl;
+      } else if (editingCompetition?.imageURL) {
+        imageURL = editingCompetition.imageURL;
+      }
+
+      const payload = {
+        ...formData,
+        imageURL: imageURL,
+        conductedOn: new Date(formData.conductedOn ).toISOString(),
+        registration_deadline: new Date(
+          formData.registration_deadline
+        ).toISOString(),
+        min_team_size: parseInt(String(formData.min_team_size)),
+        max_team_size: parseInt(String(formData.max_team_size)),
+      };
+
       if (editingCompetition) {
-        setCompetitions(competitions.map(comp => 
-          comp.id === editingCompetition.id 
-            ? { ...formData, id: comp.id } 
-            : comp
-        ));
-        setSuccess('Competition updated successfully!');
+        await axios.put(
+          `/api/competitions/${editingCompetition.competition_id}/edit`,
+          payload
+        );
+        setSuccess("Competition updated successfully!");
       } else {
-        const newCompetition = {
-          ...formData,
-          id: Date.now().toString(),
-        };
-        setCompetitions([...competitions, newCompetition]);
-        setSuccess('Competition created successfully!');
+        await axios.post("/api/competitions/create", payload);
+        setSuccess("Competition created successfully!");
       }
 
       setFormData({
-        competitionName: '',
-        conductedBy: '',
+        competitionName: "",
+        conductedBy: "",
         conductedOn: new Date(),
         registration_deadline: new Date(),
-        venue: '',
-        prize: '',
-        description: '',
+        venue: "",
+        prize: "",
+        description: "",
         min_team_size: 1,
         max_team_size: 4,
-        imageURL: '',
+        imageURL: "",
       });
+      setFile(null);
       setIsModalOpen(false);
       setEditingCompetition(null);
+      refetchCompetitions();
     } catch (err: any) {
-      setError(editingCompetition ? 'Failed to update competition' : 'Failed to create competition');
+      setError(
+        err.response?.data?.message ||
+          (editingCompetition
+            ? "Failed to update competition"
+            : "Failed to create competition")
+      );
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (competition: Competition) => {
+  const handleEdit = (competition: Competitions) => {
     setEditingCompetition(competition);
     setFormData(competition);
     setIsModalOpen(true);
@@ -121,40 +195,45 @@ const CompForm = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setCompetitions(competitions.filter(comp => comp.id !== id));
-      setSuccess('Competition deleted successfully!');
+     const res = await deleteCompetition(id);
+      if (res.error) {
+        throw new Error(res.error);
+      }
+      setCompetitions(
+        competitions?.filter((comp) => comp.competition_id !== id) || []
+      );
+      setSuccess("Competition deleted successfully!");
+      refetchCompetitions();
     } catch (err) {
-      setError('Failed to delete competition');
+      setError("Failed to delete competition");
     }
   };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    if (name === 'conductedOn' || name === 'registration_deadline') {
-      setFormData(prev => ({ ...prev, [name]: new Date(value) }));
-    } else if (name === 'min_team_size' || name === 'max_team_size') {
-      setFormData(prev => ({ ...prev, [name]: parseInt(value) }));
+    let { name, value } = e.target;
+    if (name === "min_team_size" || name === "max_team_size") {
+      if(value == "")value="0";
+      setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
   const openCreateModal = () => {
     setEditingCompetition(null);
     setFormData({
-      competitionName: '',
-      conductedBy: '',
+      competitionName: "",
+      conductedBy: "",
       conductedOn: new Date(),
       registration_deadline: new Date(),
-      venue: '',
-      prize: '',
-      description: '',
+      venue: "",
+      prize: "",
+      description: "",
       min_team_size: 1,
       max_team_size: 4,
-      imageURL: '',
+      imageURL: "",
     });
     setIsModalOpen(true);
   };
@@ -167,7 +246,7 @@ const CompForm = () => {
           <Trophy className="h-6 w-6 text-primary-cyan" />
           <h2 className="text-xl font-semibold text-white">Competitions</h2>
         </div>
-        <GradientButton onClick={openCreateModal} type="button">
+        <GradientButton onClick={openCreateModal}>
           <div className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
             <span>Create Competition</span>
@@ -188,55 +267,83 @@ const CompForm = () => {
       )}
 
       {/* Competitions Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {competitions.map(competition => (
-          <div
-            key={competition.id}
-            className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
-          >
-            <div className="relative h-48">
-              <img
-                src={competition.imageURL}
-                alt={competition.competitionName}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-white mb-2">{competition.competitionName}</h3>
-              <div className="space-y-2 text-sm text-gray-300">
-                <p><span className="text-gray-400">By:</span> {competition.conductedBy}</p>
-                <p><span className="text-gray-400">Date:</span> {competition.conductedOn.toLocaleDateString()}</p>
-                <p><span className="text-gray-400">Venue:</span> {competition.venue}</p>
-                <p><span className="text-gray-400">Team Size:</span> {competition.min_team_size} - {competition.max_team_size} members</p>
-                {competition.prize && (
-                  <p><span className="text-gray-400">Prize:</span> {competition.prize}</p>
-                )}
+      {loadingCompetitions ? (
+        <div className="flex justify-center">
+          <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+        </div>
+      ) : competitions && competitions.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {competitions.map((competition) => (
+            <div
+              key={competition.competition_id}
+              className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
+            >
+              <div className="relative h-48">
+                <Image
+                  src={competition?.imageURL || placeholder}
+                  alt={competition.competitionName}
+                  className="w-full h-full object-cover"
+                  fill
+                  sizes="100%"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="mt-4 flex justify-end space-x-2">
-                <button
-                  onClick={() => handleEdit(competition)}
-                  className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                >
-                  <Pencil className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(competition.id)}
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {competition.competitionName}
+                </h3>
+                <div className="space-y-2 text-sm text-gray-300">
+                  <p>
+                    <span className="text-gray-400">Date:</span>{" "}
+                    {new Date(competition.conductedOn).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <span className="text-gray-400">Venue:</span>{" "}
+                    {competition.venue}
+                  </p>
+                  <p>
+                    <span className="text-gray-400">Team Size:</span>{" "}
+                    {competition.min_team_size} - {competition.max_team_size}{" "}
+                    members
+                  </p>
+                  {competition.prize && (
+                    <p>
+                      <span className="text-gray-400">Prize:</span>{" "}
+                      {competition.prize}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-4 flex justify-end space-x-2">
+                  <button
+                    onClick={() => handleEdit(competition)}
+                    className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                  >
+                    <Pencil className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(competition.competition_id)}
+                    className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-gray-400">
+          {competitions === null
+            ? "Failed to load competitions."
+            : "No competitions found."}
+        </div>
+      )}
 
       {/* Create/Edit Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingCompetition ? 'Edit Competition' : 'Create Competition'}
+        title={editingCompetition ? "Edit Competition" : "Create Competition"}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -256,56 +363,22 @@ const CompForm = () => {
                 required
               />
             </div>
-
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-300">
-                Conducted By
-              </label>
-              <input
-                type="text"
-                name="conductedBy"
-                value={formData.conductedBy}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                placeholder="Enter conducting organization"
-                required
-              />
-            </div>
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-              Competition Banner Image
+              Competition Image
             </label>
-            <div className="flex items-center space-x-4">
-              <input
-                type="url"
-                name="imageURL"
-                value={formData.imageURL}
-                onChange={handleInputChange}
-                className="flex-1 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                placeholder="Enter banner image URL"
-              />
-              <button
-                type="button"
-                className="px-4 py-2.5 bg-gray-800 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors"
-              >
-                <Upload className="h-5 w-5" />
-              </button>
-            </div>
-            {formData.imageURL && (
-              <div className="mt-2 relative rounded-lg overflow-hidden h-40">
-                <img
-                  src={formData.imageURL}
-                  alt="Competition banner preview"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
+            <input
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setFile(e.target.files[0]);
+                }
+              }}
+              className="w-full text-white file:bg-primary-blue file:border-none file:rounded-md file:p-2 file:text-sm file:font-bold cursor-pointer"
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -313,32 +386,64 @@ const CompForm = () => {
               <label className="block text-sm font-medium text-gray-300">
                 Competition Date
               </label>
-              <input
-                type="datetime-local"
-                name="conductedOn"
-                value={formData.conductedOn instanceof Date ? formData.conductedOn.toISOString().slice(0, 16) : ''}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                required
-              />
+              <div
+                className="relative cursor-pointer"
+                onClick={() => handleDateClick(conductedOnRef)}
+              >
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <CalendarClock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="datetime-local"
+                  ref={conductedOnRef}
+                  name="conductedOn"
+                  value={new Date(formData.conductedOn)
+                    .toISOString()
+                    .slice(0, 16)}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      conductedOn: new Date(e.target.value),
+                    }))
+                  }
+                  className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                         appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                         text-white placeholder-gray-500 backdrop-blur-sm"
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">
                 Registration Deadline
               </label>
-              <input
-                type="datetime-local"
-                name="registration_deadline"
-                value={formData.registration_deadline instanceof Date ? formData.registration_deadline.toISOString().slice(0, 16) : ''}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                required
-              />
+              <div
+                className="relative cursor-pointer"
+                onClick={() => handleDateClick(deadlineRef)}
+              >
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Clock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="datetime-local"
+                  ref={deadlineRef}
+                  name="registration_deadline"
+                  value={new Date(formData.registration_deadline)
+                    .toISOString()
+                    .slice(0, 16)}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      registration_deadline: new Date(e.target.value),
+                    }))
+                  }
+                  className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                         appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                         text-white placeholder-gray-500 backdrop-blur-sm"
+                  required
+                />
+              </div>
             </div>
           </div>
 
@@ -367,7 +472,7 @@ const CompForm = () => {
               <input
                 type="text"
                 name="prize"
-                value={formData.prize}
+                value={formData.prize || ""}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -430,6 +535,23 @@ const CompForm = () => {
             />
           </div>
 
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Conducted By
+            </label>
+            <input
+              type="text"
+              name="conductedBy"
+              value={formData.conductedBy}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
+              placeholder="Enter conducting organization"
+              required
+            />
+          </div>
+
           <div className="flex justify-end gap-4">
             <button
               type="button"
@@ -448,11 +570,11 @@ const CompForm = () => {
                 <span>
                   {loading
                     ? editingCompetition
-                      ? 'Updating...'
-                      : 'Creating...'
+                      ? "Updating..."
+                      : "Creating..."
                     : editingCompetition
-                    ? 'Update Competition'
-                    : 'Create Competition'}
+                    ? "Update Competition"
+                    : "Create Competition"}
                 </span>
               </div>
             </GradientButton>
