@@ -10,16 +10,6 @@ const NoticeHeader = () => {
       <p className="text-gray-400 max-w-2xl mx-auto">
         Stay updated with the latest announcements, updates, and important information.
       </p>
-      <div className="flex justify-center gap-4 mt-8">
-        <button className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/10 text-cyan-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all">
-          <Bell size={18} />
-          All Notices
-        </button>
-        <button className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/10 text-cyan-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all">
-          <Filter size={18} />
-          Filter
-        </button>
-      </div>
     </div>
   );
 };
