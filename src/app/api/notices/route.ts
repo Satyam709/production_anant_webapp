@@ -5,7 +5,7 @@ import {notice_cat} from "@prisma/client";
 
 export async function GET(req: NextRequest) {
     try{
-        const size = 3;
+        const size = 12;
         const url = new URL(req.url);
         const searchParams = url.searchParams;
         const pageNumber = parseInt(searchParams.get("page") || "1", 10);
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
                 },
                 orderBy: {
                     postedOn: "desc"
-                }
+                },
             });
         }
 

@@ -38,8 +38,6 @@ export async function POST(req: NextRequest) {
       userID: session.user.id,
     };
 
-    console.log(notice);
-    console.log("Creating notice");
     const result = await prisma.notice.create({
       data: notice,
     });
