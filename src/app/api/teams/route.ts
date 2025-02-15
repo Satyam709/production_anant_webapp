@@ -12,15 +12,54 @@ export async function GET(req: NextRequest) {
         
         const teams_leaded = await prisma.team.findMany({
             where: { team_leader_id: userId },
-            select: { team_name: true, team_id: true },
+            select: { 
+                team_name: true, 
+                team_id: true,  
+                team_members:{
+                    select:{
+                        roll_number: true,
+                        name: true,
+                    }
+                }
+            },
         });
 
         const teams_member = await prisma.team.findMany({
             where: { team_members: { some: { id: userId } } },
-            select: { team_name: true, team_id: true },
+            select: { 
+                team_name: true, 
+                team_id: true,
+                team_members:{
+                    select:{
+                        roll_number: true
+                    }
+                } ,
+                team_leader:{
+                    select:{
+                        roll_number: true
+                    }
+                }
+            },
         });
 
-        return NextResponse.json({status: 200, teams_leaded, teams_member});
+        const invitations = await prisma.pending_requests.findMany({
+            where:{
+                user_id: userId
+            },
+            select:{
+                request_id: true,
+                request_time: true,
+                team_id: true,
+                team: {
+                    select: {
+                        team_leader_id: true,
+                        team_name: true
+                    }
+                }
+            }
+        });
+
+        return NextResponse.json({status: 200, teams_leaded, teams_member, invitations});
 
     }
     catch(err){

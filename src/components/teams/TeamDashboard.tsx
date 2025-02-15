@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Users, UserPlus, Send, Plus, Pencil, Trash2, Loader } from 'lucide-react';
 import GradientButton from '../ui/GradientButton';
 import Modal from '../ui/Modal';
 import StatusModal from '../ui/StatusModal';
+import { DeleteTeam } from '@/lib/actions/DeleteTeam';
 
 interface Team {
-  id: string;
-  name: string;
-  members: string[];
-  description?: string;
-  createdAt: Date;
+  team_id: string;
+  team_name: string;
+  team_leader: string,
+  team_members: string[];
 }
 
 interface Invitation {
-  id: string;
+  request_id: string;
   teamName: string;
-  from: string;
-  role: string;
-  sentAt: Date;
+  team_id: string;
+  team_leader: string
+  request_time: Date;
 }
 
 interface StatusMessage {
@@ -27,59 +27,76 @@ interface StatusMessage {
 }
 
 const TeamDashboard = () => {
-  const [teams, setTeams] = useState<Team[]>([
-    {
-      id: '1',
-      name: 'Web Development Team',
-      members: ['21CS101', '21CS102', '21CS103'],
-      description: 'Frontend and Backend development team',
-      createdAt: new Date('2024-02-15'),
-    },
-    {
-      id: '2',
-      name: 'AI Research Group',
-      members: ['21CS201', '21CS202', '21CS204', '21CS205'],
-      description: 'Research on machine learning algorithms',
-      createdAt: new Date('2024-01-20'),
-    },
-  ]);
+  const [teams, setTeams] = useState<Team[]>([]);
 
-  const [memberTeams, setMemberTeams] = useState<Team[]>([
-    {
-      id: '4',
-      name: 'Competitive Programming',
-      members: ['21CS401', '21CS402', '21CS403', '21CS404'],
-      description: 'Practice and compete in coding contests',
-      createdAt: new Date('2024-02-01'),
-    },
-  ]);
+  const [memberTeams, setMemberTeams] = useState<Team[]>([]);
 
-  const [invitations, setInvitations] = useState<Invitation[]>([
-    {
-      id: '1',
-      teamName: 'Cloud Computing Team',
-      from: 'Prof. Sarah Johnson',
-      role: 'Member',
-      sentAt: new Date('2024-03-10'),
-    },
-  ]);
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [statusModal, setStatusModal] = useState<StatusMessage | null>(null);
   const [teamToDelete, setTeamToDelete] = useState<string | null>(null);
+  const [refresh, set_refresh] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name: ''
   });
 
   const [newMemberRoll, setNewMemberRoll] = useState('');
+
+  useEffect(()=>{
+    async function getData(){
+      const details = await fetch(`/api/teams`, {
+        method:"GET",
+        headers:{"Content-Type":"application/json"}
+      });
+
+      const response = await details.json();
+
+      let teams_member = response.teams_member;
+      let modified_teams_member = [];
+      for (let i=0;i<teams_member.length;i++){
+        modified_teams_member.push({
+          team_id : teams_member[i].team_id,
+          team_name: teams_member[i].team_name,
+          team_members: teams_member[i].team_members.map((el:any)=>String(el.roll_number)),
+          team_leader: String(teams_member[i].team_leader.roll_number) 
+        });
+      }
+
+      const teams_leaded = response.teams_leaded;
+      let modified_teams_leaded = [];
+      for(let i=0;i<teams_leaded.length;i++){
+        modified_teams_leaded.push({
+          team_id: teams_leaded[i].team_id,
+          team_name: teams_leaded[i].team_name,
+          team_members: teams_leaded[i].team_members.map((el:any)=>String(el.roll_number)),
+          team_leader: teams_leaded[i].team_leader
+        })
+      }
+
+      const invitations = response.invitations;
+      let modified_invitations = [];
+      for(let i=0;i<invitations.length;i++){
+        modified_invitations.push({
+          request_id: invitations[i].request_id,
+          teamName: invitations[i].team.team_name,
+          team_id:invitations[i].team_id,
+          team_leader:invitations[i].team.team_leader_id,
+          request_time: invitations[i].request_time
+        })
+      }
+      
+      setInvitations(modified_invitations);
+      setTeams(modified_teams_leaded);
+      setMemberTeams(modified_teams_member);
+    }
+    getData();
+  },[refresh]);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -91,27 +108,36 @@ const TeamDashboard = () => {
     if (formData.name.trim()) {
       setLoading(true);
       try {
-        const newTeam: Team = {
-          id: Date.now().toString(),
-          name: formData.name,
-          description: formData.description,
-          members: [],
-          createdAt: new Date(),
-        };
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+  
+        const createTeam = await fetch(`/api/teams/create`, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({"team_name":formData.name})
+        });
+
+        if (!createTeam.ok) {
+          const errorResponse = await createTeam.json();
+          throw new Error(errorResponse.error || "Failed to create team");
+        }
+
+        const response = await createTeam.json();
+        let newTeam = response.data;
+        newTeam = {...newTeam, team_members:[]}
+        
         setTeams([...teams, newTeam]);
         setIsCreateModalOpen(false);
-        setFormData({ name: '', description: '' });
+        setFormData({ name: ''});
         setStatusModal({
           type: 'success',
           title: 'Team Created',
           message: 'The team has been created successfully.',
         });
       } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
         setStatusModal({
           type: 'error',
           title: 'Error',
-          message: 'Failed to create team. Please try again.',
+          message:  errorMessage || 'Failed to create team. Please try again.',
         });
       } finally {
         setLoading(false);
@@ -119,44 +145,7 @@ const TeamDashboard = () => {
     }
   };
 
-  const editTeam = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (selectedTeam && formData.name.trim()) {
-      setLoading(true);
-      try {
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-        const updatedTeams = teams.map(team => {
-          if (team.id === selectedTeam.id) {
-            return {
-              ...team,
-              name: formData.name,
-              description: formData.description,
-            };
-          }
-          return team;
-        });
-        setTeams(updatedTeams);
-        setIsEditModalOpen(false);
-        setSelectedTeam(null);
-        setFormData({ name: '', description: '' });
-        setStatusModal({
-          type: 'success',
-          title: 'Team Updated',
-          message: 'The team has been updated successfully.',
-        });
-      } catch (err) {
-        setStatusModal({
-          type: 'error',
-          title: 'Error',
-          message: 'Failed to update team. Please try again.',
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  const confirmDeleteTeam = (teamId: string) => {
+  const confirmDeleteTeam = async (teamId: string) => {
     setTeamToDelete(teamId);
     setStatusModal({
       type: 'confirm',
@@ -168,8 +157,11 @@ const TeamDashboard = () => {
   const deleteTeam = async () => {
     if (teamToDelete) {
       try {
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-        setTeams(teams.filter(team => team.id !== teamToDelete));
+        const delete_team = await DeleteTeam(teamToDelete);
+        if(!delete_team?.success){
+          throw new Error(delete_team.message);
+        }
+        setTeams(teams.filter(team => team.team_id !== teamToDelete));
         setStatusModal({
           type: 'success',
           title: 'Team Deleted',
@@ -191,31 +183,40 @@ const TeamDashboard = () => {
     e.preventDefault();
     if (selectedTeam && newMemberRoll.trim()) {
       setLoading(true);
-      try {
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-        const updatedTeams = teams.map(team => {
-          if (team.id === selectedTeam.id) {
-            return {
-              ...team,
-              members: [...team.members, newMemberRoll],
-            };
-          }
-          return team;
+      try { 
+        
+        if(isNaN(Number(newMemberRoll.trim()))){
+          throw new Error("Roll Number should be a number");
+        }
+
+        const data = {
+          team_id : selectedTeam.team_id,
+          invitee_roll_number: newMemberRoll.trim()
+        };
+
+        const invite = await fetch(`/api/invite-to-team`, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify(data)
         });
-        setTeams(updatedTeams);
-        setIsAddMemberModalOpen(false);
-        setSelectedTeam(null);
-        setNewMemberRoll('');
+
+        if(!invite.ok){
+          const errorMsg = await invite.json(); 
+          throw new Error(errorMsg.error);
+        }
+
+        const response = await invite.json();
+
         setStatusModal({
           type: 'success',
-          title: 'Member Added',
-          message: 'The member has been added to the team successfully.',
+          title: 'Request Sent',
+          message: response.message || 'Invitation sent successfully.',
         });
       } catch (err) {
         setStatusModal({
           type: 'error',
           title: 'Error',
-          message: 'Failed to add member. Please try again.',
+          message: String(err) || 'Failed to add member. Please try again.',
         });
       } finally {
         setLoading(false);
@@ -223,14 +224,43 @@ const TeamDashboard = () => {
     }
   };
 
-  const handleEditClick = (team: Team) => {
-    setSelectedTeam(team);
-    setFormData({
-      name: team.name,
-      description: team.description || '',
-    });
-    setIsEditModalOpen(true);
-  };
+  const acceptInvitation = async (req_id: string, joinTeam: boolean) =>{
+    try{
+      const invite = await fetch(`/api/join-team`, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({request_id: req_id, joinTeam: joinTeam})
+      });
+
+      if(!invite.ok){
+        const errorMsg = await invite.json();
+        throw new Error(errorMsg);
+      }
+
+      if(joinTeam){
+        setStatusModal({
+          type: 'success',
+          title: 'Invitation accepted',
+          message: 'Team joined successfully.',
+        });
+      }
+      else{
+        setStatusModal({
+          type: 'success',
+          title: 'Invitation rejected',
+          message: 'Invitation request deleted successfully.',
+        });
+      }
+      set_refresh(!refresh);
+    }
+    catch(err){
+      setStatusModal({
+        type: 'error',
+        title: 'Error',
+        message: String(err) || 'Failed to process request.',
+      });
+    }
+  }
 
   const handleAddMemberClick = (team: Team) => {
     setSelectedTeam(team);
@@ -242,7 +272,7 @@ const TeamDashboard = () => {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
-    }).format(date);
+    }).format(new Date(date));
   };
 
   return (
@@ -264,21 +294,14 @@ const TeamDashboard = () => {
           </div>
           <div className="space-y-4">
             {teams.map(team => (
-              <div key={team.id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
+              <div key={team.team_id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h3 className="font-medium text-white text-lg">{team.name}</h3>
-                    <p className="text-gray-400 text-sm">{team.description}</p>
+                    <h3 className="font-medium text-white text-lg">{team.team_name}</h3>
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => handleEditClick(team)}
-                      className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                    >
-                      <Pencil className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => confirmDeleteTeam(team.id)}
+                      onClick={() => confirmDeleteTeam(team.team_id)}
                       className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <Trash2 className="h-5 w-5" />
@@ -293,7 +316,7 @@ const TeamDashboard = () => {
                 </div>
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex -space-x-2">
-                    {team.members.slice(0, 3).map((member, idx) => (
+                    {team.team_members.slice(0, 3).map((member, idx) => (
                       <div
                         key={idx}
                         className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-blue to-primary-cyan border-2 border-gray-900 flex items-center justify-center text-xs text-white"
@@ -301,13 +324,12 @@ const TeamDashboard = () => {
                         {member.slice(-2)}
                       </div>
                     ))}
-                    {team.members.length > 3 && (
+                    {team.team_members.length > 3 && (
                       <div className="w-8 h-8 rounded-full bg-gray-700 border-2 border-gray-900 flex items-center justify-center text-xs text-white">
-                        +{team.members.length - 3}
+                        +{team.team_members.length - 3}
                       </div>
                     )}
                   </div>
-                  <span className="text-gray-400 text-sm">Created {formatDate(team.createdAt)}</span>
                 </div>
               </div>
             ))}
@@ -322,14 +344,13 @@ const TeamDashboard = () => {
           </div>
           <div className="space-y-4">
             {memberTeams.map(team => (
-              <div key={team.id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
+              <div key={team.team_id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
                 <div className="mb-2">
-                  <h3 className="font-medium text-white text-lg">{team.name}</h3>
-                  <p className="text-gray-400 text-sm">{team.description}</p>
+                  <h3 className="font-medium text-white text-lg">{team.team_name}</h3>
                 </div>
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex -space-x-2">
-                    {team.members.slice(0, 3).map((member, idx) => (
+                    {team.team_members.slice(0, 3).map((member, idx) => (
                       <div
                         key={idx}
                         className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-blue to-primary-cyan border-2 border-gray-900 flex items-center justify-center text-xs text-white"
@@ -337,13 +358,12 @@ const TeamDashboard = () => {
                         {member.slice(-2)}
                       </div>
                     ))}
-                    {team.members.length > 3 && (
+                    {team.team_members.length > 3 && (
                       <div className="w-8 h-8 rounded-full bg-gray-700 border-2 border-gray-900 flex items-center justify-center text-xs text-white">
-                        +{team.members.length - 3}
+                        +{team.team_members.length - 3}
                       </div>
                     )}
                   </div>
-                  <span className="text-gray-400 text-sm">Joined {formatDate(team.createdAt)}</span>
                 </div>
               </div>
             ))}
@@ -358,22 +378,22 @@ const TeamDashboard = () => {
           </div>
           <div className="space-y-4">
             {invitations.map(invitation => (
-              <div key={invitation.id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
+              <div key={invitation.request_id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
                 <div className="mb-3">
                   <h3 className="font-medium text-white text-lg">{invitation.teamName}</h3>
                   <p className="text-gray-400 text-sm">
-                    Invited by {invitation.from} • Role: {invitation.role}
+                    Invited by {invitation.team_leader}
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400 text-sm">
-                    Sent {formatDate(invitation.sentAt)}
+                    Sent {formatDate(invitation.request_time)}
                   </span>
                   <div className="space-x-2">
-                    <button className="bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white px-4 py-2 rounded-md text-sm transition-colors">
+                    <button onClick={()=>{acceptInvitation(invitation.request_id, true)}} className="bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white px-4 py-2 rounded-md text-sm transition-colors">
                       Accept
                     </button>
-                    <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition-colors">
+                    <button onClick={()=>{acceptInvitation(invitation.request_id, false)}} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition-colors">
                       Decline
                     </button>
                   </div>
@@ -410,21 +430,6 @@ const TeamDashboard = () => {
               required
             />
           </div>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={3}
-              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-              placeholder="Enter team description"
-            />
-          </div>
           <div className="flex justify-end gap-4">
             <button
               type="button"
@@ -447,72 +452,6 @@ const TeamDashboard = () => {
         </form>
       </Modal>
 
-      {/* Edit Team Modal */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false);
-          setSelectedTeam(null);
-        }}
-        title="Edit Team"
-      >
-        <form onSubmit={editTeam} className="space-y-6">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              Team Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-              placeholder="Enter team name"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={3}
-              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-              placeholder="Enter team description"
-            />
-          </div>
-          <div className="flex justify-end gap-4">
-            <button
-              type="button"
-              onClick={() => {
-                setIsEditModalOpen(false);
-                setSelectedTeam(null);
-              }}
-              className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              Cancel
-            </button>
-            <GradientButton disabled={loading}>
-              <div className="flex items-center space-x-2">
-                {loading ? (
-                  <Loader className="h-5 w-5 animate-spin" />
-                ) : (
-                  <Pencil className="h-5 w-5" />
-                )}
-                <span>{loading ? 'Updating...' : 'Update Team'}</span>
-              </div>
-            </GradientButton>
-          </div>
-        </form>
-      </Modal>
-
       {/* Add Member Modal */}
       <Modal
         isOpen={isAddMemberModalOpen}
@@ -520,7 +459,7 @@ const TeamDashboard = () => {
           setIsAddMemberModalOpen(false);
           setSelectedTeam(null);
         }}
-        title={`Add Member to ${selectedTeam?.name}`}
+        title={`Add Member to ${selectedTeam?.team_name}`}
       >
         <form onSubmit={addMember} className="space-y-6">
           <div className="space-y-2">

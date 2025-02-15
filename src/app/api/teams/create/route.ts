@@ -14,14 +14,14 @@ export async function POST(req: NextRequest) {
 
         if(!result.success){
             const errorMessages = result.error.errors.map((err) => err.message);
-            return NextResponse.json({status: 400, message: errorMessages.join(", ")});
+            return NextResponse.json({error: errorMessages.join(", ")},{status: 400});
         }
 
         const { team_name } = body;
         const session = await getSession();
 
         if(!session?.user){
-            return NextResponse.json({status: 400, message: "User not logged in!"});
+            return NextResponse.json({error: "User not logged in!"},{status: 401});
         }
 
         const userId = session.user.id;
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         });
 
         if (!user) {
-            return NextResponse.json({status: 400, message: "User not found!"});
+            return NextResponse.json({error: "User not found!"},{status: 400});
         }
 
         const findName = await prisma.team.findUnique({
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         });
 
         if(findName){
-            return NextResponse.json({status: 400, message: "Team name already exists!"});
+            return NextResponse.json({error: "Team name already exists!"},{status: 409});
         }
 
         const team = await prisma.team.create({
@@ -49,14 +49,14 @@ export async function POST(req: NextRequest) {
         });
 
         if(!team){
-            return NextResponse.json({status: 500, message: "Failed to create team!"});
+            return NextResponse.json({error: "Failed to create team!"},{status: 500});
         }
 
-        return NextResponse.json({status: 200, message: `Team ${team_name} created successfully!`});
+        return NextResponse.json({status: 201, message: `Team ${team_name} created successfully!`, data: team});
 
     }
     catch(err){
         console.log(err);
-        return NextResponse.json({status: 500, message: "Internal Server Error"});
+        return NextResponse.json({error: "Internal Server Error"},{status:500});
     }
 }
