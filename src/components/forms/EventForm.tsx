@@ -1,146 +1,204 @@
-import React, { useState } from 'react';
-import { Calendar, Loader, Upload, Pencil, Trash2, Plus } from 'lucide-react';
-import GradientButton from '../ui/GradientButton';
-import Modal from '../ui/Modal';
+import React, {
+  useState,
+  useRef,
+  type RefObject,
+  useCallback,
+  useEffect,
+} from "react";
+import {
+  Calendar,
+  Loader,
+  Pencil,
+  Trash2,
+  Plus,
+  CalendarClock,
+  Clock,
+} from "lucide-react";
+import GradientButton from "../ui/GradientButton";
+import Modal from "@/components/ui/Modal";
+import Image from "next/image";
+import axios from "axios";
+import { uploadServerSideFile } from "@/lib/actions/uploadthing";
+import { Prisma } from "@prisma/client";
+import { Events } from "@prisma/client";
+import { placeholder } from "@/lib/images/placeholder";
+import { deleteEvent } from "@/lib/actions/Events";
 
-type Event = {
-  id: string;
-  eventName: string;
-  conductedBy: string;
-  conductedOn: Date;
-  registration_deadline: Date;
-  venue: string;
-  prize: string;
-  description: string;
-  banner_image: string;
-};
-
-// Mock data
-const mockEvents: Event[] = [
-  {
-    id: '1',
-    eventName: 'Tech Summit 2025',
-    conductedBy: 'Engineering Department',
-    conductedOn: new Date('2025-04-15'),
-    registration_deadline: new Date('2025-04-01'),
-    venue: 'Main Auditorium',
-    prize: '$1000 in prizes',
-    description: 'Annual technology summit featuring industry experts',
-    banner_image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: '2',
-    eventName: 'Hackathon Spring 2025',
-    conductedBy: 'Computer Science Club',
-    conductedOn: new Date('2025-05-20'),
-    registration_deadline: new Date('2025-05-10'),
-    venue: 'Innovation Lab',
-    prize: '$500 for winners',
-    description: '24-hour coding challenge',
-    banner_image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1000',
-  },
-];
+type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
 
 const EventForm = () => {
-  const [events, setEvents] = useState<Event[]>(mockEvents);
+  const [events, setEvents] = useState<Events[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
-  const [formData, setFormData] = useState<Omit<Event, 'id'>>({
-    eventName: '',
-    conductedBy: '',
+  const [editingEvent, setEditingEvent] = useState<Events | null>(null);
+  const [formData, setFormData] = useState<EventFormInput>({
+    eventName: "",
+    conductedBy: "",
     conductedOn: new Date(),
     registration_deadline: new Date(),
-    venue: '',
-    prize: '',
-    description: '',
-    banner_image: '',
+    venue: "",
+    prize: "",
+    description: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+
+  const conductedOnRef = useRef<HTMLInputElement | null>(null);
+  const deadlineRef = useRef<HTMLInputElement | null>(null);
+
+  const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
+    if (ref.current) {
+      if (typeof ref.current.showPicker === "function") {
+        ref.current.showPicker();
+      } else {
+        ref.current.focus();
+      }
+    }
+  };
+
+  const refetchEvents = useCallback(async () => {
+    setLoadingEvents(true);
+    try {
+      // Fetch events logic (replace with your actual API call)
+      const res = await axios.get("/api/events");
+      console.log(res.data);
+      if (!res.data || !res.data.upcomingEvents) {
+        setEvents([]);
+        throw new Error("Failed to fetch events");
+      }
+      setEvents(res.data.upcomingEvents);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch events");
+    } finally {
+      setLoadingEvents(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refetchEvents();
+  }, [refetchEvents]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (!file && !editingEvent?.imageURL) {
+        setError("Please upload an image");
+        return;
+      }
+
+      let imageURL: string | undefined;
+
+      if (file) {
+        const res = await uploadServerSideFile(file);
+        if (!res) {
+          setError("Failed to upload image");
+          return;
+        }
+        imageURL = res.ufsUrl;
+      } else if (editingEvent?.imageURL) {
+        imageURL = editingEvent.imageURL;
+      }
+
+      console.log("imageurl uplaoding ",imageURL);
       
+
+      const payload = {
+        ...formData,
+        imageURL: imageURL,
+        conductedOn: new Date(formData.conductedOn).toISOString(),
+        registration_deadline: new Date(
+          formData.registration_deadline
+        ).toISOString(),
+      };
+
       if (editingEvent) {
-        setEvents(events.map(event => 
-          event.id === editingEvent.id 
-            ? { ...formData, id: event.id } 
-            : event
-        ));
-        setSuccess('Event updated successfully!');
+        // Update event logic (replace with your actual API call)
+        await axios.put(`/api/events/${editingEvent.event_id}/edit`, payload);
+        setSuccess("Event updated successfully!");
       } else {
-        const newEvent = {
-          ...formData,
-          id: Date.now().toString(),
-        };
-        setEvents([...events, newEvent]);
-        setSuccess('Event created successfully!');
+        // Create event logic (replace with your actual API call)
+        await axios.post("/api/events/create", payload);
+        setSuccess("Event created successfully!");
       }
 
       setFormData({
-        eventName: '',
-        conductedBy: '',
+        eventName: "",
+        conductedBy: "",
         conductedOn: new Date(),
         registration_deadline: new Date(),
-        venue: '',
-        prize: '',
-        description: '',
-        banner_image: '',
+        venue: "",
+        prize: "",
+        description: "",
       });
+
+      setFile(null);
       setIsModalOpen(false);
       setEditingEvent(null);
+      refetchEvents();
     } catch (err: any) {
-      setError(editingEvent ? 'Failed to update event' : 'Failed to create event');
+      setError(
+        err.response?.data?.message ||
+          (editingEvent ? "Failed to update event" : "Failed to create event")
+      );
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (event: Event) => {
+  const handleEdit = (event: Events) => {
     setEditingEvent(event);
-    setFormData(event);
+    setFormData({
+      eventName: event.eventName,
+      conductedBy: event.conductedBy,
+      conductedOn: event.conductedOn,
+      registration_deadline: event.registration_deadline,
+      venue: event.venue,
+      prize: event.prize,
+      description: event.description,
+    });
     setIsModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setEvents(events.filter(event => event.id !== id));
-      setSuccess('Event deleted successfully!');
-    } catch (err) {
-      setError('Failed to delete event');
+    console.log("clcikd");
+
+    const res = await deleteEvent(id);
+    if (res.error) {
+      setError(res.error);
+    } else {
+      setSuccess("Event deleted successfully!");
     }
+    refetchEvents();
   };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === 'conductedOn' || name === 'registration_deadline') {
-      setFormData(prev => ({ ...prev, [name]: new Date(value) }));
+    if (name === "conductedOn" || name === "registration_deadline") {
+      setFormData((prev) => ({ ...prev, [name]: new Date(value) }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
   const openCreateModal = () => {
     setEditingEvent(null);
     setFormData({
-      eventName: '',
-      conductedBy: '',
+      eventName: "",
+      conductedBy: "",
       conductedOn: new Date(),
       registration_deadline: new Date(),
-      venue: '',
-      prize: '',
-      description: '',
-      banner_image: '',
+      venue: "",
+      prize: "",
+      description: "",
     });
     setIsModalOpen(true);
   };
@@ -153,7 +211,7 @@ const EventForm = () => {
           <Calendar className="h-6 w-6 text-primary-cyan" />
           <h2 className="text-xl font-semibold text-white">Events</h2>
         </div>
-        <GradientButton onClick={openCreateModal} type="button">
+        <GradientButton onClick={openCreateModal}>
           <div className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
             <span>Create Event</span>
@@ -174,54 +232,77 @@ const EventForm = () => {
       )}
 
       {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map(event => (
-          <div
-            key={event.id}
-            className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
-          >
-            <div className="relative h-48">
-              <img
-                src={event.banner_image}
-                alt={event.eventName}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-white mb-2">{event.eventName}</h3>
-              <div className="space-y-2 text-sm text-gray-300">
-                <p><span className="text-gray-400">By:</span> {event.conductedBy}</p>
-                <p><span className="text-gray-400">Date:</span> {event.conductedOn.toLocaleDateString()}</p>
-                <p><span className="text-gray-400">Venue:</span> {event.venue}</p>
-                {event.prize && (
-                  <p><span className="text-gray-400">Prize:</span> {event.prize}</p>
-                )}
+      {loadingEvents ? (
+        <div className="flex justify-center">
+          <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+        </div>
+      ) : events.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {events.map((event) => (
+            <div
+              key={event.event_id}
+              className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
+            >
+              <div className="relative h-48">
+                <Image
+                  src={event.imageURL || placeholder}
+                  alt={event.eventName}
+                  className="w-full h-full object-cover"
+                  fill
+                  sizes="100%"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="mt-4 flex justify-end space-x-2">
-                <button
-                  onClick={() => handleEdit(event)}
-                  className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                >
-                  <Pencil className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(event.id)}
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {event.eventName}
+                </h3>
+                <div className="space-y-2 text-sm text-gray-300">
+                  <p>
+                    <span className="text-gray-400">By:</span>{" "}
+                    {event.conductedBy}
+                  </p>
+                  <p>
+                    <span className="text-gray-400">Date:</span>{" "}
+                    {new Date(event.conductedOn).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <span className="text-gray-400">Venue:</span> {event.venue}
+                  </p>
+                  {event.prize && (
+                    <p>
+                      <span className="text-gray-400">Prize:</span>{" "}
+                      {event.prize}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-4 flex justify-end space-x-2">
+                  <button
+                    onClick={() => handleEdit(event)}
+                    className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                  >
+                    <Pencil className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(event.event_id)}
+                    className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-gray-400">No events found.</div>
+      )}
 
       {/* Create/Edit Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingEvent ? 'Edit Event' : 'Create Event'}
+        title={editingEvent ? "Edit Event" : "Create Event"}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -262,35 +343,18 @@ const EventForm = () => {
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-              Event Banner Image
+              Event Image
             </label>
-            <div className="flex items-center space-x-4">
-              <input
-                type="url"
-                name="banner_image"
-                value={formData.banner_image}
-                onChange={handleInputChange}
-                className="flex-1 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                placeholder="Enter banner image URL"
-              />
-              <button
-                type="button"
-                className="px-4 py-2.5 bg-gray-800 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors"
-              >
-                <Upload className="h-5 w-5" />
-              </button>
-            </div>
-            {formData.banner_image && (
-              <div className="mt-2 relative rounded-lg overflow-hidden h-40">
-                <img
-                  src={formData.banner_image}
-                  alt="Event banner preview"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
+            <input
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setFile(e.target.files[0]);
+                }
+              }}
+              className="w-full text-white file:bg-primary-blue file:border-none file:rounded-md file:p-2 file:text-sm file:font-bold cursor-pointer"
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -298,32 +362,64 @@ const EventForm = () => {
               <label className="block text-sm font-medium text-gray-300">
                 Event Date
               </label>
-              <input
-                type="datetime-local"
-                name="conductedOn"
-                value={formData.conductedOn instanceof Date ? formData.conductedOn.toISOString().slice(0, 16) : ''}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                required
-              />
+              <div
+                className="relative cursor-pointer"
+                onClick={() => handleDateClick(conductedOnRef)}
+              >
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <CalendarClock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="datetime-local"
+                  ref={conductedOnRef}
+                  name="conductedOn"
+                  value={new Date(formData.conductedOn)
+                    .toISOString()
+                    .slice(0, 16)}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      conductedOn: new Date(e.target.value),
+                    }))
+                  }
+                  className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                         appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                         text-white placeholder-gray-500 backdrop-blur-sm"
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">
                 Registration Deadline
               </label>
-              <input
-                type="datetime-local"
-                name="registration_deadline"
-                value={formData.registration_deadline instanceof Date ? formData.registration_deadline.toISOString().slice(0, 16) : ''}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                required
-              />
+              <div
+                className="relative cursor-pointer"
+                onClick={() => handleDateClick(deadlineRef)}
+              >
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Clock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="datetime-local"
+                  ref={deadlineRef}
+                  name="registration_deadline"
+                  value={new Date(formData.registration_deadline)
+                    .toISOString()
+                    .slice(0, 16)}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      registration_deadline: new Date(e.target.value),
+                    }))
+                  }
+                  className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                         appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                         text-white placeholder-gray-500 backdrop-blur-sm"
+                  required
+                />
+              </div>
             </div>
           </div>
 
@@ -352,7 +448,7 @@ const EventForm = () => {
               <input
                 type="text"
                 name="prize"
-                value={formData.prize}
+                value={formData.prize || ""}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -397,11 +493,11 @@ const EventForm = () => {
                 <span>
                   {loading
                     ? editingEvent
-                      ? 'Updating...'
-                      : 'Creating...'
+                      ? "Updating..."
+                      : "Creating..."
                     : editingEvent
-                    ? 'Update Event'
-                    : 'Create Event'}
+                    ? "Update Event"
+                    : "Create Event"}
                 </span>
               </div>
             </GradientButton>
