@@ -15,22 +15,22 @@ export const navItems = {
         { label: 'Shop', href: '/shop' },
       ]
     },
-    Puzzles: {
-      label: 'Puzzles',
-      items: [
-        { label: 'Weekly Challenge', href: '/' },
-        { label: 'Archives', href: '/' },
-        { label: 'Submit a Puzzle', href: '/' }
-      ]
-    },
-    opportunities: {
-      label: 'Opportunities',
-      items: [
-        { label: 'Internships', href: '/' },
-        { label: 'Research', href: '/' },
-        { label: 'Projects', href: '/' }
-      ]
-    },
+    // Puzzles: {
+    //   label: 'Puzzles',
+    //   items: [
+    //     { label: 'Weekly Challenge', href: '/' },
+    //     { label: 'Archives', href: '/' },
+    //     { label: 'Submit a Puzzle', href: '/' }
+    //   ]
+    // },
+    // opportunities: {
+    //   label: 'Opportunities',
+    //   items: [
+    //     { label: 'Internships', href: '/' },
+    //     { label: 'Research', href: '/' },
+    //     { label: 'Projects', href: '/' }
+    //   ]
+    // },
     Student: {
       label: 'Student',
       items: [

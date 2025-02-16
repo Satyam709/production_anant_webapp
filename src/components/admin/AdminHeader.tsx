@@ -1,7 +1,7 @@
 import React from 'react';
 import { Shield } from 'lucide-react';
 
-const AdminHeader = () => {
+const AdminHeader = ({isAdmin}:{isAdmin:boolean} ) => {
   return (
     <div className="text-center mb-12">
       <div className="flex items-center justify-center space-x-4 mb-6 mt-12">

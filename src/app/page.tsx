@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <About />
-      <LatestNews latestNews={latestNews} />
+      {/* <LatestNews latestNews={latestNews} /> */}
       <Footer />
     </div>
   );

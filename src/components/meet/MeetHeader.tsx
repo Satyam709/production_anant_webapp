@@ -8,9 +8,9 @@ const MeetHeader = () => {
         Meetings
       </h1>
       <p className="text-gray-400 max-w-2xl mx-auto">
-        Schedule, join, and manage your team meetings and discussions.
+        All your upcoming meetings in one place.
       </p>
-      <div className="flex justify-center gap-4 mt-8">
+      {/* <div className="flex justify-center gap-4 mt-8">
         <button className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/10 text-cyan-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all">
           <Video size={18} />
           Join Meeting
@@ -23,7 +23,7 @@ const MeetHeader = () => {
           <Clock size={18} />
           Upcoming
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

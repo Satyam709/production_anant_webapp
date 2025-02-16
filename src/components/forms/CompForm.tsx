@@ -23,6 +23,7 @@ import axios from "axios";
 import { uploadServerSideFile } from "@/lib/actions/uploadthing";
 import { deleteCompetition } from "@/lib/actions/Competitions";
 import { th } from "framer-motion/client";
+import { ConfirmModal } from "./ConfirmModal";
 
 
 type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, "createdBy">;
@@ -83,6 +84,9 @@ const CompForm = () => {
 
   const conductedOnRef = useRef<HTMLInputElement | null>(null);
   const deadlineRef = useRef<HTMLInputElement | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  
 
   const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
@@ -321,14 +325,38 @@ const CompForm = () => {
                     <Pencil className="h-5 w-5" />
                   </button>
                   <button
-                    onClick={() => handleDelete(competition.competition_id)}
+                    onClick={() => setShowDeleteConfirm(true)}
                     className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                   >
                     <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
               </div>
+                    {/* Confirmation Modal */}
+                    <ConfirmModal
+                      isOpen={showDeleteConfirm}
+                      title="Delete Meeting"
+                      message={
+                        <div className="space-y-4">
+                          <p>Are you sure you want to delete this meeting?</p>
+                          <div className="p-3 bg-gray-800/50 rounded-lg">
+                            <p className="text-white font-medium">{competition.competitionName}</p>
+                            <p className="text-sm text-gray-400 mt-1">
+                              {new Date(competition.conductedOn).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <p className="text-sm">This action cannot be undone.</p>
+                        </div>
+                      }
+                      onConfirm={() => {
+                        handleDelete(competition.competition_id) // Call the delete function
+                        setShowDeleteConfirm(false); // Close the modal after confirmation
+                      }}
+                      onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
+                    />
             </div>
+
+            
           ))}
         </div>
       ) : (

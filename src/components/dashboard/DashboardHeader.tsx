@@ -1,8 +1,8 @@
 import React from 'react';
-import { Trophy, Calendar, Users, Bell, BarChart3, UserPlus } from 'lucide-react';
+import { Trophy, Calendar, Users, Bell, BarChart3, UserPlus, Send } from 'lucide-react';
 
 type Props = {
-  activeTab: 'overview' | 'competitions' | 'events' | 'meetings' | 'notices' | 'teams';
+  activeTab: 'overview' | 'competitions' | 'events' | 'meetings' | 'notices' | 'teams' | 'shop';
 };
 
 const tabConfig = {
@@ -35,6 +35,11 @@ const tabConfig = {
     title: 'Team Management',
     description: 'Create and manage your teams',
     icon: UserPlus,
+  },
+  shop : {
+    title: 'Shop',
+    description: 'Manage your shop',
+    icon: Send,
   },
 };
 

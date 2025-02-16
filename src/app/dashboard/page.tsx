@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Trophy,
@@ -7,7 +7,6 @@ import {
   Users,
   Bell,
   BarChart3,
-  Settings,
   Menu,
   X,
   LogOut,
@@ -22,6 +21,9 @@ import NoticeForm from "@/components/forms/NoticeForm";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeamDashboard from "@/components/teams/TeamDashboard";
+import { signOut, useSession } from "next-auth/react";
+import { position_options } from "@prisma/client";
+import {  useRouter } from "next/navigation";
 
 type TabType =
   | "overview"
@@ -29,25 +31,43 @@ type TabType =
   | "events"
   | "meetings"
   | "notices"
-  | "teams";
+  | "teams"
+  | "shop";
 
 function App() {
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const session = useSession();
+  const router = useRouter();
+  const isAdmin = session?.data?.user.info?.position != position_options.Member;
+  const defTab = isAdmin ? "overview" : "teams";
+  const [activeTab, setActiveTab] = useState<TabType>(defTab);
 
   const handleLogout = () => {
-    // Add logout logic here
-    console.log("Logging out...");
+    signOut({callbackUrl: '/login'});
   };
 
-  const tabs = [
+  useEffect(() => {
+    if (session.status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [session.status, router]);
+
+  const normaltabs = [
+    { id: "teams", label: "Teams", icon: UserPlus },
+  ];
+
+  const adminTabs = [
     { id: "overview", label: "Overview", icon: BarChart3 },
     { id: "competitions", label: "Competitions", icon: Trophy },
     { id: "events", label: "Events", icon: Calendar },
     { id: "meetings", label: "Meetings", icon: Users },
     { id: "notices", label: "Notices", icon: Bell },
     { id: "teams", label: "Teams", icon: UserPlus },
+    { id :"shop", label: "Shop", icon: Send},
   ];
+
+  const tabs = isAdmin ? adminTabs : normaltabs;
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
@@ -71,7 +91,7 @@ function App() {
         <div className="p-6">
           <div className="flex items-center space-x-3 mb-10">
             <LayoutDashboard className="h-8 w-8 text-primary-cyan" />
-            <h1 className="text-xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-xl font-bold">{isAdmin?"Admin Dashboard":"Dashboard"}</h1>
           </div>
 
           <nav className="space-y-2">
@@ -102,16 +122,6 @@ function App() {
 
         <div className="absolute bottom-0 left-0 right-0 p-6 space-y-2">
           <button
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800/50 hover:text-white transition-colors duration-200"
-            onClick={() => {
-              /* Add settings logic */
-            }}
-          >
-            <Settings className="h-5 w-5" />
-            <span>Settings</span>
-          </button>
-
-          <button
             onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-200"
           >
@@ -138,11 +148,41 @@ function App() {
             {activeTab === "meetings" && <MeetForm />}
             {activeTab === "notices" && <NoticeForm />}
             {activeTab === "teams" && <TeamDashboard />}
+            {activeTab === "shop" && <Shop />}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+const Shop = () => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/shop/admin");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
+      <div className="p-8 text-center">
+        <div className="py-8">
+          <h2 className="text-2xl font-bold mb-4">Hello!</h2>
+          <p className="text-lg mb-6">
+            Click the button below to enter the shop admin panel.
+          </p>
+          <button
+            onClick={handleClick}
+            className="px-6 py-3 bg-primary-cyan text-white rounded-lg hover:bg-primary-cyan/80 transition-colors duration-200"
+          >
+            Enter Shop Admin Panel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 
 export default App;

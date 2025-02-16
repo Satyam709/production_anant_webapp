@@ -57,24 +57,6 @@ const MeetCard: React.FC<Meeting> = (meet) => {
           </div>
           <p className="text-gray-400">{meet.topic_of_discussion}</p>
         </div>
-
-        <div className="flex justify-between items-center mt-6">
-          <div className="flex flex-col items-start">
-            <GradientButton>
-              <Video size={16} className="mr-2" />
-              Join Meeting
-            </GradientButton>
-          </div>
-
-          {/* QR Code */}
-          <div className="flex flex-col items-center">
-            <div className="w-24 h-24 bg-black/50 rounded-lg flex items-center justify-center border border-gray-800">
-              <QrCode className="w-16 h-16 text-cyan-400" />
-              {/* replace with actual qr logic later */}
-            </div>
-            <span className="text-xs text-gray-400">Scan to join</span>
-          </div>
-        </div>
       </div>
     </div>
   );

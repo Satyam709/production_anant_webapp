@@ -23,10 +23,12 @@ import { Prisma } from "@prisma/client";
 import { Events } from "@prisma/client";
 import { placeholder } from "@/lib/images/placeholder";
 import { deleteEvent } from "@/lib/actions/Events";
+import { ConfirmModal } from "./ConfirmModal";
 
 type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
 
 const EventForm = () => {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [events, setEvents] = useState<Events[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Events | null>(null);
@@ -284,13 +286,36 @@ const EventForm = () => {
                     <Pencil className="h-5 w-5" />
                   </button>
                   <button
-                    onClick={() => handleDelete(event.event_id)}
+                    onClick={() => setShowDeleteConfirm(true)}
                     className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                   >
                     <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
               </div>
+
+                    {/* Confirmation Modal */}
+                    <ConfirmModal
+                      isOpen={showDeleteConfirm}
+                      title="Delete Meeting"
+                      message={
+                        <div className="space-y-4">
+                          <p>Are you sure you want to delete this meeting?</p>
+                          <div className="p-3 bg-gray-800/50 rounded-lg">
+                            <p className="text-white font-medium">{event.eventName}</p>
+                            <p className="text-sm text-gray-400 mt-1">
+                              {new Date(event.conductedOn).toLocaleDateString()} at {event.venue}
+                            </p>
+                          </div>
+                          <p className="text-sm">This action cannot be undone.</p>
+                        </div>
+                      }
+                      onConfirm={() => {
+                        handleDelete(event.event_id);
+                        setShowDeleteConfirm(false);
+                      }}
+                      onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
+                    />
             </div>
           ))}
         </div>
