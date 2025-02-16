@@ -16,6 +16,7 @@ import {
   CalendarClock,
   QrCode,
   Eye,
+  Download,
 } from "lucide-react";
 import GradientButton from "../ui/GradientButton";
 import { ConfirmModal } from "./ConfirmModal";
@@ -26,6 +27,7 @@ import axios from "axios";
 import { deleteMeeting, getAttendies } from "@/lib/actions/MeetAction";
 import Image from "next/image";
 import generateQr from "@/lib/actions/GenerateQr";
+import { convertToCSV } from "@/helpers/convertToCsv";
 
 type MeetFormInput = Omit<
   Prisma.MeetingCreateInput,
@@ -39,12 +41,14 @@ const MeetingCard = React.memo(({
   meeting, 
   onEdit, 
   onDelete, 
+  onDownload,
   onShowAttendees, 
   onGenerateQR,
   formatTime 
 }: {
   meeting: Meeting;
   onEdit: (meeting: Meeting) => void;
+  onDownload: (meeting: Meeting) => void;
   onDelete: (id: string) => void;
   onShowAttendees: (meeting: Meeting) => void;
   onGenerateQR: (meeting: Meeting) => void;
@@ -104,6 +108,13 @@ const MeetingCard = React.memo(({
             </button>
 
             <div className="flex justify-end space-x-2 border-t border-gray-800 pt-4">
+            <button
+                onClick={() => onDownload(meeting)}
+                className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+              >
+                <Download className="h-5 w-5" />
+              </button>
+
               <button
                 onClick={() => onEdit(meeting)}
                 className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
@@ -447,6 +458,33 @@ const MeetForm = () => {
     setIsQRModalOpen(true);
   }, []);
 
+  const handleDownload = useCallback(async (meeting: Meeting) => {
+    try {
+      // Fetch the attendees for the meeting
+      const attendies = await getAttendies(meeting.meeting_id);
+  
+      // Convert the attendees data to CSV
+      const csv = convertToCSV(attendies);
+  
+      // Trigger the download of the CSV file
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `attendies_${meeting.meeting_id}.csv`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error("Error downloading attendees:", error);
+    }
+  }, []);
+
+
+
   return (
     <div className="space-y-6">
       {/* Header with Create Button */}
@@ -488,6 +526,7 @@ const MeetForm = () => {
               meeting={meeting}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onDownload={handleDownload}
               onShowAttendees={handleShowAttendees}
               onGenerateQR={handleGenerateQR}
               formatTime={formatTime}
