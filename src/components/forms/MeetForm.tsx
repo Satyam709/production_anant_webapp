@@ -31,6 +31,228 @@ type MeetFormInput = Omit<
   "hostID" | "conductor" | "attendees"
 >;
 
+// Separate components for better performance
+const MeetingCard = React.memo(({ 
+  meeting, 
+  onEdit, 
+  onDelete, 
+  onShowAttendees, 
+  onGenerateQR,
+  formatTime 
+}: {
+  meeting: Meeting;
+  onEdit: (meeting: Meeting) => void;
+  onDelete: (id: string) => void;
+  onShowAttendees: (meeting: Meeting) => void;
+  onGenerateQR: (meeting: Meeting) => void;
+  formatTime: (date: Date) => string;
+}) => (
+  <div className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200">
+    <div className="p-4 sm:p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-primary-blue/20 rounded-lg">
+            <Users className="h-5 w-5 text-primary-cyan" />
+          </div>
+          <h3 className="text-lg font-semibold text-white line-clamp-1">
+            {meeting.topic_of_discussion}
+          </h3>
+        </div>
+      </div>
+      <div className="space-y-2 text-sm text-gray-300">
+        <p className="flex justify-between">
+          <span className="text-gray-400">Date:</span>
+          <span>{new Date(meeting.starts).toLocaleDateString()}</span>
+        </p>
+        <p className="flex justify-between">
+          <span className="text-gray-400">Time:</span>
+          <span>{formatTime(new Date(meeting.starts))}</span>
+        </p>
+        <p className="flex justify-between">
+          <span className="text-gray-400">Duration:</span>
+          <span>{meeting.duration} minutes</span>
+        </p>
+        <p className="flex justify-between">
+          <span className="text-gray-400">Venue:</span>
+          <span className="text-right">{meeting.venue}</span>
+        </p>
+      </div>
+
+      <div className="mt-6 flex flex-col gap-3">
+        <button
+          onClick={() => onGenerateQR(meeting)}
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-primary-blue/20 hover:scale-[1.02] group"
+        >
+          <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+          <span>Generate QR Code</span>
+        </button>
+
+        <button
+          onClick={() => onShowAttendees(meeting)}
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-lg transition-colors duration-200"
+        >
+          <Eye className="h-5 w-5" />
+          <span>Show Attendees</span>
+        </button>
+
+        <div className="flex justify-end space-x-2 border-t border-gray-800 pt-4">
+          <button
+            onClick={() => onEdit(meeting)}
+            className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+          >
+            <Pencil className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => onDelete(meeting.meeting_id)}
+            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+          >
+            <Trash2 className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+));
+
+MeetingCard.displayName = 'MeetingCard';
+
+const RenderQrCode = React.memo(({ id }: { id: string }) => {
+  const [qrCode, setQrCode] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let mounted = true;
+
+    const genQr = async () => {
+      if (!id || isFetching) return;
+      
+      setIsFetching(true);
+      try {
+        const qr = await generateQr(id, 10);
+        if (mounted && qr) setQrCode(qr);
+      } catch (error) {
+        if (mounted) setError("Failed to generate QR code");
+        console.error("Error generating QR code:", error);
+      } finally {
+        if (mounted) setIsFetching(false);
+      }
+    };
+
+    genQr();
+
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
+
+  return (
+    <div className="bg-white p-4 sm:p-8 rounded-lg inline-block mx-auto">
+      {isFetching ? (
+        <div className="w-48 h-48 flex items-center justify-center">
+          <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+        </div>
+      ) : qrCode ? (
+        <div className="relative w-48 h-48">
+          <Image
+            src={qrCode}
+            alt="QR Code"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      ) : (
+        <div className="w-48 h-48 flex items-center justify-center">
+          <p className="text-gray-400">{error || "Failed to generate QR code."}</p>
+        </div>
+      )}
+    </div>
+  );
+});
+
+RenderQrCode.displayName = 'RenderQrCode';
+
+const RenderAttendees = React.memo(({ id }: { id: string }) => {
+  interface Attendee {
+    name: string;
+    id: string;
+    roll_number: number;
+    branch: branch_options | null;
+    batch: string | null;
+  }
+
+  const [attendees, setAttendees] = useState<Attendee[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchAttendees = async () => {
+      if (!id || isFetching) return;
+      
+      setIsFetching(true);
+      try {
+        const data = await getAttendies(id);
+        if (mounted) setAttendees(data);
+      } catch (error) {
+        console.error("Error fetching attendees:", error);
+      } finally {
+        if (mounted) setIsFetching(false);
+      }
+    };
+
+    fetchAttendees();
+
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
+
+  if (isFetching) {
+    return (
+      <div className="flex justify-center p-4">
+        <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 -mr-2">
+        {attendees.length > 0 ? (
+          attendees.map((attendee) => (
+            <div
+              key={attendee.id}
+              className="flex items-center space-x-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 hover:border-primary-blue/50 transition-all duration-200"
+            >
+              <div className="min-w-[2.5rem] h-10 rounded-full bg-gradient-to-r from-primary-blue to-primary-cyan flex items-center justify-center text-white font-medium">
+                {attendee.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-white font-medium truncate">{attendee.name}</h4>
+                <div className="flex flex-wrap items-center gap-2 text-sm">
+                  <span className="text-gray-400">{attendee.roll_number}</span>
+                  <span className="text-gray-600 hidden sm:inline">•</span>
+                  <span className="text-gray-400">{attendee.branch}</span>
+                  <span className="text-gray-400">{attendee.batch} year</span>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-400 py-4">No attendees found.</p>
+        )}
+      </div>
+    </div>
+  );
+});
+
+RenderAttendees.displayName = 'RenderAttendees';
+
 const MeetForm = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,7 +273,7 @@ const MeetForm = () => {
 
   const startsDateRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
+  const handleDateClick = useCallback((ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
       if (typeof ref.current.showPicker === "function") {
         ref.current.showPicker();
@@ -59,7 +281,15 @@ const MeetForm = () => {
         ref.current.focus();
       }
     }
-  };
+  }, []);
+
+  const formatTime = useCallback((date: Date) => {
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
+  }, []);
 
   const refetchMeetings = useCallback(async () => {
     setLoadingMeetings(true);
@@ -95,7 +325,7 @@ const MeetForm = () => {
       };
 
       if (editingMeeting) {
-        await axios.put(`/api/meetings/${editingMeeting.meeting_id}`, payload);
+        await axios.put(`/api/meetings/${editingMeeting.meeting_id}/edit`, payload);
         setSuccess("Meeting updated successfully!");
       } else {
         await axios.post("/api/meetings/create", payload);
@@ -123,7 +353,7 @@ const MeetForm = () => {
     }
   };
 
-  const handleEdit = (meeting: Meeting) => {
+  const handleEdit = useCallback((meeting: Meeting) => {
     setEditingMeeting(meeting);
     setFormData({
       venue: meeting.venue,
@@ -132,33 +362,34 @@ const MeetForm = () => {
       topic_of_discussion: meeting.topic_of_discussion,
     });
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     try {
       await axios.delete(`/api/meetings/${id}`);
-
       setSuccess("Meeting deleted successfully!");
       refetchMeetings();
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to delete meeting");
     }
-  };
+  }, [refetchMeetings]);
 
-  const handleInputChange = (
+  const handleInputChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "starts") {
-      setFormData((prev) => ({ ...prev, starts: new Date(value) }));
-    } else if (name === "duration") {
-      setFormData((prev) => ({ ...prev, duration: parseInt(value) }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+    setFormData(prev => {
+      if (name === "starts") {
+        return { ...prev, starts: new Date(value) };
+      } else if (name === "duration") {
+        return { ...prev, duration: parseInt(value) };
+      } else {
+        return { ...prev, [name]: value };
+      }
+    });
+  }, []);
 
-  const openCreateModal = () => {
+  const openCreateModal = useCallback(() => {
     setEditingMeeting(null);
     setFormData({
       venue: "",
@@ -167,25 +398,17 @@ const MeetForm = () => {
       topic_of_discussion: "",
     });
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const formatTime = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    }).format(date);
-  };
-
-  const handleShowAttendees = (meeting: Meeting) => {
+  const handleShowAttendees = useCallback((meeting: Meeting) => {
     setSelectedMeeting(meeting);
     setIsAttendeesModalOpen(true);
-  };
+  }, []);
 
-  const handleGenerateQR = (meeting: Meeting) => {
+  const handleGenerateQR = useCallback((meeting: Meeting) => {
     setSelectedMeeting(meeting);
     setIsQRModalOpen(true);
-  };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -217,105 +440,25 @@ const MeetForm = () => {
 
       {/* Meetings Grid */}
       {loadingMeetings ? (
-        <div className="flex justify-center">
+        <div className="flex justify-center p-8">
           <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
         </div>
       ) : meetings.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {meetings.map((meeting) => (
-            <div
+            <MeetingCard
               key={meeting.meeting_id}
-              className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-primary-blue/20 rounded-lg">
-                      <Users className="h-5 w-5 text-primary-cyan" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">
-                      {meeting.topic_of_discussion}
-                    </h3>
-                  </div>
-                </div>
-                <div className="space-y-3 text-sm text-gray-300">
-                  <p>
-                    <span className="text-gray-400">Date:</span>{" "}
-                    {new Date(meeting.starts).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <span className="text-gray-400">Time:</span>{" "}
-                    {formatTime(new Date(meeting.starts))}
-                  </p>
-                  <p>
-                    <span className="text-gray-400">Duration:</span>{" "}
-                    {meeting.duration} minutes
-                  </p>
-                  <p>
-                    <span className="text-gray-400">Venue:</span>{" "}
-                    {meeting.venue}
-                  </p>
-                  {/* <div>
-                    <span className="text-gray-400">Attendees:</span>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {meeting.attendees && meeting.attendees.length > 0 ? (
-                        meeting.attendees.map((attendee, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 text-xs bg-gray-800 rounded-full text-gray-300"
-                          >
-                            {attendee}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-gray-500">No attendees yet</span>
-                      )}
-                    </div>
-                  </div> */}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="mt-6 flex flex-col gap-3">
-                  {/* QR Code Button - Highlighted */}
-                  <button
-                    onClick={() => handleGenerateQR(meeting)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-primary-blue/20 hover:scale-[1.02] group"
-                  >
-                    <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
-                    <span>Generate QR Code</span>
-                  </button>
-
-                  {/* Show Attendees Button */}
-                  <button
-                    onClick={() => handleShowAttendees(meeting)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-lg transition-colors duration-200"
-                  >
-                    <Eye className="h-5 w-5" />
-                    <span>Show Attendees</span>
-                  </button>
-
-                  {/* Edit and Delete */}
-                  <div className="flex justify-end space-x-2 border-t border-gray-800 pt-4">
-                    <button
-                      onClick={() => handleEdit(meeting)}
-                      className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                    >
-                      <Pencil className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(meeting.meeting_id)}
-                      className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+              meeting={meeting}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onShowAttendees={handleShowAttendees}
+              onGenerateQR={handleGenerateQR}
+              formatTime={formatTime}
+            />
           ))}
         </div>
       ) : (
-        <div className="text-center text-gray-400">No meetings scheduled.</div>
+        <div className="text-center text-gray-400 py-8">No meetings scheduled.</div>
       )}
 
       {/* Create/Edit Modal */}
@@ -342,7 +485,7 @@ const MeetForm = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">
                 Start Date & Time
@@ -358,11 +501,7 @@ const MeetForm = () => {
                   type="datetime-local"
                   ref={startsDateRef}
                   name="starts"
-                  value={
-                    formData.starts instanceof Date
-                      ? formData.starts.toISOString().slice(0, 16)
-                      : ""
-                  }
+                  value={new Date(formData.starts).toISOString().slice(0, 16)}
                   onChange={handleInputChange}
                   className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -408,7 +547,7 @@ const MeetForm = () => {
             />
           </div>
 
-          <div className="flex justify-end gap-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
@@ -444,9 +583,14 @@ const MeetForm = () => {
         onClose={() => setIsAttendeesModalOpen(false)}
         title={`Attendees - ${selectedMeeting?.topic_of_discussion}`}
       >
-        
-        <Suspense fallback={"Loading..."}>
-        <RenderAttendees id={selectedMeeting?.meeting_id || ""} />
+        <Suspense 
+          fallback={
+            <div className="flex justify-center p-8">
+              <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+            </div>
+          }
+        >
+          <RenderAttendees id={selectedMeeting?.meeting_id || ""} />
         </Suspense>
       </Modal>
 
@@ -457,8 +601,14 @@ const MeetForm = () => {
         title="Attendance QR Code"
       >
         <div className="text-center space-y-6">
-          <Suspense fallback={"Loading..."}>
-            <RenderQrCode id={selectedMeeting?.meeting_id || ""} /> 
+          <Suspense 
+            fallback={
+              <div className="flex justify-center p-8">
+                <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+              </div>
+            }
+          >
+            <RenderQrCode id={selectedMeeting?.meeting_id || ""} />
           </Suspense>
           <div className="space-y-2">
             <h3 className="text-lg font-medium text-white">
@@ -478,113 +628,6 @@ const MeetForm = () => {
           </div>
         </div>
       </Modal>
-    </div>
-  );
-};
-
-const RenderQrCode = ({ id }: { id: string }) => {
-  const [qrCode, setqrCode] = useState("");
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    const genQr = async () => {
-      if (id && !isFetching) { 
-        setIsFetching(true);
-        try {
-          const qr = await generateQr(id, 10);
-          if (qr) setqrCode(qr);
-        } catch (error) {
-          console.error("Error generating QR code:", error);
-        } finally {
-          setIsFetching(false);
-        }
-      }
-    };
-
-    if (id && !qrCode) {
-      genQr();
-    }
-  }, [id, qrCode]); 
-return (
-  <div className="bg-white p-8 rounded-lg inline-block mx-auto">
-    {isFetching ? (
-      <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
-    ) : qrCode ? (
-      <Image
-        src={qrCode}
-        alt="QR Code"
-        width={192}
-        height={192}
-        className="w-48 h-48"
-      />
-    ) : (
-      <p className="text-gray-400">Failed to generate QR code.</p>
-    )}
-  </div>
-);
-};
-
-
-const RenderAttendees = ({ id }: { id: string }) => {
-  interface Attendee {
-    name: string;
-    id: string;
-    roll_number: number;
-    branch: branch_options | null;
-    batch: string | null;
-  }
-
-  const [attendees, setAttendees] = useState<Attendee[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    const fetchAttendees = async () => {
-      if (id && !isFetching) { 
-        setIsFetching(true);
-        const data = await getAttendies(id);
-        setAttendees(data);
-        setIsFetching(false);
-      }
-    };
-
-    if (id) {
-      fetchAttendees();
-    }
-  }, [id, isFetching]);
-
-  return (
-    <div className="space-y-6">
-      {/* Attendees List */}
-      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-        {attendees.length > 0 ? (
-          attendees.map((attendee) => (
-            <div
-              key={attendee.id}
-              className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700/50 hover:border-primary-blue/50 transition-all duration-200"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary-blue to-primary-cyan flex items-center justify-center text-white font-medium">
-                  {attendee.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </div>
-                <div>
-                  <h4 className="text-white font-medium">{attendee.name}</h4>
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-400">{attendee.roll_number}</span>
-                    <span className="text-gray-600">•</span>
-                    <span className="text-gray-400">{attendee.branch}</span>
-                    <span className="text-gray-400">{attendee.batch} year</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-400">No attendees found.</p>
-        )}
-      </div>
     </div>
   );
 };
