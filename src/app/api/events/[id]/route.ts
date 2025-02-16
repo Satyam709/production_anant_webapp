@@ -11,13 +11,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         });
 
         if(!event){
-            return NextResponse.json({status: 404, message: "Event not found"});
+            return NextResponse.json({error: "Event not found"},{status: 404});
         }
 
         return NextResponse.json({status: 200, data: event});
     }
     catch(err){
         console.log(err);
-        return NextResponse.json({status: 500, message: "Internal Server Error"});
+        return NextResponse.json({error: "Internal Server Error"},{status: 500});
     }
 }

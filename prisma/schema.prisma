@@ -49,16 +49,15 @@ model User{
   // Pending requests
   pending_requests Pending_requests[]
 
-  //compitition
-  compititions_created Competitions[]
-
   //events
   events_created Events[]
+  events_participated Events[] @relation(name: "event_participant_member")
   first_prize Events[] @relation(name: "first_prize")
   second_prize Events[] @relation(name: "second_prize")
   third_prize Events[] @relation(name: "third_prize")
 
   //compitition
+  compititions_created Competitions[]
   compititions_participated Competitions[] @relation(name: "participant_member")
   first_prize_comp Competitions[] @relation(name: "first_prize_comp")
   second_prize_comp Competitions[] @relation(name: "second_prize_comp")
@@ -147,6 +146,7 @@ model Events{
   second_prize_id String?
   third_prize_id String?
 
+  users_participated User[] @relation(name: "event_participant_member")
   createdBy User @relation(fields: [creator_id], references: [id])
   first_prize User? @relation(name: "first_prize", fields: [first_prize_id], references: [id])
   second_prize User? @relation(name: "second_prize", fields: [second_prize_id], references: [id])

@@ -37,8 +37,6 @@ export async function getEvents() {
 
     const data = await response.json();
 
-    // console.log("events Data:", data);
-
     if (!data) {
       return {
         upcomingEvents: [],

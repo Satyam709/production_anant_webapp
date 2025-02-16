@@ -58,11 +58,6 @@ const EventCard: React.FC<Events> = (event) => {
               <span>{event.venue || "Venue not specified"}</span>
             </div>
           </div>
-
-          {/* Event Description */}
-          <p className="text-gray-400 mb-4 line-clamp-2">
-            {event.description || "No description available."}
-          </p>
         </div>
 
         {/* View Details Button */}
