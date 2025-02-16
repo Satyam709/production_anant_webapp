@@ -21,23 +21,7 @@ export default function CompetitionsPage() {
           <p className="text-gray-400 mb-8">
             Form teams, participate in competitions, and showcase your skills on the global stage!
           </p>
-          
-          <div className="flex justify-center gap-4">
-            <Link href="/compete" className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/10 text-cyan-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all">
-              <Trophy size={18} />
-              <span>Active Competitions</span>
-            </Link>
-            <Link href="/compete/my-teams" className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/10 text-cyan-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all">
-              <Users size={18} />
-              <span>My Teams</span>
-            </Link>
-            <Link href="/compete/invitations" className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-500/10 text-cyan-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all">
-              <Bell size={18} />
-              <span>Invitations</span>
-            </Link>
-          </div>
         </div>
-
         <CompList />
       </main>
       

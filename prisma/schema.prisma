@@ -147,6 +147,7 @@ model Events{
   third_prize_id String?
 
   users_participated User[] @relation(name: "event_participant_member")
+  
   createdBy User @relation(fields: [creator_id], references: [id])
   first_prize User? @relation(name: "first_prize", fields: [first_prize_id], references: [id])
   second_prize User? @relation(name: "second_prize", fields: [second_prize_id], references: [id])

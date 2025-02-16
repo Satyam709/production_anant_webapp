@@ -2,6 +2,7 @@ import React from "react";
 import CompCard from "./CompCard";
 import { Competitions } from "@prisma/client";
 export const dynamic = "force-dynamic";
+
 async function fetchActiveCompetitions(): Promise<Competitions[]> {
   const response = await fetch(
     `${process.env.API_URL}/api/competitions`,
@@ -29,12 +30,6 @@ async function fetchActiveCompetitions(): Promise<Competitions[]> {
     if (data.upcoming_comp) {
       activeCompetitions = data.upcoming_comp;
     }
-
-    // Filter for active competitions (registration deadline not passed)
-    // const now = new Date();
-    // const filteredCompetitions = activeCompetitions.filter(
-    //   (comp: Competitions) => new Date(comp.registration_deadline) > now
-    // );
 
     return activeCompetitions;
   } catch (error) {

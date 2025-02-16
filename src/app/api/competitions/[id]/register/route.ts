@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/actions/Sessions";
 import prisma from "@/lib/PrismaClient/db";
-import { error } from "console";
 
 export async function POST(req: NextRequest, { params }: { params: { id: string }}){
     try{

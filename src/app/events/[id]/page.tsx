@@ -113,10 +113,15 @@ async function EventDetails({ params }: { params: { id: string } }) {
 export default EventDetails;
 
 async function getEvents(id: string){
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/events/${id}`);
-  if(!res.ok){
+  try{
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/events/${id}`);
+    if(!res.ok){
+      return [];
+    }
+    const data = await res.json(); 
+    return data;
+  }
+  catch(err){
     return [];
   }
-  const data = await res.json(); 
-  return data;
 }
