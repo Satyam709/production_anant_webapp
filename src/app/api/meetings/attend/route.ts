@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
   const userId = session.user.id;
   let parseToken: attendanceData;
-  const timeoutSeconds = 300; // Set timeout (e.g., 300 seconds = 5 minutes)
+  const timeoutSeconds = 600; // Set timeout (e.g., 300 seconds = 5 minutes)
 
   try {
     const decodedToken = await decodeAttendanceJwt(token);
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, data: result });
+    return NextResponse.redirect(new URL("/meet", req.url));
   } catch (err) {
     console.log("Error updating meeting attendees", err);
     return NextResponse.json(

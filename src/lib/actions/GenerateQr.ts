@@ -3,6 +3,7 @@ import qr from "qrcode";
 import { encodeMeetingattendance } from "@/lib/actions/AttendenceJwt";
 
 import { attendanceData } from "@/types/meet_data";
+import prisma from "../PrismaClient/db";
 
 export default async function generateQr(meetingId: string, duration: number) {
   const data: attendanceData = {
@@ -12,7 +13,17 @@ export default async function generateQr(meetingId: string, duration: number) {
   };
   let token: string;
   try {
+    const isExist = await prisma.meeting.findUnique({
+      where: {
+        meeting_id: meetingId,
+      },
+    });
+    if (!isExist) {
+      throw new Error("meeting not exist");
+    }
+
     token = await encodeMeetingattendance(data);
+
     // console.log("token for qr -> ",token);
     const siteurl = process.env.SiteURL || "http://localhost:3000";
     const apiUrl = siteurl + "/api/meetings/attend?token=" + token;

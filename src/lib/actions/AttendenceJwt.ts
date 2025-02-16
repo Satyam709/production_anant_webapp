@@ -3,7 +3,7 @@ import { attendanceData } from "@/types/meet_data";
 import jwt from "jsonwebtoken";
 
 export async function decodeAttendanceJwt(token: string) {
-  const secret = process.env.AttendenceSecret;
+  const secret = process.env.AttendenceSecret || "itsasecret";
   if (!secret) {
     throw new Error("cannot load secret to decode jwt");
   }
@@ -15,7 +15,8 @@ export async function decodeAttendanceJwt(token: string) {
 }
 
 export async function encodeMeetingattendance(data: object) {
-  const secret = process.env.AttendenceSecret;
+  // to be removed
+  const secret = process.env.AttendenceSecret || "itsasecret";
 
   if (!secret) {
     throw new Error("cannot load secret to encode jwt");

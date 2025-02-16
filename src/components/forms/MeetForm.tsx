@@ -24,6 +24,7 @@ import { Meeting } from "@prisma/client";
 import axios from "axios";
 import { getAttendies } from "@/lib/actions/MeetAction";
 import Image from "next/image";
+import generateQr from "@/lib/actions/GenerateQr";
 
 type MeetFormInput = Omit<
   Prisma.MeetingCreateInput,
@@ -456,13 +457,9 @@ const MeetForm = () => {
         title="Attendance QR Code"
       >
         <div className="text-center space-y-6">
-          <div className="bg-white p-8 rounded-lg inline-block mx-auto">
-            <Image
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=meeting-attendance-demo"
-              alt="QR Code"
-              className="w-48 h-48"
-            />
-          </div>
+          <Suspense fallback={"Loading..."}>
+            <RenderQrCode id={selectedMeeting?.meeting_id || ""} /> 
+          </Suspense>
           <div className="space-y-2">
             <h3 className="text-lg font-medium text-white">
               {selectedMeeting?.topic_of_discussion}
@@ -485,27 +482,75 @@ const MeetForm = () => {
   );
 };
 
-const RenderAttendees = async ({ id }: { id: string }) => {
+const RenderQrCode = ({ id }: { id: string }) => {
+  const [qrCode, setqrCode] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
 
-  interface att  {
+  useEffect(() => {
+    const genQr = async () => {
+      if (id && !isFetching) { 
+        setIsFetching(true);
+        try {
+          const qr = await generateQr(id, 10);
+          if (qr) setqrCode(qr);
+        } catch (error) {
+          console.error("Error generating QR code:", error);
+        } finally {
+          setIsFetching(false);
+        }
+      }
+    };
+
+    if (id && !qrCode) {
+      genQr();
+    }
+  }, [id, qrCode]); 
+return (
+  <div className="bg-white p-8 rounded-lg inline-block mx-auto">
+    {isFetching ? (
+      <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+    ) : qrCode ? (
+      <Image
+        src={qrCode}
+        alt="QR Code"
+        width={192}
+        height={192}
+        className="w-48 h-48"
+      />
+    ) : (
+      <p className="text-gray-400">Failed to generate QR code.</p>
+    )}
+  </div>
+);
+};
+
+
+const RenderAttendees = ({ id }: { id: string }) => {
+  interface Attendee {
     name: string;
     id: string;
     roll_number: number;
     branch: branch_options | null;
     batch: string | null;
-};
+  }
 
-  const [attendees, setAttendees] = useState<att[]>([]);
+  const [attendees, setAttendees] = useState<Attendee[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     const fetchAttendees = async () => {
-      if (id) {
+      if (id && !isFetching) { 
+        setIsFetching(true);
         const data = await getAttendies(id);
         setAttendees(data);
+        setIsFetching(false);
       }
     };
-    fetchAttendees();
-  }, [id]);
+
+    if (id) {
+      fetchAttendees();
+    }
+  }, [id, isFetching]);
 
   return (
     <div className="space-y-6">
@@ -530,6 +575,7 @@ const RenderAttendees = async ({ id }: { id: string }) => {
                     <span className="text-gray-400">{attendee.roll_number}</span>
                     <span className="text-gray-600">•</span>
                     <span className="text-gray-400">{attendee.branch}</span>
+                    <span className="text-gray-400">{attendee.batch} year</span>
                   </div>
                 </div>
               </div>
@@ -542,4 +588,5 @@ const RenderAttendees = async ({ id }: { id: string }) => {
     </div>
   );
 };
+
 export default MeetForm;
