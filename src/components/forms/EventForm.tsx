@@ -13,6 +13,7 @@ import {
   Plus,
   CalendarClock,
   Clock,
+  Download,
 } from "lucide-react";
 import GradientButton from "../ui/GradientButton";
 import Modal from "@/components/ui/Modal";
@@ -22,8 +23,9 @@ import { uploadServerSideFile } from "@/lib/actions/uploadthing";
 import { Prisma } from "@prisma/client";
 import { Events } from "@prisma/client";
 import { placeholder } from "@/lib/images/placeholder";
-import { deleteEvent } from "@/lib/actions/Events";
+import { deleteEvent, getAllParticipants } from "@/lib/actions/Events";
 import { ConfirmModal } from "./ConfirmModal";
+import { convertToCSV } from "@/helpers/convertToCsv";
 
 type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
 
@@ -107,8 +109,7 @@ const EventForm = () => {
         imageURL = editingEvent.imageURL;
       }
 
-      console.log("imageurl uplaoding ",imageURL);
-      
+      console.log("imageurl uplaoding ", imageURL);
 
       const payload = {
         ...formData,
@@ -168,9 +169,42 @@ const EventForm = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    console.log("clcikd");
+  const handleDownload = useCallback(async (id : string) => {
+    try {
+      // Fetch the attendees for the meeting
+      const res = await getAllParticipants(id);
+      if (!res) {
+        setError("Failed to fetch participants");
+      } else {
+        setSuccess("Participants fetched successfully!");
+      }
 
+      if (res.length === 0) {
+        setError("No participants found");
+        return;
+      }
+
+      // Convert the attendees data to CSV
+      const csv = convertToCSV(res);
+
+      // Trigger the download of the CSV file
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `participants_${id}.csv`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error("Error downloading attendees:", error);
+    }
+  }, []);
+
+  const handleDelete = async (id: string) => {
     const res = await deleteEvent(id);
     if (res.error) {
       setError(res.error);
@@ -280,6 +314,12 @@ const EventForm = () => {
                 </div>
                 <div className="mt-4 flex justify-end space-x-2">
                   <button
+                    onClick={() => handleDownload(event.event_id)}
+                    className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                  >
+                    <Download className="h-5 w-5" />
+                  </button>
+                  <button
                     onClick={() => handleEdit(event)}
                     className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
                   >
@@ -294,28 +334,31 @@ const EventForm = () => {
                 </div>
               </div>
 
-                    {/* Confirmation Modal */}
-                    <ConfirmModal
-                      isOpen={showDeleteConfirm}
-                      title="Delete Meeting"
-                      message={
-                        <div className="space-y-4">
-                          <p>Are you sure you want to delete this meeting?</p>
-                          <div className="p-3 bg-gray-800/50 rounded-lg">
-                            <p className="text-white font-medium">{event.eventName}</p>
-                            <p className="text-sm text-gray-400 mt-1">
-                              {new Date(event.conductedOn).toLocaleDateString()} at {event.venue}
-                            </p>
-                          </div>
-                          <p className="text-sm">This action cannot be undone.</p>
-                        </div>
-                      }
-                      onConfirm={() => {
-                        handleDelete(event.event_id);
-                        setShowDeleteConfirm(false);
-                      }}
-                      onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
-                    />
+              {/* Confirmation Modal */}
+              <ConfirmModal
+                isOpen={showDeleteConfirm}
+                title="Delete Meeting"
+                message={
+                  <div className="space-y-4">
+                    <p>Are you sure you want to delete this meeting?</p>
+                    <div className="p-3 bg-gray-800/50 rounded-lg">
+                      <p className="text-white font-medium">
+                        {event.eventName}
+                      </p>
+                      <p className="text-sm text-gray-400 mt-1">
+                        {new Date(event.conductedOn).toLocaleDateString()} at{" "}
+                        {event.venue}
+                      </p>
+                    </div>
+                    <p className="text-sm">This action cannot be undone.</p>
+                  </div>
+                }
+                onConfirm={() => {
+                  handleDelete(event.event_id);
+                  setShowDeleteConfirm(false);
+                }}
+                onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
+              />
             </div>
           ))}
         </div>

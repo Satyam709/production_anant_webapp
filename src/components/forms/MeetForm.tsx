@@ -34,133 +34,134 @@ type MeetFormInput = Omit<
   "hostID" | "conductor" | "attendees"
 >;
 
-
-
 // Meeting Card Component
-const MeetingCard = React.memo(({ 
-  meeting, 
-  onEdit, 
-  onDelete, 
-  onDownload,
-  onShowAttendees, 
-  onGenerateQR,
-  formatTime 
-}: {
-  meeting: Meeting;
-  onEdit: (meeting: Meeting) => void;
-  onDownload: (meeting: Meeting) => void;
-  onDelete: (id: string) => void;
-  onShowAttendees: (meeting: Meeting) => void;
-  onGenerateQR: (meeting: Meeting) => void;
-  formatTime: (date: Date) => string;
-}) => {
-  // Initialize the state for the delete confirmation modal
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+const MeetingCard = React.memo(
+  ({
+    meeting,
+    onEdit,
+    onDelete,
+    onDownload,
+    onShowAttendees,
+    onGenerateQR,
+    formatTime,
+  }: {
+    meeting: Meeting;
+    onEdit: (meeting: Meeting) => void;
+    onDownload: (meeting: Meeting) => void;
+    onDelete: (id: string) => void;
+    onShowAttendees: (meeting: Meeting) => void;
+    onGenerateQR: (meeting: Meeting) => void;
+    formatTime: (date: Date) => string;
+  }) => {
+    // Initialize the state for the delete confirmation modal
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  return (
-    <>
-      <div className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200">
-        <div className="p-4 sm:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-primary-blue/20 rounded-lg">
-                <Users className="h-5 w-5 text-primary-cyan" />
+    return (
+      <>
+        <div className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200">
+          <div className="p-4 sm:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-primary-blue/20 rounded-lg">
+                  <Users className="h-5 w-5 text-primary-cyan" />
+                </div>
+                <h3 className="text-lg font-semibold text-white line-clamp-1">
+                  {meeting.topic_of_discussion}
+                </h3>
               </div>
-              <h3 className="text-lg font-semibold text-white line-clamp-1">
-                {meeting.topic_of_discussion}
-              </h3>
             </div>
-          </div>
-          <div className="space-y-2 text-sm text-gray-300">
-            <p className="flex justify-between">
-              <span className="text-gray-400">Date:</span>
-              <span>{new Date(meeting.starts).toLocaleDateString()}</span>
-            </p>
-            <p className="flex justify-between">
-              <span className="text-gray-400">Time:</span>
-              <span>{formatTime(new Date(meeting.starts))}</span>
-            </p>
-            <p className="flex justify-between">
-              <span className="text-gray-400">Duration:</span>
-              <span>{meeting.duration} minutes</span>
-            </p>
-            <p className="flex justify-between">
-              <span className="text-gray-400">Venue:</span>
-              <span className="text-right">{meeting.venue}</span>
-            </p>
-          </div>
+            <div className="space-y-2 text-sm text-gray-300">
+              <p className="flex justify-between">
+                <span className="text-gray-400">Date:</span>
+                <span>{new Date(meeting.starts).toLocaleDateString()}</span>
+              </p>
+              <p className="flex justify-between">
+                <span className="text-gray-400">Time:</span>
+                <span>{formatTime(new Date(meeting.starts))}</span>
+              </p>
+              <p className="flex justify-between">
+                <span className="text-gray-400">Duration:</span>
+                <span>{meeting.duration} minutes</span>
+              </p>
+              <p className="flex justify-between">
+                <span className="text-gray-400">Venue:</span>
+                <span className="text-right">{meeting.venue}</span>
+              </p>
+            </div>
 
-          <div className="mt-6 flex flex-col gap-3">
-            <button
-              onClick={() => onGenerateQR(meeting)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-primary-blue/20 hover:scale-[1.02] group"
-            >
-              <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
-              <span>Generate QR Code</span>
-            </button>
-
-            <button
-              onClick={() => onShowAttendees(meeting)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-lg transition-colors duration-200"
-            >
-              <Eye className="h-5 w-5" />
-              <span>Show Attendees</span>
-            </button>
-
-            <div className="flex justify-end space-x-2 border-t border-gray-800 pt-4">
-            <button
-                onClick={() => onDownload(meeting)}
-                className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={() => onGenerateQR(meeting)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-primary-blue/20 hover:scale-[1.02] group"
               >
-                <Download className="h-5 w-5" />
+                <QrCode className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
+                <span>Generate QR Code</span>
               </button>
 
               <button
-                onClick={() => onEdit(meeting)}
-                className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                onClick={() => onShowAttendees(meeting)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-lg transition-colors duration-200"
               >
-                <Pencil className="h-5 w-5" />
+                <Eye className="h-5 w-5" />
+                <span>Show Attendees</span>
               </button>
-              <button
-                onClick={() => setShowDeleteConfirm(true)} // Open the confirmation modal
-                className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-              >
-                <Trash2 className="h-5 w-5" />
-              </button>
+
+              <div className="flex justify-end space-x-2 border-t border-gray-800 pt-4">
+                <button
+                  onClick={() => onDownload(meeting)}
+                  className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                >
+                  <Download className="h-5 w-5" />
+                </button>
+
+                <button
+                  onClick={() => onEdit(meeting)}
+                  className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                >
+                  <Pencil className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)} // Open the confirmation modal
+                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Confirmation Modal */}
-      <ConfirmModal
-        isOpen={showDeleteConfirm}
-        title="Delete Meeting"
-        message={
-          <div className="space-y-4">
-            <p>Are you sure you want to delete this meeting?</p>
-            <div className="p-3 bg-gray-800/50 rounded-lg">
-              <p className="text-white font-medium">{meeting.topic_of_discussion}</p>
-              <p className="text-sm text-gray-400 mt-1">
-                {new Date(meeting.starts).toLocaleDateString()} at {formatTime(new Date(meeting.starts))}
-              </p>
+        {/* Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showDeleteConfirm}
+          title="Delete Meeting"
+          message={
+            <div className="space-y-4">
+              <p>Are you sure you want to delete this meeting?</p>
+              <div className="p-3 bg-gray-800/50 rounded-lg">
+                <p className="text-white font-medium">
+                  {meeting.topic_of_discussion}
+                </p>
+                <p className="text-sm text-gray-400 mt-1">
+                  {new Date(meeting.starts).toLocaleDateString()} at{" "}
+                  {formatTime(new Date(meeting.starts))}
+                </p>
+              </div>
+              <p className="text-sm">This action cannot be undone.</p>
             </div>
-            <p className="text-sm">This action cannot be undone.</p>
-          </div>
-        }
-        onConfirm={() => {
-          onDelete(meeting.meeting_id); // Call the delete function
-          setShowDeleteConfirm(false); // Close the modal after confirmation
-        }}
-        onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
-      />
-    </>
-  );
-});
+          }
+          onConfirm={() => {
+            onDelete(meeting.meeting_id); // Call the delete function
+            setShowDeleteConfirm(false); // Close the modal after confirmation
+          }}
+          onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
+        />
+      </>
+    );
+  }
+);
 
-MeetingCard.displayName = 'MeetingCard';
-
-
+MeetingCard.displayName = "MeetingCard";
 
 const RenderQrCode = React.memo(({ id }: { id: string }) => {
   const [qrCode, setQrCode] = useState("");
@@ -172,7 +173,7 @@ const RenderQrCode = React.memo(({ id }: { id: string }) => {
 
     const genQr = async () => {
       if (!id || isFetching) return;
-      
+
       setIsFetching(true);
       try {
         const qr = await generateQr(id, 10);
@@ -210,14 +211,16 @@ const RenderQrCode = React.memo(({ id }: { id: string }) => {
         </div>
       ) : (
         <div className="w-48 h-48 flex items-center justify-center">
-          <p className="text-gray-400">{error || "Failed to generate QR code."}</p>
+          <p className="text-gray-400">
+            {error || "Failed to generate QR code."}
+          </p>
         </div>
       )}
     </div>
   );
 });
 
-RenderQrCode.displayName = 'RenderQrCode';
+RenderQrCode.displayName = "RenderQrCode";
 
 const RenderAttendees = React.memo(({ id }: { id: string }) => {
   interface Attendee {
@@ -236,7 +239,7 @@ const RenderAttendees = React.memo(({ id }: { id: string }) => {
 
     const fetchAttendees = async () => {
       if (!id || isFetching) return;
-      
+
       setIsFetching(true);
       try {
         const data = await getAttendies(id);
@@ -279,7 +282,9 @@ const RenderAttendees = React.memo(({ id }: { id: string }) => {
                   .join("")}
               </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-white font-medium truncate">{attendee.name}</h4>
+                <h4 className="text-white font-medium truncate">
+                  {attendee.name}
+                </h4>
                 <div className="flex flex-wrap items-center gap-2 text-sm">
                   <span className="text-gray-400">{attendee.roll_number}</span>
                   <span className="text-gray-600 hidden sm:inline">•</span>
@@ -297,7 +302,7 @@ const RenderAttendees = React.memo(({ id }: { id: string }) => {
   );
 });
 
-RenderAttendees.displayName = 'RenderAttendees';
+RenderAttendees.displayName = "RenderAttendees";
 
 const MeetForm = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -319,15 +324,18 @@ const MeetForm = () => {
 
   const startsDateRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDateClick = useCallback((ref: RefObject<HTMLInputElement | null>) => {
-    if (ref.current) {
-      if (typeof ref.current.showPicker === "function") {
-        ref.current.showPicker();
-      } else {
-        ref.current.focus();
+  const handleDateClick = useCallback(
+    (ref: RefObject<HTMLInputElement | null>) => {
+      if (ref.current) {
+        if (typeof ref.current.showPicker === "function") {
+          ref.current.showPicker();
+        } else {
+          ref.current.focus();
+        }
       }
-    }
-  }, []);
+    },
+    []
+  );
 
   const formatTime = useCallback((date: Date) => {
     return new Intl.DateTimeFormat("en-US", {
@@ -339,10 +347,9 @@ const MeetForm = () => {
 
   const handleDelete = useCallback(async (id: string) => {
     const res = await deleteMeeting(id);
-    if(res){
+    if (res) {
       setSuccess("Meeting deleted successfully!");
-    }
-    else{
+    } else {
       setError("Failed to delete meeting");
     }
     refetchMeetings();
@@ -382,7 +389,10 @@ const MeetForm = () => {
       };
 
       if (editingMeeting) {
-        await axios.put(`/api/meetings/${editingMeeting.meeting_id}/edit`, payload);
+        await axios.put(
+          `/api/meetings/${editingMeeting.meeting_id}/edit`,
+          payload
+        );
         setSuccess("Meeting updated successfully!");
       } else {
         await axios.post("/api/meetings/create", payload);
@@ -421,21 +431,21 @@ const MeetForm = () => {
     setIsModalOpen(true);
   }, []);
 
-
-  const handleInputChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => {
-      if (name === "starts") {
-        return { ...prev, starts: new Date(value) };
-      } else if (name === "duration") {
-        return { ...prev, duration: parseInt(value) };
-      } else {
-        return { ...prev, [name]: value };
-      }
-    });
-  }, []);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => {
+        if (name === "starts") {
+          return { ...prev, starts: new Date(value) };
+        } else if (name === "duration") {
+          return { ...prev, duration: parseInt(value) };
+        } else {
+          return { ...prev, [name]: value };
+        }
+      });
+    },
+    []
+  );
 
   const openCreateModal = useCallback(() => {
     setEditingMeeting(null);
@@ -462,10 +472,10 @@ const MeetForm = () => {
     try {
       // Fetch the attendees for the meeting
       const attendies = await getAttendies(meeting.meeting_id);
-  
+
       // Convert the attendees data to CSV
       const csv = convertToCSV(attendies);
-  
+
       // Trigger the download of the CSV file
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const link = document.createElement("a");
@@ -482,8 +492,6 @@ const MeetForm = () => {
       console.error("Error downloading attendees:", error);
     }
   }, []);
-
-
 
   return (
     <div className="space-y-6">
@@ -534,7 +542,9 @@ const MeetForm = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center text-gray-400 py-8">No meetings scheduled.</div>
+        <div className="text-center text-gray-400 py-8">
+          No meetings scheduled.
+        </div>
       )}
 
       {/* Create/Edit Modal */}
@@ -659,7 +669,7 @@ const MeetForm = () => {
         onClose={() => setIsAttendeesModalOpen(false)}
         title={`Attendees - ${selectedMeeting?.topic_of_discussion}`}
       >
-        <Suspense 
+        <Suspense
           fallback={
             <div className="flex justify-center p-8">
               <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
@@ -677,7 +687,7 @@ const MeetForm = () => {
         title="Attendance QR Code"
       >
         <div className="text-center space-y-6">
-          <Suspense 
+          <Suspense
             fallback={
               <div className="flex justify-center p-8">
                 <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
