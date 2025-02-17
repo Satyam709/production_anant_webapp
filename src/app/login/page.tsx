@@ -8,12 +8,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GradientButton from "@/components/ui/GradientButton";
 import LoginSymbols from "@/components/floating/LoginSymbols";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [rollNumber, setRollNumber] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -34,7 +36,7 @@ export default function LoginPage() {
       setError(result.error);
     } else if (result?.ok) {
       // Optional: you can handle redirection or success actions here
-      window.location.href = "/dashboard"; // or use router.push('/dashboard');
+      router.push("/");
     }
   };
 

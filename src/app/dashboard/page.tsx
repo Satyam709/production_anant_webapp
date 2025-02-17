@@ -38,7 +38,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const session = useSession();
   const router = useRouter();
-  const isAdmin = session?.data?.user.info?.position != position_options.Member;
+  const isAdmin =session?.data?.user.info?.position && session?.data?.user.info?.position != position_options.Member;
   const defTab = isAdmin ? "overview" : "teams";
   const [activeTab, setActiveTab] = useState<TabType>(defTab);
 

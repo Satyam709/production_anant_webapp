@@ -71,10 +71,10 @@ const authOptions: AuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      url = baseUrl + "/dashboard"; // Adjusted to use correct baseUrl
-      return url;
-    },
+    // async redirect({ url }) {
+    //   // url = baseUrl + "/"; // Adjusted to use correct baseUrl
+    //   return url;
+    // },
     async session({ session, token }) {
       if (token) {
         session.user = {
