@@ -32,3 +32,46 @@ export async function deleteCompetition(id: string) {
     return { error: "Internal Server Error", status: 500 };
   }
 }
+
+export async function getCompetitionParticipants(id: string) {
+  try {
+    const session = await getSession();
+
+    if (!session?.user || !(await isAdmin())) {
+      return [];
+    }
+
+    // Check if competition exists
+    const events = await prisma.competitions.findUnique({
+      where: { competition_id: id },
+    });
+
+    if (!events) {
+      return [];
+    }
+
+    // Get all participants
+    const participants = await prisma.competitions.findUnique({
+      where: { competition_id: id },
+      select: {
+        users_participated: {
+          select: {
+            id: true,
+            name: true,
+            roll_number: true,
+            branch: true,
+            batch: true,
+            position: true,
+          },
+        },
+      },
+    });
+    if (!participants) {
+      return [];
+    }
+    return participants.users_participated;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}

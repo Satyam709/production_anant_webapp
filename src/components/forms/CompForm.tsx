@@ -13,6 +13,7 @@ import {
   Plus,
   CalendarClock,
   Clock,
+  Download,
 } from "lucide-react";
 import GradientButton from "../ui/GradientButton";
 import Modal from "../ui/Modal";
@@ -21,9 +22,10 @@ import Image from "next/image";
 import { placeholder } from "@/lib/images/placeholder";
 import axios from "axios";
 import { uploadServerSideFile } from "@/lib/actions/uploadthing";
-import { deleteCompetition } from "@/lib/actions/Competitions";
+import { deleteCompetition, getCompetitionParticipants } from "@/lib/actions/Competitions";
 import { th } from "framer-motion/client";
 import { ConfirmModal } from "./ConfirmModal";
+import { convertToCSV } from "@/helpers/convertToCsv";
 
 
 type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, "createdBy">;
@@ -213,6 +215,41 @@ const CompForm = () => {
     }
   };
 
+    const handleDownload = useCallback(async (id : string) => {
+      try {
+        // Fetch the attendees for the meeting
+        const res = await getCompetitionParticipants(id);
+        if (!res) {
+          setError("Failed to fetch participants");
+        } else {
+          setSuccess("Participants fetched successfully!");
+        }
+  
+        if (res.length === 0) {
+          setError("No participants found");
+          return;
+        }
+  
+        // Convert the attendees data to CSV
+        const csv = convertToCSV(res);
+  
+        // Trigger the download of the CSV file
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        if (link.download !== undefined) {
+          const url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", `competition_participants_${id}.csv`);
+          link.style.visibility = "hidden";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      } catch (error) {
+        console.error("Error downloading attendees:", error);
+      }
+    }, []);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -319,6 +356,12 @@ const CompForm = () => {
                 </div>
                 <div className="mt-4 flex justify-end space-x-2">
                   <button
+                    onClick={() => handleDownload(competition.competition_id)}
+                    className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                  >
+                    <Download className="h-5 w-5" />
+                  </button>
+                  <button
                     onClick={() => handleEdit(competition)}
                     className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
                   >
@@ -332,31 +375,31 @@ const CompForm = () => {
                   </button>
                 </div>
               </div>
-                    {/* Confirmation Modal */}
-                    <ConfirmModal
-                      isOpen={showDeleteConfirm}
-                      title="Delete Meeting"
-                      message={
-                        <div className="space-y-4">
-                          <p>Are you sure you want to delete this meeting?</p>
-                          <div className="p-3 bg-gray-800/50 rounded-lg">
-                            <p className="text-white font-medium">{competition.competitionName}</p>
-                            <p className="text-sm text-gray-400 mt-1">
-                              {new Date(competition.conductedOn).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <p className="text-sm">This action cannot be undone.</p>
-                        </div>
-                      }
-                      onConfirm={() => {
-                        handleDelete(competition.competition_id) // Call the delete function
-                        setShowDeleteConfirm(false); // Close the modal after confirmation
-                      }}
-                      onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
-                    />
+              {/* Confirmation Modal */}
+              <ConfirmModal
+                isOpen={showDeleteConfirm}
+                title="Delete Meeting"
+                message={
+                  <div className="space-y-4">
+                    <p>Are you sure you want to delete this meeting?</p>
+                    <div className="p-3 bg-gray-800/50 rounded-lg">
+                      <p className="text-white font-medium">
+                        {competition.competitionName}
+                      </p>
+                      <p className="text-sm text-gray-400 mt-1">
+                        {new Date(competition.conductedOn).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <p className="text-sm">This action cannot be undone.</p>
+                  </div>
+                }
+                onConfirm={() => {
+                  handleDelete(competition.competition_id); // Call the delete function
+                  setShowDeleteConfirm(false); // Close the modal after confirmation
+                }}
+                onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
+              />
             </div>
-
-            
           ))}
         </div>
       ) : (
