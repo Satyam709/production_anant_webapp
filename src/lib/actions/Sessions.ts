@@ -5,7 +5,8 @@ import authOptions from "../NextAuth/authOptions";
 export async function getSession() {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
-    console.error("unauthenticated!!");
+    // console.error("unauthenticated!!");
+    return null;
   }
   return session;
 }

@@ -24,9 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
               },
             },
           });
-
-        console.log(connectionCount);
-
+          
         return NextResponse.json({ isRegistered: connectionCount>0? true:false },{status: 200});
     }
     catch(e){

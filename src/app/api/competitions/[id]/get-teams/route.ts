@@ -28,7 +28,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         const comp = await prisma.competitions.findUnique({
             where: {competition_id: id},
             select: {
-                registration_deadline: true,
                 min_team_size: true,
                 max_team_size: true,
                 users_participated:{
@@ -41,22 +40,22 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
             return NextResponse.json({error:"Compitition not found!"},{status: 404});
         }
 
-        const dt_now = new Date();
-        if (dt_now>comp.registration_deadline){
-            return NextResponse.json({error: "Registrations are closed now!"},{status: 400});
-        }
+        const userSet = new Set(comp.users_participated.map((user) => user.id));
 
-        const comp_user_set = new Set(comp.users_participated.map((user) => user.id));
-        console.log(teams[0].team_members[0]);
-        const valid_teams = teams.filter((team) => team.team_members.length+1>=comp.min_team_size && team.team_members.length+1<=comp.max_team_size && check_registration(comp_user_set,team.team_members));
+        const valid_sized_teams = teams.filter((team) => team.team_members.length+1>=comp.min_team_size && team.team_members.length+1<=comp.max_team_size);
+        
+        let valid_teams = [];
+        for (let i=0;i<valid_sized_teams.length;i++){
+            let team_members = valid_sized_teams[i].team_members.map((member) => member.id);
+            const hasMatch = team_members.some(el => userSet.has(el));
+            if(!hasMatch){
+                valid_teams.push(valid_sized_teams[i]);
+            }
+        }
 
         return NextResponse.json({valid_teams},{status: 200});
     }
     catch(e){
         console.log(e);
     }
-}
-
-function check_registration(compUserSet: any, team_members: any){
-    return !team_members.some(obj => compUserSet.has(obj.id));
 }

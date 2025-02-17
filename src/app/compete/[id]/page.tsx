@@ -2,13 +2,17 @@
 import React from 'react';
 import { Trophy, Users, Calendar, MapPin, Clock, Coins } from 'lucide-react';
 import Register_Button from '@/components/compete/Register';
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import { getSession } from "@/lib/actions/Sessions";
 
 async function CompetitionDetails({ params }: { params: { id: string } }) {
 
   const { id } = await params;
   const response = await getCompi(id);
-  const competition = response.competition;
-  // console.log(competition);
+  const competition = await response.competition;
+  const session = await getSession();
+  const isLoggedin = session?.user? true : false;
   const isRegistrationOpen = new Date() < new Date(competition.registration_deadline);
 
   const formatDate = (date: string) => {
@@ -24,6 +28,8 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
+      
+      <Navbar />
       {/* Hero Section */}
       <div className="relative h-[500px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
@@ -32,6 +38,11 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
             alt="Hackathon background"
             className="w-full h-full object-cover opacity-20 scale-105 transform hover:scale-110 transition-transform duration-700"
           />
+          {!isRegistrationOpen && (
+            <div className="absolute bottom-4 right-4 z-20 bg-red-500 text-white px-4 py-2 rounded-full">
+              Registration Closed
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/50 to-gray-900"></div>
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
@@ -99,7 +110,7 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Prize Pool</p>
-                <p className="font-semibold">{competition.prize} Total Prize Pool</p>
+                <p className="font-semibold">{competition.prize}</p>
               </div>
             </div>
           </div>
@@ -168,7 +179,11 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-    <Register_Button compi_id={competition.competition_id} isRegistrationOpen={isRegistrationOpen} />
+    <Register_Button compi_id={competition.competition_id} isRegistrationOpen={isRegistrationOpen} isLoggedin={isLoggedin}/>
+
+    <div className="relative z-10">
+        <Footer />
+    </div>
     </div>
 
   );
@@ -179,12 +194,10 @@ export default CompetitionDetails;
 async function getCompi(id: string){
   try{
     const res = await fetch(`${process.env.NEXTAUTH_URL}/api/competitions/${id}?participant=false`);
-    // console.log(res);
     if(!res.ok){
       return [];
     }
     const data = await res.json(); 
-    // console.log(data);
     return data;
   }
   catch(err){
