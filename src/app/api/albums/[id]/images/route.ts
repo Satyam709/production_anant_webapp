@@ -4,17 +4,15 @@ import { getSession } from "@/lib/actions/Sessions";
 import isAdmin from "@/lib/actions/Admin";
 import z from "zod";
 
-// Schema for Image Validation
+// Schema for validating multiple image URLs
 const imageSchema = z.object({
-  url: z.string().url("Invalid image URL"),
+  urls: z.array(z.string().url("Invalid image URL")).min(1, "At least one image URL is required"),
 });
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// Add multiple images to an album
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id: albumId } = params;
+    const { id: albumId } = await params;
     const body = await req.json();
     const session = await getSession();
 
@@ -24,10 +22,10 @@ export async function POST(
 
     const validation = imageSchema.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+      return NextResponse.json({ error: validation.error.message }, { status: 400 });
     }
 
-    const { url } = validation.data;
+    const { urls } = validation.data;
 
     // Check if album exists
     const album = await prisma.album.findUnique({ where: { id: albumId } });
@@ -35,13 +33,16 @@ export async function POST(
       return NextResponse.json({ error: "Album not found" }, { status: 404 });
     }
 
-    // Add image to album
-    const image = await prisma.albumImages.create({
-      data: { url, albumId },
+    // Add multiple images to the album
+    const createdImages = await prisma.albumImages.createMany({
+      data: urls.map((url) => ({
+        url,
+        albumId,
+      })),
     });
 
     return NextResponse.json(
-      { message: "Image added successfully", image },
+      { message: "Images added successfully", count: createdImages.count },
       { status: 201 }
     );
   } catch (error) {
@@ -56,10 +57,10 @@ export async function POST(
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: albumId } = params;
+    const { id: albumId } = await params;
 
     // Check if album exists
     const album = await prisma.album.findUnique({
@@ -82,44 +83,4 @@ export async function GET(
 }
 
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { albumId: string; imageId: string } }
-) {
-  try {
-    const { albumId, imageId } = params;
-    const session = await getSession();
 
-    if (!session?.user || !(await isAdmin())) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
-
-    // Check if album exists
-    const album = await prisma.album.findUnique({ where: { id: albumId } });
-    if (!album) {
-      return NextResponse.json({ error: "Album not found" }, { status: 404 });
-    }
-
-    // Check if image exists
-    const image = await prisma.albumImages.findUnique({
-      where: { id: imageId },
-    });
-    if (!image) {
-      return NextResponse.json({ error: "Image not found" }, { status: 404 });
-    }
-
-    // Delete the image
-    await prisma.albumImages.delete({ where: { id: imageId } });
-
-    return NextResponse.json(
-      { message: "Image deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
-}
