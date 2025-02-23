@@ -38,9 +38,10 @@ const Hero = () => {
             }}
           />
         </div>
-        <h1 className="text-5xl sm:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-gray-400">
-          Anant
+        <h1 className="text-6xl sm:text-8xl font-extrabold pb-8 pt-2 tracking-wide leading-snug bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-white to-purple-400 drop-shadow-lg">
+          अनंत
         </h1>
+
         <p className="text-xl sm:text-2xl mb-8 text-gray-400">
           The Mathematical Society | NIT Kurukshetra
         </p>
@@ -51,7 +52,7 @@ const Hero = () => {
         <GradientButton href="#about">
           <div className="flex flex-col items-center justify-center">
             <span>Discover More</span>
-            <ArrowBigDownDash/>
+            <ArrowBigDownDash />
           </div>
         </GradientButton>
       </div>
