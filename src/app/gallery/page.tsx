@@ -1,10 +1,29 @@
-import React from "react";
-import Link from "next/link";
-import { Trophy, Users, Bell } from "lucide-react";
+import { AlbumGallery } from "@/components/gallery/AlbumGallery";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { AlbumGallery } from "@/components/gallery/AlbumGallery";
-export default function CompetitionsPage() {
+import { AlbumType } from "@/types/common";
+async function getAlbums() {
+  let albums: AlbumType[] = [];
+  try {
+    const res = await fetch(`${process.env.API_URL}/api/albums`, {
+      cache: "no-store", // Ensures fresh data on each request
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch albums");
+    const data = (await res.json()) as { albums: AlbumType[] };
+    albums = data.albums;
+  } catch (error) {
+    console.log(error);    
+    albums = [];
+  }
+  finally {
+    return { albums };
+  }
+}
+
+export default async function GalleryPage() {
+  const { albums } = await getAlbums();
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
       <div className="fixed inset-0">
@@ -23,7 +42,9 @@ export default function CompetitionsPage() {
             Capturing moments of mathematical brilliance and fun.
           </p>
         </div>
-        <AlbumGallery></AlbumGallery>
+
+        {/* Pass fetched albums to AlbumGallery */}
+        <AlbumGallery albums={albums}/>
       </main>
 
       <div className="relative z-10">

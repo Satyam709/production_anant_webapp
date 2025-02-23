@@ -4,41 +4,14 @@ import { AlbumCard } from './AlbumCard';
 import { ImageGrid } from './ImageGrid';
 import { ImageViewer } from './ImageViewer';
 import { ChevronLeft } from 'lucide-react';
+import { AlbumType } from '@/types/common';
 
-// Mock data based on your schema
-const mockAlbums = [
-  {
-    id: '1',
-    name: 'Mathematics Day 2024',
-    images: [
-      { id: '1', url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800' },
-      { id: '2', url: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800' },
-      { id: '3', url: 'https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=800' },
-    ],
-    createdAt: new Date('2024-02-15'),
-  },
-  {
-    id: '2',
-    name: 'Workshop Series',
-    images: [
-      { id: '4', url: 'https://images.unsplash.com/photo-1596496050827-8299e0220de1?w=800' },
-      { id: '5', url: 'https://images.unsplash.com/photo-1513258496099-48168024aec0?w=800' },
-    ],
-    createdAt: new Date('2024-01-20'),
-  },
-  {
-    id: '3',
-    name: 'Team Building 2024',
-    images: [
-      { id: '6', url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800' },
-      { id: '7', url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800' },
-    ],
-    createdAt: new Date('2024-01-10'),
-  },
-];
+type AlbumGalleryProps = {
+  albums: AlbumType[];
+};
 
-export const AlbumGallery: React.FC = () => {
-  const [selectedAlbum, setSelectedAlbum] = useState<typeof mockAlbums[0] | null>(null);
+export const AlbumGallery: React.FC<AlbumGalleryProps> = ({albums}) => {
+  const [selectedAlbum, setSelectedAlbum] = useState<AlbumType | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(-1);
 
   const handleNext = () => {
@@ -71,7 +44,7 @@ export const AlbumGallery: React.FC = () => {
                 {selectedAlbum.name}
               </h1>
               <p className="text-primary-cyan/80 mt-1">
-                {selectedAlbum.images.length} photos • Created on {selectedAlbum.createdAt.toLocaleDateString()}
+                {selectedAlbum.images.length} photos • Created on {new Date(selectedAlbum.createdAt).toLocaleDateString()}
               </p>
             </div>
 
@@ -93,7 +66,7 @@ export const AlbumGallery: React.FC = () => {
         ) : (
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockAlbums.map((album) => (
+              {albums.map((album) => (
                 <AlbumCard
                   key={album.id}
                   name={album.name}
