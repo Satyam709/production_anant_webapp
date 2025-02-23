@@ -1,123 +1,170 @@
 "use client";
 
-import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Menu, X, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import NavDropdown from "./navigation/NavDropdown";
-import { navItems, shopNavItems } from "@/constants/navigation";
-import { usePathname } from "next/navigation";
+import { navItems } from "@/constants/navigation";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState(null);
   const { data: session } = useSession();
-  const pathname = usePathname();
-  const isShopPage = pathname?.startsWith("/shop");
 
-  //navbar selector
-  const currentNavItems = isShopPage ? shopNavItems : navItems;
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const toggleSection = (sectionLabel) => {
+    setActiveSection(activeSection === sectionLabel ? null : sectionLabel);
+  };
 
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm z-50 border border-gray-800 rounded-3xl shadow-lg w-[90%] max-w-7xl transition-all duration-300">
-      <div className="mx-auto px-4">
-        <div className="relative flex items-center justify-between h-14">
-          {/* Logo and Navigation Items */}
-          <div className="flex items-center flex-1">
-            <Link 
-              href="/" 
-              className="flex-shrink-0 mr-4 transform hover:scale-105 transition-all duration-300 ease-out"
-            >
-              <Image
-                src="/anant_logo.png"
-                alt="Anant Logo"
-                className="h-8 w-auto"
-                width={32}
-                height={32}
-                style={{ 
-                  filter: "drop-shadow(0 0 10px rgba(0, 224, 255, 0.3))",
-                  transition: "filter 0.3s ease-out"
-                }}
-              />
-            </Link>
-            
-            <div className="hidden lg:flex items-center space-x-1 flex-1 justify-center">
-              {Object.values(currentNavItems).map((item) => (
-                <NavDropdown 
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? "py-2" : "py-4"
+      }`}
+    >
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div
+          className={`relative mx-auto bg-black/70 backdrop-blur-md rounded-2xl border border-gray-800/50 
+          shadow-lg transition-all duration-300 ${
+            scrolled ? "shadow-black/20" : "shadow-black/10"
+          }`}
+        >
+          {/* Main Navbar Content */}
+          <div className="relative flex items-center justify-between px-4 py-3">
+            {/* Logo Section */}
+            <div className="flex items-center">
+              <Link href="/" className="flex-shrink-0 group">
+                <div className="relative w-8 h-8 sm:w-9 sm:h-9">
+                  <Image
+                    src="/anant_logo.png"
+                    alt="Anant Logo"
+                    fill
+                    className="object-contain transform group-hover:scale-105 transition-all duration-300"
+                    style={{
+                      filter: "drop-shadow(0 0 10px rgba(0, 224, 255, 0.3))",
+                    }}
+                  />
+                </div>
+              </Link>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center justify-center flex-1 ml-8">
+              {Object.values(navItems).map((item) => (
+                <NavDropdown
                   key={item.label}
                   label={item.label}
                   items={item.items}
                 />
               ))}
             </div>
-          </div>
 
-          {/* Auth Button and Mobile Menu */}
-          <div className="flex items-center gap-2">
-            {session ? (
-              <Link
-                href="/dashboard"
-                className="text-gray-300 hover:text-white px-3 py-1.5 rounded-3xl text-sm font-medium 
-                  transition-all duration-300 ease-out hover:bg-gradient-to-r from-primary-blue/20 to-primary-purple/20
-                  hover:shadow-[0_0_15px_rgba(0,224,255,0.15)] border border-transparent hover:border-gray-700"
-              >
-                Dashboard
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                className="text-gray-300 hover:text-white px-3 py-1.5 rounded-3xl text-sm font-medium 
-                  transition-all duration-300 ease-out hover:bg-gradient-to-r from-primary-blue/20 to-primary-purple/20
-                  hover:shadow-[0_0_15px_rgba(0,224,255,0.15)] border border-transparent hover:border-gray-700"
-              >
-                Login
-              </Link>
-            )}
-
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden inline-flex items-center justify-center p-2 rounded-3xl text-gray-400 
-                hover:text-white hover:bg-gradient-to-r from-primary-blue/20 to-primary-purple/20 
-                focus:outline-none transition-all duration-300 ease-out"
-              aria-expanded={isOpen}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? (
-                <X className="h-5 w-5 transform rotate-0 transition-transform duration-300" />
+            {/* Auth & Mobile Menu Button */}
+            <div className="flex items-center gap-3">
+              {session ? (
+                <Link
+                  href="/dashboard"
+                  className="text-gray-300 hover:text-white px-3 py-1.5 text-sm font-medium rounded-xl
+                    bg-gradient-to-r from-gray-800/50 to-gray-700/50 hover:from-primary-blue/20 hover:to-primary-purple/20
+                    transition-all duration-300 border border-gray-700/50 hover:border-gray-600"
+                >
+                  Dashboard
+                </Link>
               ) : (
-                <Menu className="h-5 w-5 transform rotate-0 transition-transform duration-300" />
+                <Link
+                  href="/login"
+                  className="text-gray-300 hover:text-white px-3 py-1.5 text-sm font-medium rounded-xl
+                    bg-gradient-to-r from-gray-800/50 to-gray-700/50 hover:from-primary-blue/20 hover:to-primary-purple/20
+                    transition-all duration-300 border border-gray-700/50 hover:border-gray-600"
+                >
+                  Login
+                </Link>
               )}
-            </button>
-          </div>
-        </div>
 
-        {/* Mobile Navigation Menu */}
-        <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out
-            ${isOpen ? 'max-h-[32rem] border-t border-gray-800' : 'max-h-0'}`}
-        >
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            {Object.values(currentNavItems).map((section) => (
-              <div key={section.label} className="px-3 py-2">
-                <div className="text-gray-400 text-sm font-medium mb-2">
-                  {section.label}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="lg:hidden inline-flex items-center justify-center p-2 rounded-xl
+                  text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50
+                  transition-all duration-300 border border-gray-700/50 hover:border-gray-600"
+                aria-expanded={isOpen}
+              >
+                {isOpen ? (
+                  <X className="h-5 w-5 transition-transform duration-300" />
+                ) : (
+                  <Menu className="h-5 w-5 transition-transform duration-300" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Enhanced Mobile Navigation Menu */}
+          <div
+            className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out
+              ${
+                isOpen ? "max-h-[85vh] border-t border-gray-800/50" : "max-h-0"
+              }`}
+          >
+            <div className="px-2 py-3 max-h-[85vh] overflow-y-auto">
+              {Object.values(navItems).map((section) => (
+                <div key={section.label} className="mb-2 last:mb-0">
+                  {/* Section Header */}
+                  <button
+                    onClick={() => toggleSection(section.label)}
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl
+                      bg-gradient-to-r from-gray-800/30 to-gray-700/30 
+                      hover:from-primary-blue/10 hover:to-primary-purple/10
+                      transition-all duration-300"
+                  >
+                    <span className="text-sm font-medium text-white">
+                      {section.label}
+                    </span>
+                    <ChevronRight
+                      className={`h-4 w-4 text-gray-400 transition-transform duration-300
+                        ${activeSection === section.label ? "rotate-90" : ""}`}
+                    />
+                  </button>
+
+                  {/* Section Content */}
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out
+                      ${
+                        activeSection === section.label
+                          ? "max-h-96 mt-2"
+                          : "max-h-0"
+                      }`}
+                  >
+                    <div className="space-y-1 pl-4">
+                      {section.items.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          className="flex items-center px-4 py-2.5 rounded-lg text-gray-300
+                            hover:text-white hover:bg-gradient-to-r from-primary-blue/5 to-primary-purple/5
+                            transition-all duration-300 group border border-transparent
+                            hover:border-gray-800"
+                          onClick={() => {
+                            setIsOpen(false);
+                            setActiveSection(null);
+                          }}
+                        >
+                          <span className="text-sm">{item.label}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  {section.items.map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gradient-to-r 
-                        from-primary-blue/10 to-primary-purple/10 rounded-lg transition-all duration-300 
-                        ease-out text-sm"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
