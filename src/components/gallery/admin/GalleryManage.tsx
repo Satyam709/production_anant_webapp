@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image as ImageIcon,
   Plus,
@@ -11,59 +11,22 @@ import {
 import GradientButton from "@/components/ui/GradientButton";
 import Modal from "@/components/ui/Modal";
 import StatusModal from "@/components/ui/StatusModal";
+import { AlbumType } from "@/types/common";
+import { placeholder } from "@/lib/images/placeholder";
+import Image from "next/image";
+import {
+  uploadServerSideFiles,
+} from "@/lib/actions/uploadthing";
 
-interface Album {
-  id: string;
-  name: string;
-  createdAt: Date;
-  images: AlbumImage[];
-}
-
-interface AlbumImage {
-  id: string;
-  url: string;
-  albumId: string;
-}
-
-// Mock data - replace with actual API calls later
-const mockAlbums: Album[] = [
-  {
-    id: "1",
-    name: "Tech Events 2024",
-    createdAt: new Date("2024-01-15"),
-    images: [
-      {
-        id: "1",
-        url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=2000",
-        albumId: "1",
-      },
-      {
-        id: "2",
-        url: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=2000",
-        albumId: "1",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Hackathon Moments",
-    createdAt: new Date("2024-02-20"),
-    images: [
-      {
-        id: "3",
-        url: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=2000",
-        albumId: "2",
-      },
-    ],
-  },
-];
 
 const PhotoGallery = () => {
-  const [albums, setAlbums] = useState<Album[]>(mockAlbums);
-  const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
+  const [albums, setAlbums] = useState<AlbumType[]>([]);
+  const [selectedAlbum, setSelectedAlbum] = useState<AlbumType | null>(null);
   const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+
   const [statusModal, setStatusModal] = useState<{
     type: "success" | "error" | "confirm";
     title: string;
@@ -76,25 +39,45 @@ const PhotoGallery = () => {
     name: "",
   });
 
-  const [imageForm, setImageForm] = useState({
-    url: "",
-  });
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  useEffect(() => {
+    setIsFetching(true);
+    fetchAlbums().finally(() => setIsFetching(false));
+  }, []);
+
+  const fetchAlbums = async () => {
+    let albums: AlbumType[] = [];
+    try {
+      const res = await fetch(`/api/albums`);
+
+      if (!res.ok) throw new Error("Failed to fetch albums");
+      const data = (await res.json()) as { albums: AlbumType[] };
+      albums = data.albums;
+    } catch (error) {
+      console.log(error);
+      albums = [];
+    } finally {
+      setAlbums(albums);
+    }
+  };
 
   const handleCreateAlbum = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const newAlbum: Album = {
-        id: Date.now().toString(),
-        name: albumForm.name,
-        createdAt: new Date(),
-        images: [],
-      };
-
-      setAlbums([...albums, newAlbum]);
+      const res = await fetch(`/api/albums`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: albumForm.name,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create album");
       setIsAlbumModalOpen(false);
       setAlbumForm({ name: "" });
       setStatusModal({
@@ -102,11 +85,13 @@ const PhotoGallery = () => {
         title: "Success",
         message: "Album created successfully",
       });
-    } catch (error) {
+      // Fetch albums again to update the list
+      await fetchAlbums();
+    } catch (error: any) {
       setStatusModal({
         type: "error",
         title: "Error",
-        message: "Failed to create album",
+        message: error.message || "Failed to create album",
       });
     } finally {
       setLoading(false);
@@ -119,7 +104,19 @@ const PhotoGallery = () => {
 
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch(`/api/albums/${selectedAlbum.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newName: albumForm.name,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed to update album");
 
       setAlbums(
         albums.map((album) =>
@@ -137,11 +134,11 @@ const PhotoGallery = () => {
         title: "Success",
         message: "Album updated successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       setStatusModal({
         type: "error",
         title: "Error",
-        message: "Failed to update album",
+        message: error.message,
       });
     } finally {
       setLoading(false);
@@ -152,7 +149,13 @@ const PhotoGallery = () => {
     if (!albumToDelete) return;
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch(`/api/albums/${albumToDelete}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed to update album");
 
       setAlbums(albums.filter((album) => album.id !== albumToDelete));
       setStatusModal({
@@ -160,51 +163,106 @@ const PhotoGallery = () => {
         title: "Success",
         message: "Album deleted successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       setStatusModal({
         type: "error",
         title: "Error",
-        message: "Failed to delete album",
+        message: error.message || "Failed to delete album",
       });
     } finally {
       setAlbumToDelete(null);
     }
   };
 
-  const handleAddImage = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddImage = async () => {
     if (!selectedAlbum) return;
-
+    if (imageFiles.length === 0) {
+      setStatusModal({
+        type: "error",
+        title: "Error",
+        message: "Please select an image to upload",
+      });
+      return;
+    }
+    const newImages: AlbumType["images"] = [];
+    const successSet = new Set();
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const newImage: AlbumImage = {
-        id: Date.now().toString(),
-        url: imageForm.url,
-        albumId: selectedAlbum.id,
+      const res = await uploadServerSideFiles(imageFiles);
+      if (!res) {
+        throw new Error("Failed to add image");
+      }
+      const formDataUrl: { urls: string[] } = {
+        urls: [],
       };
+      res.forEach((response, idx) => {
+        try {
+          if (response.error) throw new Error("Failed to add image");
 
-      setAlbums(
-        albums.map((album) =>
-          album.id === selectedAlbum.id
-            ? { ...album, images: [...album.images, newImage] }
-            : album
-        )
+          const newImg = {
+            id: "",
+            url: response.data?.ufsUrl,
+          };
+
+          successSet.add(idx);
+          formDataUrl.urls.push(newImg.url);
+          newImages.push(newImg);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+
+      if (successSet.size === 0) throw new Error("Failed to add image");
+
+      // preserve the failed files
+      const failedImageFiles = imageFiles.filter(
+        (file, idx) => !successSet.has(idx)
       );
+      setImageFiles(failedImageFiles);
+
+      // update database
+      const updateDB = await fetch(`/api/albums/${selectedAlbum.id}/images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formDataUrl),
+      });
+
+      const resdata = await updateDB.json();
+
+      if (!updateDB.ok) {
+        throw new Error(resdata.error || "Failed to add image to database");
+      }
+
+      const updatedAlbum = await fetch(`/api/albums/${selectedAlbum.id}`);
+      const albumData = await updatedAlbum.json();
+
+      // update local state
+      if (updatedAlbum.ok) {
+        setSelectedAlbum(albumData.album);
+        setAlbums(
+          albums.map((album) =>
+            album.id === selectedAlbum.id ? albumData.album : album
+          )
+        );
+      }
+
+      if (successSet.size != imageFiles.length)
+        throw new Error("few images failed to add");
 
       setIsImageModalOpen(false);
-      setImageForm({ url: "" });
+
       setStatusModal({
         type: "success",
         title: "Success",
         message: "Image added successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       setStatusModal({
         type: "error",
         title: "Error",
-        message: "Failed to add image",
+        message: error.message || "Failed to add image",
       });
     } finally {
       setLoading(false);
@@ -215,7 +273,16 @@ const PhotoGallery = () => {
     if (!imageToDelete || !selectedAlbum) return;
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch(
+        `/api/albums/${selectedAlbum.id}/images/${imageToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed to delete image");
 
       setAlbums(
         albums.map((album) =>
@@ -228,21 +295,42 @@ const PhotoGallery = () => {
         )
       );
 
+      setSelectedAlbum({
+        ...selectedAlbum,
+        images: selectedAlbum.images.filter((img) => img.id !== imageToDelete),
+      });
+
       setStatusModal({
         type: "success",
         title: "Success",
         message: "Image deleted successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       setStatusModal({
         type: "error",
         title: "Error",
-        message: "Failed to delete image",
+        message: error.message || "Failed to delete image",
       });
     } finally {
       setImageToDelete(null);
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="w-full flex items-center justify-center">
+        <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
+      </div>
+    );
+  }
+
+  if (!albums || albums.length === 0) {
+    return (
+      <div className="w-full flex items-center justify-center">
+        <p className="text-gray-400">No albums found</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -262,7 +350,6 @@ const PhotoGallery = () => {
               setIsAlbumModalOpen(true);
             }
           }}
-          type="button"
         >
           <div className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
@@ -290,19 +377,19 @@ const PhotoGallery = () => {
               key={album.id}
               className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
             >
-              {album.images[0] && (
-                <div
-                  className="relative h-48 cursor-pointer"
-                  onClick={() => setSelectedAlbum(album)}
-                >
-                  <img
-                    src={album.images[0].url}
-                    alt={album.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                </div>
-              )}
+              <div
+                className="relative h-48 cursor-pointer"
+                onClick={() => setSelectedAlbum(album)}
+              >
+                <Image
+                  src={album.images[0]?.url || placeholder}
+                  alt={album.name}
+                  layout="fill"
+                  objectFit="cover"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              </div>
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-white mb-2">
                   {album.name}
@@ -346,16 +433,18 @@ const PhotoGallery = () => {
       )}
 
       {/* Images Grid */}
-      {selectedAlbum && (
+      {albums && selectedAlbum && (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {selectedAlbum.images.map((image) => (
             <div
               key={image.id}
               className="group relative aspect-square rounded-lg overflow-hidden border border-gray-800 hover:border-primary-blue/50 transition-all duration-200"
             >
-              <img
+              <Image
                 src={image.url}
                 alt=""
+                layout="fill"
+                objectFit="cover"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -447,62 +536,73 @@ const PhotoGallery = () => {
         isOpen={isImageModalOpen}
         onClose={() => {
           setIsImageModalOpen(false);
-          setImageForm({ url: "" });
+          setImageFiles([]);
         }}
         title="Add Image"
       >
         <form onSubmit={handleAddImage} className="space-y-6">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              Image URL
-            </label>
-            <div className="flex items-center space-x-4">
+            <div className="flex justify-center items-center">
               <input
-                type="url"
-                value={imageForm.url}
-                onChange={(e) => setImageForm({ url: e.target.value })}
-                className="flex-1 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-                placeholder="Enter image URL"
-                required
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) =>
+                  setImageFiles(Array.from(e.target.files || []))
+                }
+                className="w-full max-w-xs text-sm text-gray-300
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-lg file:border-0
+               file:text-sm file:font-medium
+               file:bg-gray-800 file:text-gray-300
+               hover:file:bg-gray-700 transition-colors"
               />
-              <button
-                type="button"
-                className="px-4 py-2.5 bg-gray-800 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors"
-              >
-                <Upload className="h-5 w-5" />
-              </button>
             </div>
-            {imageForm.url && (
-              <div className="mt-2 relative rounded-lg overflow-hidden h-40">
-                <img
-                  src={imageForm.url}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
+
+            {imageFiles.length > 0 && (
+              <div className="mt-4 grid grid-cols-3 gap-4">
+                {imageFiles.map((file, index) => (
+                  <div
+                    key={index}
+                    className="relative w-32 h-32 rounded-lg overflow-hidden border border-gray-600"
+                  >
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt={`Preview ${index + 1}`}
+                      layout="fill"
+                      objectFit="cover"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>
+
           <div className="flex justify-end gap-4">
             <button
               type="button"
               onClick={() => {
                 setIsImageModalOpen(false);
-                setImageForm({ url: "" });
+                setImageFiles([]);
               }}
               className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
-            <GradientButton disabled={loading}>
+            <GradientButton
+              disabled={loading}
+              onClick={() => {
+                handleAddImage();
+              }}
+            >
               <div className="flex items-center space-x-2">
                 {loading ? (
                   <Loader className="h-5 w-5 animate-spin" />
                 ) : (
                   <Upload className="h-5 w-5" />
                 )}
-                <span>{loading ? "Adding..." : "Add Image"}</span>
+                <span>{loading ? "Adding..." : "Add Images"}</span>
               </div>
             </GradientButton>
           </div>
