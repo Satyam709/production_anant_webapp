@@ -13,6 +13,7 @@ import {
   UserPlus,
   Send,
   Plus,
+  ImageIcon,
 } from "lucide-react";
 import CompForm from "@/components/forms/CompForm";
 import EventForm from "@/components/forms/EventForm";
@@ -24,6 +25,7 @@ import TeamDashboard from "@/components/teams/TeamDashboard";
 import { signOut, useSession } from "next-auth/react";
 import { position_options } from "@prisma/client";
 import {  useRouter } from "next/navigation";
+import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 
 type TabType =
   | "overview"
@@ -32,7 +34,8 @@ type TabType =
   | "meetings"
   | "notices"
   | "teams"
-  | "shop";
+  | "shop"
+  | "gallery";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -63,7 +66,8 @@ function App() {
     { id: "meetings", label: "Meetings", icon: Users },
     { id: "notices", label: "Notices", icon: Bell },
     { id: "teams", label: "Teams", icon: UserPlus },
-    { id :"shop", label: "Shop", icon: Send},
+    { id: "shop", label: "Shop", icon: Send },
+    { id: "gallery", label: "Gallery", icon: ImageIcon },
   ];
 
   const tabs = isAdmin ? adminTabs : normaltabs;
@@ -149,6 +153,7 @@ function App() {
             {activeTab === "notices" && <NoticeForm />}
             {activeTab === "teams" && <TeamDashboard />}
             {activeTab === "shop" && <Shop />}
+            {activeTab === "gallery" && <PhotoGallery />}
           </div>
         </div>
       </div>
