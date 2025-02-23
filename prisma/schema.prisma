@@ -269,7 +269,7 @@ enum item_category {
 // gallery and images
 model Album {
   id      String  @id @default(cuid())
-  name    String
+  name    String  @unique
   images  AlbumImages[]
   createdAt DateTime @default(now())
 }
