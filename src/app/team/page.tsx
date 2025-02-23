@@ -20,7 +20,6 @@ export default function TeamPage() {
       <main className="relative z-10 container mx-auto px-4 py-20">
         <TeamHeader />
         <OfficeBearers />
-        <ExecutiveHeads />
         <Members />
       </main>     
       <div className="relative z-10">
