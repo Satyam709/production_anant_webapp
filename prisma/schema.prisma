@@ -263,3 +263,20 @@ enum item_category {
   Gadgets
   Books
 }
+
+
+
+// gallery and images
+model Album {
+  id      String  @id @default(cuid())
+  name    String
+  images  AlbumImages[]
+  createdAt DateTime @default(now())
+}
+
+model AlbumImages {
+  id      String  @id @default(cuid())
+  url     String
+  albumId String
+  album   Album   @relation(fields: [albumId], references: [id])
+}
