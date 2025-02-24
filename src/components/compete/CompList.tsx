@@ -1,7 +1,7 @@
 import React from "react";
 import CompCard from "./CompCard";
 import { Competitions } from "@prisma/client";
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 async function fetchActiveCompetitions(): Promise<Competitions[]> {
   const response = await fetch(
