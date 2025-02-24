@@ -140,7 +140,6 @@ export async function getUserInfo() : Promise<getUserInfoType>{
         }
       }
     });
-    // remove pass 
     return {
       id: user?.id,
       roll_number: user?.roll_number,
@@ -238,8 +237,7 @@ export async function getUserInfoById(roll_number:string) : Promise<getUserInfoT
           }
         }
       }
-    });
-    // remove pass 
+    }); 
     return {
       id: user?.id,
       roll_number: user?.roll_number,
