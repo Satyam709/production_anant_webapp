@@ -4,27 +4,24 @@ import { Competitions } from "@prisma/client";
 // export const dynamic = "force-dynamic";
 
 async function fetchActiveCompetitions(): Promise<Competitions[]> {
-  const response = await fetch(
-    `${process.env.API_URL}/api/competitions`,
-    {
-      next: { revalidate: 300 }, // Revalidate every 5min
-    }
-  );
-
-  if (!response.ok) {
-    console.error("Failed to fetch competitions:", response.status);
-    return []; // Return an empty array instead of throwing
-  }
-
   try {
+    const response = await fetch(`${process.env.API_URL}/api/competitions`, {
+      next: { revalidate: 300 }, // Revalidate every 5min
+    });
+
     const data = await response.json();
+    
+    if (!response.ok) {
+      console.error("Failed to fetch competitions:", response.status);
+      throw new Error("Failed to fetch competitions"+data);
+    }
 
     // console.log("Competitions data:", data);
-    
+
     if (!data || (!data.upcoming_comp && !data.past_comp)) {
       return []; // No competitions found
     }
-  
+
     let activeCompetitions: Competitions[] = [];
 
     if (data.upcoming_comp) {
