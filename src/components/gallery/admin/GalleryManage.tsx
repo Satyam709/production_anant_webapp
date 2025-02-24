@@ -14,10 +14,7 @@ import StatusModal from "@/components/ui/StatusModal";
 import { AlbumType } from "@/types/common";
 import { placeholder } from "@/lib/images/placeholder";
 import Image from "next/image";
-import {
-  uploadServerSideFiles,
-} from "@/lib/actions/uploadthing";
-
+import { uploadServerSideFiles } from "@/lib/actions/uploadthing";
 
 const PhotoGallery = () => {
   const [albums, setAlbums] = useState<AlbumType[]>([]);
@@ -324,14 +321,6 @@ const PhotoGallery = () => {
     );
   }
 
-  if (!albums || albums.length === 0) {
-    return (
-      <div className="w-full flex items-center justify-center">
-        <p className="text-gray-400">No albums found</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -370,65 +359,71 @@ const PhotoGallery = () => {
       )}
 
       {/* Albums Grid */}
-      {!selectedAlbum && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {albums.map((album) => (
-            <div
-              key={album.id}
-              className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
-            >
+      {albums && albums.length > 0 ? (
+        !selectedAlbum && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {albums.map((album) => (
               <div
-                className="relative h-48 cursor-pointer"
-                onClick={() => setSelectedAlbum(album)}
+                key={album.id}
+                className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
               >
-                <Image
-                  src={album.images[0]?.url || placeholder}
-                  alt={album.name}
-                  layout="fill"
-                  objectFit="cover"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  {album.name}
-                </h3>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">
-                    {album.images.length}{" "}
-                    {album.images.length === 1 ? "image" : "images"}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        setSelectedAlbum(album);
-                        setAlbumForm({ name: album.name });
-                        setIsAlbumModalOpen(true);
-                      }}
-                      className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                    >
-                      <Pencil className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setAlbumToDelete(album.id);
-                        setStatusModal({
-                          type: "confirm",
-                          title: "Delete Album",
-                          message:
-                            "Are you sure you want to delete this album? This action cannot be undone.",
-                        });
-                      }}
-                      className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    >
-                      <Trash2 className="h-5 w-5 text-red-400" />
-                    </button>
+                <div
+                  className="relative h-48 cursor-pointer"
+                  onClick={() => setSelectedAlbum(album)}
+                >
+                  <Image
+                    src={album.images[0]?.url || placeholder}
+                    alt={album.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {album.name}
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-400">
+                      {album.images.length}{" "}
+                      {album.images.length === 1 ? "image" : "images"}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedAlbum(album);
+                          setAlbumForm({ name: album.name });
+                          setIsAlbumModalOpen(true);
+                        }}
+                        className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
+                      >
+                        <Pencil className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setAlbumToDelete(album.id);
+                          setStatusModal({
+                            type: "confirm",
+                            title: "Delete Album",
+                            message:
+                              "Are you sure you want to delete this album? This action cannot be undone.",
+                          });
+                        }}
+                        className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="h-5 w-5 text-red-400" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )
+      ) : (
+        <div className="w-full flex items-center justify-center">
+          <p className="text-gray-400">No albums found</p>
         </div>
       )}
 
