@@ -5,15 +5,23 @@ import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileTabs from "@/components/profile/ProfileTabs";
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import AchievementCard from "./AchievementCard";
+import ActivityCard from "./ActivityCard";
 import { getUserInfoType } from "@/lib/actions/Profile";
 import { UpdateProfileImage } from "@/lib/actions/Profile"; // Import the new server action
 
 const tabs = [
   { id: "profile", label: "Profile" },
   { id: "achievements", label: "Achievements" },
-  { id: "competitions", label: "Competitions" },
-  { id: "contributions", label: "Contributions" },
+  { id: "activities", label: "Activities" },
 ];
+
+function formatDate(date: Date){
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(date))
+}
 
 const ProfileLayout = ({ userInfo }: { userInfo: getUserInfoType }) => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -52,41 +60,89 @@ const ProfileLayout = ({ userInfo }: { userInfo: getUserInfoType }) => {
       case "achievements":
         return (
           <div className="space-y-4 animate-fadeIn">
-            <AchievementCard
-              title="Coders Carnival Winner"
-              description="First place Coders Carnival 2k24"
-              date="March 15, 2024"
-              points={500}
-              type="gold"
-            />
-            <AchievementCard
-              title="Algorithm Master"
-              description="Completed advanced algorithm puzzle series"
-              date="February 28, 2024"
-              points={300}
-              type="silver"
-            />
-            <AchievementCard
-              title="Participation Award"
-              description="Participated in all events at TechFest 2k24"
-              date="January 10, 2024"
-              points={200}
-              type="bronze"
-            />
+            {userInfo?.first_prize_comp?.map((competition, index) => (
+              <AchievementCard
+                key={index}
+                title={`1st Prize Winner Of ${competition.competitionName}`}
+                description={`First prize in ${competition.competitionName} competition`}
+                date ={competition?.conductedOn ? formatDate(competition.conductedOn) : "Feb 29, 2024"}
+                type="gold"
+              />
+            ))}
+            {userInfo?.first_prize?.map((event, index) => (
+              <AchievementCard
+                key={index}
+                title={`1st Prize Winner Of ${event.eventName}`}
+                description={`First prize in ${event.eventName} event`}
+                date ={event?.conductedOn ? formatDate(event.conductedOn) : "Feb 29, 2024"}
+                type="gold"
+              />
+            ))}
+            {userInfo?.second_prize_comp?.map((competition, index) => (
+              <AchievementCard
+                key={index}
+                title={`2nd Prize Winner Of ${competition.competitionName}`}
+                description={`Second prize in ${competition.competitionName} competition`}
+                date ={competition?.conductedOn ? formatDate(competition.conductedOn): "Feb 29, 2024"}
+                type="silver"
+              />
+            ))}
+            {userInfo?.second_prize?.map((event, index) => (
+              <AchievementCard
+                key={index}
+                title={`2nd Prize Winner Of ${event.eventName}`}
+                description={`Second prize in ${event.eventName} event`}
+                date ={event?.conductedOn ? formatDate(event.conductedOn): "Feb 29, 2024"}
+                type="silver"
+              />
+            ))}
+            {userInfo?.third_prize_comp?.map((competition, index) => (
+              <AchievementCard
+                key={index}
+                title={`3rd Prize Winner Of ${competition.competitionName}`}
+                description={`Third prize in ${competition.competitionName} competition`}
+                date ={competition?.conductedOn ? formatDate(competition.conductedOn): "Feb 29, 2024"}
+                type="silver"
+              />
+            ))}
+            {userInfo?.third_prize?.map((event, index) => (
+              <AchievementCard
+                key={index}
+                title={`3rd Prize Winner Of ${event.eventName}`}
+                description={`Third prize in ${event.eventName} event`}
+                date ={event?.conductedOn ? formatDate(event.conductedOn) : "Feb 29, 2024"}
+                type="bronze"
+              />
+            ))}
           </div>
         );
-      case "competitions":
+      case "activities":
         return (
-          <div className="text-center text-gray-400 py-12 animate-fadeIn">
-            <h3 className="text-xl font-semibold mb-4">Coming Soon</h3>
-            <p>Competition history will be displayed here</p>
-          </div>
-        );
-      case "contributions":
-        return (
-          <div className="text-center text-gray-400 py-12 animate-fadeIn">
-            <h3 className="text-xl font-semibold mb-4">Coming Soon</h3>
-            <p>All your contributions will be displayed here</p>
+          <div className="space-y-4 animate-fadeIn">
+            {userInfo?.compititions_participated?.map((competition, index) => (
+              <ActivityCard
+                key={index}
+                title={`Compitition Participated!`}
+                description={`Participated in ${competition.competitionName} competition`}
+                date ={competition?.conductedOn ? formatDate(competition.conductedOn) : "Feb 29, 2024"}
+              />
+            ))}
+            {userInfo?.events_participated?.map((event, index) => (
+              <ActivityCard
+                key={index}
+                title={`Event Participated!`}
+                description={`Participated in ${event.eventName} event`}
+                date ={event?.conductedOn ? formatDate(event.conductedOn) : "Feb 29, 2024"}
+              />
+            ))}
+            {userInfo?.meetings_attended?.map((meet, index) => (
+              <ActivityCard
+                key={index}
+                title={`Attended Meeting`}
+                description={`Attended meeting with ID: ${meet.meeting_id}`}
+                date ={meet?.starts ? formatDate(meet.starts): "Feb 29, 2024"}
+              />
+            ))}
           </div>
         );
       default:
