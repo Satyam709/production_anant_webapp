@@ -5,7 +5,7 @@ export const navItems = {
       { label: "Vision", href: "/" },
       { label: "Team", href: "/team" },
       { label: "Photos", href: "/gallery" },
-      { label: "Timeline", href: "/" },
+      { label: "Timeline", href: "/timeline" },
     ],
   },
   Community: {
