@@ -1,35 +1,28 @@
 import React from "react";
 
-function HeroLogo() {
+export default function HeroLogo() {
   return (
-    <div className="w-fit h-[160px] min-w-[350px] relative flex items-center justify-center">
-      {/* Left section with Hindi text and diamond */}
-      <div className="relative h-full flex flex-col justify-between items-end pb-3 text-right xl-4">
-        {/* Blue diamond above text */}
-        {/* <div className="w-7 h-7 bg-blue-900 absolute -top-8 left-16 transform rotate-45"></div> */}
-
-        <span className="text-[85px] font-bold text-[#00288C] mb-[-16px]">अनंत</span>
-        <h1 className="text-sm font-semibold text-purple-700">
-          अनन्तस्य गणितम् विद्यते
+    <div className="flex items-center sm:px-5 md:py-10  text-white font-sans w-fit">
+      {/* Left Section */}
+      <div className="text-center font-martel">
+        <h1 className="text-[64px] md:text-[100px] leading-none m-0 font-bold">
+          अनंत
         </h1>
+        <p className="text-[10px] md:text-[26px] mt-[16px] text-right">अनंतस्य गणितम् विद्यते</p>
       </div>
 
-      {/* Vertical line separator */}
-      <div className="block h-full w-[1px] bg-purple-700 mx-4"></div>
+      {/* Divider */}
+      <div className="w-[2px] h-[100px] md:h-[160px] bg-white mx-[15px]" />
 
-      {/* Right section with English text */}
-      <div className="flex flex-col justify-center text-left text-blue-800">
-        <div className="text-l mb-6 font-bold">
-          <h2>The</h2>
-          <h2>Mathematical</h2>
-          <h2>Society</h2>
+      {/* Right Section */}
+      <div className="flex flex-col justify-start text-[14px] md:text-[26px] leading-[1.4]">
+        <div className="leading-[1.2] flex flex-col items-start font-medium">
+          <div>The</div>
+          <div>Mathematical</div>
+          <div>Society</div>
         </div>
-        <h3 className="text-l font-medium text-purple-700 mt-2">
-          NIT Kurukshetra
-        </h3>
+        <div className="mt-[20px]">NIT Kurukshetra</div>
       </div>
     </div>
   );
 }
-
-export default HeroLogo;

@@ -39,10 +39,10 @@ const Hero = () => {
           />
           <HeroLogo></HeroLogo>
         </div>
-        <p className="max-w-2xl mx-auto text-gray-500 mb-10">
+        {/* <p className="max-w-2xl mx-auto text-gray-500 mb-10">
           Exploring the infinite possibilities where mathematics meets
           technology
-        </p>
+        </p> */}
         <GradientButton href="#about">
           <div className="flex flex-col items-center justify-center">
             <span>Discover More</span>
