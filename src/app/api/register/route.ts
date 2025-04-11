@@ -5,9 +5,7 @@ import redis from "@/helpers/redis";
 import z from "zod";
 import fs from "fs";
 import path from "path";
-import { b } from "framer-motion/client";
 import { branch_options, club_dept_options, position_options, Prisma } from "@prisma/client";
-import { use } from "react";
 
 const RegistrationSchema = z.object({
   roll_number: z

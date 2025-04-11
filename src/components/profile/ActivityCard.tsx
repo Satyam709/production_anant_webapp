@@ -1,11 +1,9 @@
 import React from 'react';
-import { Medal } from 'lucide-react';
 
 interface AchievementCardProps {
   title: string;
   description: string;
   date: string;
-  type: 'gold' | 'silver' | 'bronze';
 }
 
 const typeColors = {
@@ -14,11 +12,10 @@ const typeColors = {
   bronze: 'from-orange-400/20 to-orange-600/20 border-orange-500/30'
 };
 
-const AchievementCard = ({ title, description, date, type }: AchievementCardProps) => {
+const AchievementCard = ({ title, description, date}: AchievementCardProps) => {
   return (
     <div className={`
       relative p-6 rounded-lg border backdrop-blur-sm
-      bg-gradient-to-br ${typeColors[type]}
       hover:border-opacity-50 transition-all duration-300
       transform hover:-translate-y-1
     `}>
@@ -28,14 +25,6 @@ const AchievementCard = ({ title, description, date, type }: AchievementCardProp
           <p className="text-gray-400 text-sm mb-4">{description}</p>
           <div className="text-sm text-gray-500">{date}</div>
         </div>
-        <div className="flex flex-col items-end">
-          <Medal className={`h-6 w-6 ${
-            type === 'gold' ? 'text-yellow-400' : 
-            type === 'silver' ? 'text-gray-300' : 
-            'text-orange-400'
-          }`} />
-          
-          </div>
         </div>
       </div>
   );

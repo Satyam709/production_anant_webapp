@@ -1,0 +1,15 @@
+{"timelineEvents" : [
+    {
+      "date": "1st Jan 2025",
+      "title": "Anant came into existence",
+      "description": "The beginning of our journey",
+      "gradient": "from-purple-500 to-pink-500"
+    },
+    {
+      "date": "25th Feb 2025",
+      "title": "Website hosted",
+      "description": "Our digital presence established",
+      "gradient": "from-cyan-500 to-blue-500"
+    }
+  ]
+}

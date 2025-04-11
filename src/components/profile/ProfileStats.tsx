@@ -33,16 +33,11 @@ const ProfileStats = () => {
         label="Joined"
         value={joinedDate}
       />
-      <StatItem
+      {userInfo?.position && <StatItem
         icon={<Award className="h-6 w-6" />}
         label="Role"
-        value={userInfo?.position || "Member"}
-      />
-      <StatItem
-        icon={<Star className="h-6 w-6" />}
-        label="Puzzles Solved"
-        value={256}
-      />
+        value={userInfo.position}
+      />}
     </div>
   );
 };

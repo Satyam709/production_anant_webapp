@@ -46,6 +46,33 @@ export type getUserInfoType = {
     club_dept: club_dept_options[] | undefined;
     joined: Date | undefined;
     batch: string | undefined;
+    first_prize_comp: {
+      conductedOn: Date;
+      competitionName: string 
+}[] | undefined;
+    second_prize_comp: {
+      conductedOn: Date; 
+      competitionName: string 
+}[] | undefined;
+    third_prize_comp: {
+      conductedOn: Date;
+      competitionName: string 
+}[] | undefined;
+    first_prize: {
+      conductedOn: Date; 
+      eventName: string 
+}[] | undefined;
+    second_prize: {
+      conductedOn: Date; 
+      eventName: string 
+}[] | undefined;
+    third_prize: {
+      conductedOn: Date; 
+      eventName: string 
+}[] | undefined;
+    compititions_participated: { competitionName: string, conductedOn: Date }[] | undefined;
+    events_participated: { eventName: string, conductedOn: Date }[] | undefined;
+    meetings_attended: { meeting_id: string, starts: Date }[] | undefined;
 } | null
 
 export async function getUserInfo() : Promise<getUserInfoType>{
@@ -56,8 +83,63 @@ export async function getUserInfo() : Promise<getUserInfoType>{
       where: {
         id: userId,
       },
+      include:{
+        first_prize_comp:{
+          select: {
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        second_prize_comp:{
+          select: {
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        third_prize_comp:{
+          select: {
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        first_prize:{
+          select: {
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        second_prize:{
+          select: {
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        third_prize:{
+          select: {
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        compititions_participated:{
+          select:{
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        events_participated:{
+          select:{
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        meetings_attended:{
+          select:{
+            meeting_id: true,
+            starts: true
+          }
+        }
+      }
     });
-    // remove pass 
     return {
       id: user?.id,
       roll_number: user?.roll_number,
@@ -68,6 +150,15 @@ export async function getUserInfo() : Promise<getUserInfoType>{
       club_dept: user?.club_dept,
       joined: user?.joined,
       batch: user?.batch || undefined,
+      first_prize_comp: user?.first_prize_comp,
+      second_prize_comp: user?.second_prize_comp,
+      third_prize_comp: user?.third_prize_comp,
+      first_prize: user?.first_prize,
+      second_prize: user?.second_prize,
+      third_prize: user?.third_prize,
+      compititions_participated: user?.compititions_participated,
+      events_participated: user?.events_participated,
+      meetings_attended: user?.meetings_attended
     }
   } catch (error) {
     console.log("error while getting user info", error);
@@ -90,8 +181,63 @@ export async function getUserInfoById(roll_number:string) : Promise<getUserInfoT
       where: {
         roll_number:Number(rollNo)
       },
-    });
-    // remove pass 
+      include:{
+        first_prize_comp:{
+          select: {
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        second_prize_comp:{
+          select: {
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        third_prize_comp:{
+          select: {
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        first_prize:{
+          select: {
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        second_prize:{
+          select: {
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        third_prize:{
+          select: {
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        compititions_participated:{
+          select:{
+            competitionName: true,
+            conductedOn: true
+          }
+        },
+        events_participated:{
+          select:{
+            eventName: true,
+            conductedOn: true
+          }
+        },
+        meetings_attended:{
+          select:{
+            meeting_id: true,
+            starts: true
+          }
+        }
+      }
+    }); 
     return {
       id: user?.id,
       roll_number: user?.roll_number,
@@ -102,6 +248,15 @@ export async function getUserInfoById(roll_number:string) : Promise<getUserInfoT
       club_dept: user?.club_dept,
       joined: user?.joined,
       batch: user?.batch || undefined,
+      first_prize_comp: user?.first_prize_comp,
+      second_prize_comp: user?.second_prize_comp,
+      third_prize_comp: user?.third_prize_comp,
+      first_prize: user?.first_prize,
+      second_prize: user?.second_prize,
+      third_prize: user?.third_prize,
+      compititions_participated: user?.compititions_participated,
+      events_participated: user?.events_participated,
+      meetings_attended: user?.meetings_attended
     }
   } catch (error) {
     console.log("error while getting user info", error);

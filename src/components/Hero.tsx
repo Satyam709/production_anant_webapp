@@ -5,7 +5,7 @@ import MathSymbols from "@/components/floating/MathSymbols";
 import TechStack from "@/components/floating/TechStack";
 import { ArrowBigDownDash } from "lucide-react";
 import Image from "next/image";
-
+import HeroLogo from "./HeroLogo";
 const Hero = () => {
   return (
     <div
@@ -23,11 +23,11 @@ const Hero = () => {
       <TechStack />
 
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 relative">
+        <div className="mb-6 relative flex flex-col sm:flex-row items-center">
           <Image
             src="/anant_logo.png" // Adjust the path as necessary
             alt="Anant Logo"
-            className="h-70 w-auto mx-auto animate-float" // Increased height
+            className="h-70 w-auto pt-4 mx-auto animate-float" // Increased height
             width={150}
             height={150}
             style={{
@@ -37,18 +37,12 @@ const Hero = () => {
               maxHeight: "20rem",
             }}
           />
+          <HeroLogo></HeroLogo>
         </div>
-        <h1 className="text-6xl sm:text-8xl font-extrabold pb-8 pt-2 tracking-wide leading-snug bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-white to-purple-400 drop-shadow-lg">
-          अनंत
-        </h1>
-
-        <p className="text-xl sm:text-2xl mb-8 text-gray-400">
-          The Mathematical Society | NIT Kurukshetra
-        </p>
-        <p className="max-w-2xl mx-auto text-gray-500 mb-10">
+        {/* <p className="max-w-2xl mx-auto text-gray-500 mb-10">
           Exploring the infinite possibilities where mathematics meets
           technology
-        </p>
+        </p> */}
         <GradientButton href="#about">
           <div className="flex flex-col items-center justify-center">
             <span>Discover More</span>

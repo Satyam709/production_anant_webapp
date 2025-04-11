@@ -1,6 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
-import { Trophy, Users, Bell } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import CompList from '@/components/compete/CompList'
