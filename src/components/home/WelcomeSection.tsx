@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface WelcomeSectionProps {
   photos: string[];
@@ -12,7 +14,7 @@ const WelcomeSection = ({ photos }: WelcomeSectionProps) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % photos.length);
-    }, 7000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [photos.length]);
@@ -41,18 +43,20 @@ const WelcomeSection = ({ photos }: WelcomeSectionProps) => {
           </div>
           <div className="md:w-1/2">
             <div className="relative aspect-video rounded-xl overflow-hidden shadow-xl">
-              <img
+              <Image
                 src={photos[currentPhotoIndex]}
                 alt="Anant Society"
-                className="w-full h-full object-cover rounded-xl shadow-2xl"
+                width={800}
+                height={450}
+                className="w-full p-1 h-full object-cover rounded-xl shadow-2xl"
               />
               <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
-                <a
-                  href="/photos"
+                <Link
+                  href="/gallery"
                   className="text-[#f5c722] hover:text-[#f7d452]"
                 >
                   View All Photos
-                </a>
+                </Link>
               </div>
             </div>
           </div>
