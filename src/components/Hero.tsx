@@ -43,7 +43,7 @@ const Hero = () => {
           Exploring the infinite possibilities where mathematics meets
           technology
         </p> */}
-        <GradientButton href="#about">
+        <GradientButton href="#content">
           <div className="flex flex-col items-center justify-center">
             <span>Discover More</span>
             <ArrowBigDownDash />

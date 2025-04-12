@@ -91,7 +91,7 @@ const HomeContent = () => {
   // Fallback to default news if no notices are available
 
   return (
-    <div className="flex flex-col w-full space-y-24">
+    <div className="pt-[70px] flex flex-col w-full space-y-24" id="content">
       <NewsTickerSection news={news} />
       <WelcomeSection photos={photos} />
       <HomeEventsSection events={latestEvents} />
