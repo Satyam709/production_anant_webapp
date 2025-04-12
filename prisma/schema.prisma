@@ -15,7 +15,7 @@ datasource db {
 
 model User{
   // basic user details
-  id String @id @default(uuid())
+  id String @unique @id @default(uuid())
   roll_number Int @unique
   name String
   password String
@@ -279,4 +279,14 @@ model AlbumImages {
   url     String
   albumId String
   album   Album   @relation(fields: [albumId], references: [id])
+}
+
+// latest news
+model LatestNews {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?   // Optional
+  link        String?   // Optional
+  is_active   Boolean   @default(true)
+  created_at  DateTime  @default(now())
 }

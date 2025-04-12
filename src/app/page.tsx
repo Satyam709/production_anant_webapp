@@ -4,6 +4,7 @@ import About from "@/components/About";
 import LatestNews from "@/components/home/LatestNews";
 import Footer from "@/components/Footer";
 import { latestNews } from "@/constants/news-data";
+import Home2 from "@/components/home/Home2";
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
       <div className="fixed inset-0 bg-gradient-to-b from-primary-blue/5 via-primary-purple/5 to-transparent pointer-events-none"></div>
       <Navbar />
       <Hero />
-      <About />
+      <Home2></Home2>
       {/* <LatestNews latestNews={latestNews} /> */}
       <Footer />
     </div>
