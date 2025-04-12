@@ -7,7 +7,7 @@ import { User, Lock } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GradientButton from "@/components/ui/GradientButton";
-import LoginSymbols from "@/components/floating/LoginSymbols";
+import MathSymbols from "@/components/floating/MathSymbols";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -52,7 +52,7 @@ export default function LoginPage() {
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
       </div>
 
-      <LoginSymbols />
+      <MathSymbols />
       <Navbar />
 
       <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 relative z-10 min-h-[calc(100vh-8rem)]">
