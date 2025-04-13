@@ -86,10 +86,9 @@ const HomeContent = () => {
       <NewsTickerSection news={news} />
       <WelcomeSection photos={photos} />
       <HomeEventsSection events={latestEvents} />
-      <HomeInternshipSection />
       <HomeBlogsSection blogs={[]} />
-      <div className="bg-black/20 backdrop-blur-sm py-24">
-        <HomeProjectsSection projects={[]} />
+      <div className="bg-black/15 backdrop-blur-sm">
+        <HomeInternshipSection />
       </div>
       {/* <div className="bg-black/30 backdrop-blur-sm py-24">
         <HomeGallerySection photos={[]} />
