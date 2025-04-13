@@ -1,24 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import PhotoSlideshow from "@/components/shared/PhotoSlideshow";
 
 interface WelcomeSectionProps {
   photos: string[];
 }
 
 const WelcomeSection = ({ photos }: WelcomeSectionProps) => {
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % photos.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [photos.length]);
-
   return (
     <section className="py-32">
       <div className="container mx-auto px-4">
@@ -42,23 +31,7 @@ const WelcomeSection = ({ photos }: WelcomeSectionProps) => {
             </a>
           </div>
           <div className="md:w-1/2">
-            <div className="relative aspect-video rounded-xl overflow-hidden shadow-xl">
-              <Image
-                src={photos[currentPhotoIndex]}
-                alt="Anant Society"
-                width={800}
-                height={450}
-                className="w-full p-1 h-full object-cover rounded-xl shadow-2xl"
-              />
-              <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
-                <Link
-                  href="/gallery"
-                  className="text-[#f5c722] hover:text-[#f7d452]"
-                >
-                  View All Photos
-                </Link>
-              </div>
-            </div>
+            <PhotoSlideshow photos={photos} />
           </div>
         </div>
       </div>
