@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import ShopHeader from "@/components/merch/shop/ShopHeader";
 import MerchandiseSection from "@/components/merch/shop/MerchandiseSection";
-import LoginSymbols from "@/components/floating/LoginSymbols";
 import Cart from "@/components/merch/shop/Cart";
 import "@/styles/bganimations.css";
 import Footer from "@/components/Footer";
 import { ShoppingCart } from "lucide-react";
 import { useMerchandise } from "@/components/merch/hooks/useMerchandise";
+import MathSymbols from "@/components/floating/MathSymbols";
 
 export default function Shop() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -57,7 +57,7 @@ export default function Shop() {
           style={{ top: "50%", right: "-10%" }}
         />
       </div>
-      <LoginSymbols />
+      <MathSymbols></MathSymbols>
 
       <Navbar />
 

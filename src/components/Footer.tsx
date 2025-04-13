@@ -2,7 +2,6 @@ import React from "react";
 import {
   Mail,
   MapPin,
-  Phone,
   Linkedin,
   Instagram,
   Youtube,
@@ -43,27 +42,37 @@ const Footer = () => {
     <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Main Footer Content */}
-        <div className="py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 items-start">
+        <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 md:gap-32 items-start">
           {/* Brand Section */}
-          <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="relative w-12 h-12 overflow-hidden rounded-lg bg-blue-600/10 flex items-center justify-center group-hover:bg-blue-600/20 transition-colors duration-300">
-                <Image
-                  src="/anant_logo.png"
-                  alt="Anant Logo"
-                  width={32}
-                  height={32}
-                  className="transform group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">Anant</h2>
-                <p className="text-xs text-gray-400">Mathematical Society</p>
+          <div className="lg:col-span-4 flex flex-col items-center ">
+            <Link
+              href="/"
+              className="flex flex-col items-center space-x-3 group justify-center  w-[100%]"
+            >
+              <Image
+                src="/anant_logo.png"
+                alt="Anant Logo"
+                width={100}
+                height={100}
+                className="transform group-hover:scale-110 transition-transform duration-300"
+              />
+              <div className="flex text-xl font-bold text-white flex-col items-center">
+                <h2>Anant</h2>
+                <p>The Mathematical Society</p>
+                <p>NIT Kurukshetra</p>
               </div>
             </Link>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              Fostering mathematical thinking and innovation at NIT Kurukshetra
-            </p>
+            <div className="text-sm text-gray-400 leading-tight  w-[100%] h-[100%] flex flex-col items-center justify-center">
+              <p>TeamAnant | Mathematics Department</p>
+              <p>National Institute of Technology </p>
+              <p>Kurukshetra-136119, Haryana</p>
+              <a
+                href="mailto:mathematics@nitkkr.ac.in"
+                className="text-blue-300 hover:underline"
+              >
+                mathematics@nitkkr.ac.in
+              </a>
+            </div>
             <div className="flex space-x-2">
               {socialLinks.map((social, index) => (
                 <Link
