@@ -5,7 +5,7 @@ import WelcomeSection from "./WelcomeSection";
 import HomeEventsSection from "./HomeEventsSection";
 import HomeBlogsSection from "./HomeBlogsSection";
 import HomeProjectsSection from "./HomeProjectsSection";
-import HomeGallerySection from "./HomeGallerySection";
+import HomeInternshipSection from "./HomeInternshipSection";
 import { Notice, Events } from "@prisma/client";
 import { NewsItem } from "@/components/home/NewsTickerSection";
 
@@ -27,9 +27,12 @@ const photos = [
 ];
 
 const HomeContent = () => {
-  const [notices, setNotices] = useState<Notice[]>([]);
   const [latestEvents, setLatestEvents] = useState<Events[]>([]);
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const [news, setNews] = useState<NewsItem[]>([{
+    id: "0",
+    title: defaultNews[0],
+    created_at: new Date().toString(),
+  }]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,43 +42,31 @@ const HomeContent = () => {
           fetch("/api/events"),
         ]);
 
-        if (!noticesRes.ok) {
-          throw new Error("Failed to fetch notices");
-        }
         if (!eventsRes.ok) {
           throw new Error("Failed to fetch events");
         }
 
-        const noticesData = await noticesRes.json();
-        const parsedNotices = noticesData.notices as Notice[];
-        const eventsData = await eventsRes.json();
-        const parsedEvents = eventsData.upcomingEvents as Events[];
-        // console.log('Events:', eventsData);
+        // Handle notices
+        if (noticesRes.ok) {
+          const noticesData = await noticesRes.json();
+          const parsedNotices = noticesData.notices as Notice[];
+          const mappedNews = parsedNotices
+            .filter((e) => e.is_active)
+            .map((notice: Notice) => ({
+              id: notice.notice_id,
+              title: notice.headline,
+              created_at: new Date(notice.postedOn).toString(),
+            }));
 
-        console.log("setting notices ");
-
-        setNotices(parsedNotices);
-        setLatestEvents(parsedEvents.slice(0, 3));
-
-        // Map notices to news format
-        const mappedNews = parsedNotices
-          .filter((e) => e.is_active)
-          .map((notice: Notice) => ({
-            id: notice.notice_id,
-            title: notice.headline,
-            created_at: new Date(notice.postedOn).toString(),
-          }));
-
-        if (mappedNews.length === 0) {
-          // Fallback to default news if no notices are available
-          mappedNews.push({
-            id: "0",
-            title: defaultNews[0],
-            created_at: new Date().toString(),
-          });
+          if (mappedNews.length > 0) {
+            setNews(mappedNews);
+          }
         }
 
-        setNews(mappedNews);
+        // Handle events
+        const eventsData = await eventsRes.json();
+        const parsedEvents = eventsData.upcomingEvents as Events[];
+        setLatestEvents(parsedEvents.slice(0, 3));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -95,6 +86,7 @@ const HomeContent = () => {
       <NewsTickerSection news={news} />
       <WelcomeSection photos={photos} />
       <HomeEventsSection events={latestEvents} />
+      <HomeInternshipSection />
       <HomeBlogsSection blogs={[]} />
       <div className="bg-black/20 backdrop-blur-sm py-24">
         <HomeProjectsSection projects={[]} />
