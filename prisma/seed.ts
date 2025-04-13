@@ -952,6 +952,68 @@ async function main() {
     },
   });
 
+  // Create internships
+  const internship1 = await prisma.internship.create({
+    data: {
+      user_id: user1.id, // John Doe (AIML, 2023)
+      title: "AI Research Intern",
+      description:
+        "Assist in research projects related to artificial intelligence.",
+      link: "https://example.com/ai-internship",
+      is_active: true,
+      email: "john.doe@example.com",
+      department: "Mathematics",
+      class: "MSc",
+      company_name: "Tech Innovations Inc.",
+      duration: "3 months",
+    },
+  });
+
+  const internship2 = await prisma.internship.create({
+    data: {
+      user_id: user2.id, // Jane Smith (CSE, 2024)
+      title: "Software Development Intern",
+      description: "Contribute to the development of web applications.",
+      link: "https://example.com/software-internship",
+      is_active: true,
+      email: "jane.smith@example.com",
+      department: "Mathematics",
+      class: "BtechMNC",
+      company_name: "Global Software Solutions",
+      duration: "6 months",
+    },
+  });
+
+  const internship3 = await prisma.internship.create({
+    data: {
+      user_id: user3.id, // Alice Brown (MSC, 2022)
+      title: "Data Analysis Intern",
+      description: "Analyze datasets and generate reports.",
+      link: "https://example.com/data-internship",
+      is_active: true,
+      email: "alice.brown@example.com",
+      department: "Mathematics",
+      class: "MSc",
+      company_name: "Data Insights Corp.",
+      duration: "4 months",
+    },
+  });
+
+  const internship4 = await prisma.internship.create({
+    data: {
+      user_id: user4.id, // Bob White (IT, 2025)
+      title: "IT Support Intern",
+      description: "Provide technical support to internal teams.",
+      link: "https://example.com/it-support-internship",
+      is_active: true,
+      email: "bob.white@example.com",
+      department: "Mathematics",
+      class: "BtechMNC",
+      company_name: "System Solutions Ltd.",
+      duration: "2 months",
+    },
+  });
+
   console.log("Seed data inserted successfully!");
 }
 
