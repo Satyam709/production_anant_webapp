@@ -322,3 +322,24 @@ model AlbumImages {
   album   Album   @relation(fields: [albumId], references: [id])
 }
 
+
+// blog section
+model Blog {
+  id String @id @default(uuid())
+  title String
+  category blog_cat
+  cover_picture String?
+  body String  
+  isVerified Boolean
+}
+
+enum blog_cat{
+  Mathematics
+  Trading
+  Ancient_Mathematics
+  Algebra
+  Probabilty_and_Games
+  Application_Of_Differential_Equations
+  Mathematics_in_Nature
+  Others
+}
