@@ -20,7 +20,7 @@ export async function GET(req:NextRequest){
                 isVerified: true
             },
             take: size,
-            skip: (pageNumber-1)-size,
+            skip: (pageNumber-1)*size,
             orderBy:{
                 createdAt: "asc"
             }
@@ -32,7 +32,6 @@ export async function GET(req:NextRequest){
 
     }
     catch(err){
-        console.log(err);
         return NextResponse.json(
             { message: "Internal Server Error" },
             { status: 500 }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
 import z from "zod";
 import { blog_cat } from "@prisma/client";
-import { getSession } from "next-auth/react";
+import { getSession } from "@/lib/actions/Sessions";
 
 const blogSchema = z.object({
     title: z.string().min(1, "Blog Title is required"),
@@ -13,7 +13,7 @@ const blogSchema = z.object({
 
 export async function POST(req: NextRequest){
     try{
-        const body = req.body;
+        const body = await req.json();
         const schema = blogSchema.safeParse(body);
         const session = await getSession();
 
