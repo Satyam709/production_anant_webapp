@@ -332,6 +332,7 @@ model Blog {
   title String
   category blog_cat
   cover_picture String?
+  description String?
   body String  
   isVerified Boolean
   userID String
