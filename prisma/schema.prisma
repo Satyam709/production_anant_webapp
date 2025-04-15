@@ -15,7 +15,7 @@ datasource db {
 
 model User{
   // basic user details
-  id String @id @default(uuid())
+  id String @unique @id @default(uuid())
   roll_number Int @unique
   name String
   password String
@@ -62,6 +62,8 @@ model User{
   first_prize_comp Competitions[] @relation(name: "first_prize_comp")
   second_prize_comp Competitions[] @relation(name: "second_prize_comp")
   third_prize_comp Competitions[] @relation(name: "third_prize_comp")
+
+  Internship Internship[] @relation(name: "internship")
 }
 
 model Notice{
@@ -71,6 +73,7 @@ model Notice{
   postedOn DateTime  @default(now())
   category notice_cat
   userID String
+  is_active Boolean @default(true)
   postedBy User @relation(name: "notice-posted",fields: [userID], references: [id])
 }
 
@@ -154,6 +157,44 @@ model Events{
   third_prize User? @relation(name: "third_prize", fields: [third_prize_id], references: [id])
 }
 
+// latest news
+model LatestNews {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?   // Optional
+  link        String?   // Optional
+  is_active   Boolean   @default(true)
+  created_at  DateTime  @default(now())
+}
+
+model Internship {
+  id          Int      @id @default(autoincrement())
+  user_id     String
+  title       String
+  description String?   // Optional
+  link        String?   // Optional
+  is_active   Boolean   @default(true) // for showing/hiding the internship
+  email       String?   // Optional for now
+  department  InternshipDepartment
+  class       InternshipClass
+
+  // internship details
+  company_name String
+  duration     String
+
+  created_at  DateTime  @default(now())
+  user        User      @relation(fields: [user_id], references: [id] , name: "internship")
+}
+
+enum InternshipDepartment {
+  Mathematics
+}
+
+
+enum InternshipClass {
+  MSc
+  BtechMNC
+}
 
 enum branch_options {
   AIML
@@ -280,3 +321,4 @@ model AlbumImages {
   albumId String
   album   Album   @relation(fields: [albumId], references: [id])
 }
+

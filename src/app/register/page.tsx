@@ -1,14 +1,13 @@
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import LoginSymbols from "@/components/floating/LoginSymbols";
 import RegisterForm from "@/components/auth/Register";
+import MathSymbols from "@/components/floating/MathSymbols";
 
 export default function RegisterPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0A0A0A] text-white">
       <Navbar />
-      <LoginSymbols />
+      <MathSymbols></MathSymbols>
 
       <main className="flex-grow flex items-center justify-center px-4 py-16 sm:px-6 lg:px-8 relative">
         <div className="absolute inset-0 z-0">

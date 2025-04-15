@@ -9,19 +9,17 @@ export default {
   theme: {
     extend: {
       screens: {
+        sm: "640px",
 
-        'sm': '640px', 
+        md: "768px",
 
-        'md': '768px', 
+        lg: "1024px",
 
-        'lg': '1024px', 
+        xl: "1280px",
 
-        'xl': '1280px', 
+        tbs: "868px", // phone overflow protection
 
-        'tbs': '868px', // phone overflow protection
-
-        'ld': '1440px' // large
-
+        ld: "1440px", // large
       },
       colors: {
         primary: {
@@ -35,6 +33,9 @@ export default {
           middle: "#00E0FF",
           end: "#A259FF",
         },
+      },
+      fontFamily: {
+        martel: ["var(--font-martel)"],
       },
       backgroundImage: {
         "gradient-radial":
