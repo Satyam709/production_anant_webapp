@@ -336,6 +336,7 @@ model Blog {
   isVerified Boolean
   userID String
   writtenBy User @relation(name: "blogs-written", fields: [userID], references: [id])
+  createdAt DateTime
 }
 
 enum blog_cat{
