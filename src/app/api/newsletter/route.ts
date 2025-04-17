@@ -24,7 +24,7 @@ export async function GET(req:NextRequest){
         });
 
         return NextResponse.json(
-            {newletters: newsletter},{status:200}
+            {newsletters: newsletter},{status:200}
         )
 
     }
