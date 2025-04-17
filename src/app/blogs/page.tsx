@@ -4,7 +4,7 @@ import BlogsHeader from "@/components/blogs/BlogsHeader";
 import BlogCard from "@/components/blogs/BlogCard";
 import {Blog} from "@prisma/client"
 
-export default async function EventsPage() {
+export default async function BlogsPage() {
 
     const { blogs } = await getBlogs();
 

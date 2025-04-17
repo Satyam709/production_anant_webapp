@@ -26,7 +26,7 @@ export async function POST(req: NextRequest){
             const errorMessages = schema.error.errors.map((err) => err.message);
             return NextResponse.json({error: "Invalid Body Format", messages: errorMessages},{status: 400});
         }
-
+        
         const {title, category, content, cover_picture, description} = schema.data;
 
         const blog = await prisma.blog.create({

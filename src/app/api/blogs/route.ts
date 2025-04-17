@@ -17,7 +17,7 @@ export async function GET(req:NextRequest){
 
         const blogs = await prisma.blog.findMany({
             where:{
-                isVerified: true
+                isVerified: false
             },
             take: size,
             skip: (pageNumber-1)*size,
