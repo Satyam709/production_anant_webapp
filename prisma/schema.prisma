@@ -67,6 +67,9 @@ model User{
 
   // blogs written
   blogs Blog[]     @relation("blogs-written")
+
+  // newsletters written
+  newsletters NewsLetter[] @relation("newsletter-written")
 }
 
 model Notice{
@@ -350,4 +353,16 @@ enum blog_cat{
   Application_Of_Differential_Equations
   Mathematics_in_Nature
   Others
+}
+
+model NewsLetter{
+  id String @id @default(uuid())
+  title String
+  description String?
+  cover_picture String?
+  body String
+  userID String
+  writtenBy User @relation(name: "newsletter-written", fields: [userID], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
