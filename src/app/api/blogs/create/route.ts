@@ -8,7 +8,8 @@ const blogSchema = z.object({
     title: z.string().min(1, "Blog Title is required"),
     category: z.nativeEnum(blog_cat),
     content: z.string().min(1, "Blog Content Cannot Be Empty"),
-    cover_picture: z.string().optional()
+    cover_picture: z.string().optional(),
+    description: z.string().optional(),
 });
 
 export async function POST(req: NextRequest){
@@ -22,10 +23,11 @@ export async function POST(req: NextRequest){
         }
 
         if(!schema.success){
-            return NextResponse.json({error: "Invalid Body Format"},{status: 400});
+            const errorMessages = schema.error.errors.map((err) => err.message);
+            return NextResponse.json({error: "Invalid Body Format", messages: errorMessages},{status: 400});
         }
 
-        const {title, category, content, cover_picture} = schema.data;
+        const {title, category, content, cover_picture, description} = schema.data;
 
         const blog = await prisma.blog.create({
             data:{
@@ -34,6 +36,7 @@ export async function POST(req: NextRequest){
                 cover_picture,
                 body: content,
                 isVerified: false,
+                description: description,  
                 writtenBy:{
                     connect:{
                         id: session.user.id

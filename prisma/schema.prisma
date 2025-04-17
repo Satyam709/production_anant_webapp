@@ -338,6 +338,7 @@ model Blog {
   userID String
   writtenBy User @relation(name: "blogs-written", fields: [userID], references: [id])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 enum blog_cat{
