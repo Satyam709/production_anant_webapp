@@ -10,7 +10,7 @@ interface ModalProps {
   title?: string;
 }
 
-export function Modal({ isOpen, onClose, children, title }: ModalProps) {
+export default function Modal({ isOpen, onClose, children, title }: ModalProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
