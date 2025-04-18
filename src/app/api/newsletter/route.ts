@@ -1,37 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/PrismaClient/db"
+import prisma from "@/lib/PrismaClient/db";   
 
-export async function GET(req:NextRequest){
+
+export async function GET(request: NextRequest) {
     try{
-        const size = 10;
-        const url = new URL(req.url);
-        const searchParams = url.searchParams;
-        const pageNumber = parseInt(searchParams.get("page") || "1", 10);
-     
-        if (pageNumber < 1) {
-            return NextResponse.json(
-              { message: "Invalid page number" },
-              { status: 400 }
-            );
-        }
-
-        const newsletter = await prisma.newsLetter.findMany({
-            take: size,
-            skip: (pageNumber-1)*size,
-            orderBy:{
-                createdAt: "desc"
-            }
+        const allNewsletters = await prisma.newsLetter.findMany({
+            orderBy: {
+                publisedAt: "desc"
+            },
         });
 
-        return NextResponse.json(
-            {newsletters: newsletter},{status:200}
-        )
+        if(!allNewsletters) {
+            return NextResponse.json({ error: "No newsletters found" }, { status: 404 });
+        }
 
+        return NextResponse.json({newsletters: allNewsletters}, { status: 200 });
     }
-    catch(err){
-        return NextResponse.json(
-            { message: "Internal Server Error" },
-            { status: 500 }
-        );
+    catch(error) {
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

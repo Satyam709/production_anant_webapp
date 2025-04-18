@@ -355,14 +355,12 @@ enum blog_cat{
   Others
 }
 
+// stores pdf
 model NewsLetter{
   id String @id @default(uuid())
   title String
-  description String?
-  cover_picture String?
-  body String
+  fileUrl String
+  publisedAt DateTime @default(now())
   userID String
   writtenBy User @relation(name: "newsletter-written", fields: [userID], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
 }

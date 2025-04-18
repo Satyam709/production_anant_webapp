@@ -2,6 +2,8 @@
 import { UTApi } from "uploadthing/server";
 import { getSession } from "./Sessions";
 import isAdmin from "./Admin";
+import { metadata } from "framer-motion/client";
+import { custom } from "zod";
 
 const utapi = new UTApi();
 
@@ -31,11 +33,15 @@ export async function uploadServerSideFiles(files: File[]) {
 
 export async function uploadAdminServerSideFile(file: File) {
   try {
+    if(!file)
+      return null;
     const session = await getSession();
     if (!session?.user || !(await isAdmin())) {
       return null;
     }
+
     const response = await utapi.uploadFiles(file);
+    
     console.log("Upload complete for userId:", response);
     console.log("Upload complete for userId:", response.data?.ufsUrl);
     return response.data;
