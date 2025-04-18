@@ -44,3 +44,50 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         );
     }
 }
+
+export async function DELETE(req: NextRequest, { params }: { params: { id: string }}){
+    try{
+
+        const {id} = await params;
+        let authorized = await isAdmin();
+        const session = await getSession();
+
+        const blog = await prisma.blog.findUnique({
+            where:{
+                id: id
+            }
+        });
+
+        if(!blog){
+            return NextResponse.json(
+                { message: "Blog not found" },
+                { status: 404 }
+            );
+        }
+
+        if(!authorized && blog.userID !== session?.user.id){
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        
+        await prisma.blog.delete({
+            where:{
+                id: id
+            }
+        });
+
+        return NextResponse.json(
+            { message: "Blog deleted" },{status:200}
+        )
+
+    }
+    catch(err){
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}

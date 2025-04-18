@@ -7,6 +7,38 @@ const blogid = z.object({
     blogId: z.string().min(1, "Blog ID is required")
 });
 
+export async function GET(req: NextRequest){
+    try{
+
+        const admin = await isAdmin();
+
+        if(!admin){
+            return NextResponse.json({error: "You are not an admin"},{status: 400});
+        }
+
+        const blogs = await prisma.blog.findMany({
+            where:{
+                isVerified: false
+            },
+            orderBy:{
+                createdAt: "asc"
+            }
+        });
+
+        return NextResponse.json(
+            {blogs: blogs},{status:200}
+        )
+
+    }
+    catch(err){
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}
+
+
 export async function POST(req: NextRequest){
     try{
         const body = await req.json();

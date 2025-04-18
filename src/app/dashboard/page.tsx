@@ -6,43 +6,44 @@ import {
   Calendar,
   Users,
   Bell,
-  BarChart3,
   Menu,
   X,
   LogOut,
   UserPlus,
   Send,
-  Plus,
   ImageIcon,
+  Newspaper,
+  Pencil
 } from "lucide-react";
 import CompForm from "@/components/forms/CompForm";
 import EventForm from "@/components/forms/EventForm";
 import MeetForm from "@/components/forms/MeetForm";
 import NoticeForm from "@/components/forms/NoticeForm";
-import DashboardStats from "@/components/dashboard/DashboardStats";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeamDashboard from "@/components/teams/TeamDashboard";
 import { signOut, useSession } from "next-auth/react";
 import { position_options } from "@prisma/client";
 import {  useRouter } from "next/navigation";
 import PhotoGallery from "@/components/gallery/admin/GalleryManage";
+import BlogDashBoard from "@/components/blogs/BlogDashBoard";
 
 type TabType =
-  | "overview"
   | "competitions"
   | "events"
   | "meetings"
   | "notices"
   | "teams"
   | "shop"
-  | "gallery";
+  | "gallery"
+  | "newsletter"
+  | "blogs";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const session = useSession();
   const router = useRouter();
   const isAdmin =session?.data?.user.info?.position && session?.data?.user.info?.position != position_options.Member;
-  const defTab = isAdmin ? "overview" : "teams";
+  const defTab = isAdmin ? "notices" : "teams";
   const [activeTab, setActiveTab] = useState<TabType>(defTab);
 
   const handleLogout = () => {
@@ -60,7 +61,6 @@ function App() {
   ];
 
   const adminTabs = [
-    { id: "overview", label: "Overview", icon: BarChart3 },
     { id: "competitions", label: "Competitions", icon: Trophy },
     { id: "events", label: "Events", icon: Calendar },
     { id: "meetings", label: "Meetings", icon: Users },
@@ -68,6 +68,8 @@ function App() {
     { id: "teams", label: "Teams", icon: UserPlus },
     { id: "shop", label: "Shop", icon: Send },
     { id: "gallery", label: "Gallery", icon: ImageIcon },
+    { id: "newsletter", label: "Newsletter", icon: Newspaper },
+    { id: "blogs", label: "Blogs", icon: Pencil },
   ];
 
   const tabs = isAdmin ? adminTabs : normaltabs;
@@ -146,7 +148,6 @@ function App() {
           <DashboardHeader activeTab={activeTab} />
 
           <div className="mt-8">
-            {activeTab === "overview" && <DashboardStats />}
             {activeTab === "competitions" && <CompForm />}
             {activeTab === "events" && <EventForm />}
             {activeTab === "meetings" && <MeetForm />}
@@ -154,6 +155,7 @@ function App() {
             {activeTab === "teams" && <TeamDashboard />}
             {activeTab === "shop" && <Shop />}
             {activeTab === "gallery" && <PhotoGallery />}
+            {activeTab === "blogs" && <BlogDashBoard />}
           </div>
         </div>
       </div>

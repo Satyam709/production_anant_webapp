@@ -1,26 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db"
+import {getSession} from "@/lib/actions/Sessions"
 
 export async function GET(req:NextRequest){
     try{
-        const size = 10;
-        const url = new URL(req.url);
-        const searchParams = url.searchParams;
-        const pageNumber = parseInt(searchParams.get("page") || "1", 10);
-     
-        if (pageNumber < 1) {
+        const session = await getSession();
+
+        if(!session){
             return NextResponse.json(
-              { message: "Invalid page number" },
-              { status: 400 }
+                { message: "Unauthorized" },
+                { status: 401 }
             );
         }
-
+     
         const blogs = await prisma.blog.findMany({
-            where:{
-                isVerified: true
-            },
-            take: size,
-            skip: (pageNumber-1)*size,
             orderBy:{
                 createdAt: "asc"
             }
