@@ -1,16 +1,11 @@
 import React from 'react';
-import { Trophy, Calendar, Users, Bell, BarChart3, UserPlus, Send, ImageIcon } from 'lucide-react';
+import { Trophy, Calendar, Users, Bell, UserPlus, Send, ImageIcon, Newspaper, Pencil, Briefcase, Star } from 'lucide-react';
 
 type Props = {
-  activeTab: 'overview' | 'competitions' | 'events' | 'meetings' | 'notices' | 'teams' | 'shop' | 'gallery';
+  activeTab: 'competitions' | 'events' | 'meetings' | 'notices' | 'teams' | 'shop' | 'gallery' | 'newsletter' | 'blogs' | 'internships' | 'achievements';
 };
 
 const tabConfig = {
-  overview: {
-    title: "Dashboard Overview",
-    description: "Monitor and manage all your activities from one place",
-    icon: BarChart3,
-  },
   competitions: {
     title: "Manage Competitions",
     description: "Create and manage coding competitions",
@@ -45,6 +40,26 @@ const tabConfig = {
     title: "Photo Gallery",
     description: "Manage albums and photos",
     icon: ImageIcon,
+  },
+  newsletter: {
+    title: "Newsletter",
+    description: "Create newsletters",
+    icon: Newspaper,
+  },
+  blogs: {
+    title: "Blogs",
+    description: "Create and manage blogs",
+    icon: Pencil,
+  },
+  internships: {
+    title: "Manage Internships",
+    description: "Add and manage internship experiences",
+    icon: Briefcase,
+  },
+  achievements: {
+    title: "Department Achievements",
+    description: "Add and manage department achievements",
+    icon: Star,
   },
 };
 

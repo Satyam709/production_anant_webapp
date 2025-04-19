@@ -2,10 +2,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InternshipCard from "@/components/internship/InternshipCard";
 import { InternshipWithUser } from "@/types/internship";
+import Link from "next/link";
 
 async function getInternships() {
   const response = await fetch(`${process.env.API_URL}/api/internships`, {
-    next: { revalidate: 3600 } // Revalidate every hour
+    next: { revalidate: 300 } // Revalidate every hour
   });
   
   if (!response.ok) {
@@ -33,8 +34,15 @@ export default async function InternshipPage() {
             Student Internships
           </h1>
           <p className="text-lg text-blue-200/80 max-w-2xl mx-auto">
-            Explore internship experiences of our talented students at various prestigious organizations
+            Explore internship experiences of our talented students at various
+            prestigious organizations
           </p>
+          <Link
+            href="/dashboard"
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-xl transition"
+          >
+            Add Your Internship
+          </Link>
         </section>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

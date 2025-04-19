@@ -140,17 +140,17 @@ const Footer = () => {
               rights reserved.
             </p>
             <div className="flex space-x-6">
-              <Link
+              {/* <Link
                 href="/privacy"
                 className="hover:text-white transition-colors duration-300"
               >
                 Privacy
-              </Link>
+              </Link> */}
               <Link
-                href="/terms"
+                href="/policy"
                 className="hover:text-white transition-colors duration-300"
               >
-                Terms
+                Policy
               </Link>
             </div>
           </div>

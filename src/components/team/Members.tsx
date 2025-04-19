@@ -1,8 +1,9 @@
 import React from "react";
-import { AnantTeam } from "@/data/AnantTeam";
+import { AnantTeam, teamGroups } from "@/data/AnantTeam";
 import { Linkedin, GitHub, Instagram } from "react-feather";
 import Link from "next/link";
 import Image from "next/image";
+import { kMaxLength } from "buffer";
 
 // MemberCard Component
 const MemberCard: React.FC<{
@@ -78,18 +79,41 @@ const MemberCard: React.FC<{
   );
 };
 
+const teamOrder = [
+  "Tech Team",
+  "Education Outreach Team",
+  "Content/Newsletter Team",
+  "PR /Social Media Team",
+  "Managment Team",
+];
+
 // Members Component
 const Members: React.FC = () => {
   return (
-    <section className="mb-20 px-6">
+    <section className="mb-20 px-6" id="executive-head">
       <h2 className="text-4xl font-extrabold mb-12 text-center text-gray-200">
         Executive Heads
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {AnantTeam.map((member) => (
-          <MemberCard key={member.ID} member={member} />
-        ))}
-      </div>
+
+      {teamOrder.map((teamName) => {
+        const members = teamGroups[teamName]; // Assuming teamGroups is accessible here
+        if (!members || members.length === 0){
+          console.log(`No members found for ${teamName}`);
+          return null; // Skip rendering if no members found
+        }
+        return (
+          <div key={teamName} className="mb-16">
+            <h3 className="text-2xl font-bold mb-6 text-gray-100 text-center">
+              {teamName}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {members.map((member) => (
+                <MemberCard key={member.ID} member={member} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
     </section>
   );
 };

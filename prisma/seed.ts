@@ -1014,6 +1014,50 @@ async function main() {
     },
   });
 
+await prisma.departmentAchievements.createMany({
+  data: [
+    {
+      department: "Computer Science",
+      achievement: "AI Research Paper Published",
+      description:
+        "Our AI research paper was published in an international journal.",
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // AI concept
+    },
+    {
+      department: "Electronics",
+      achievement: "Robotics Competition Winner",
+      description: "Won the national robotics competition held in Bangalore.",
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Robotics
+    },
+    {
+      department: "Mathematics",
+      achievement: "Data Science Workshop Conducted",
+      description:
+        "Organized a national-level workshop on data science and analytics.",
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Data analysis
+    },
+    {
+      department: "Physics",
+      achievement: "Quantum Mechanics Seminar",
+      description: "Invited top physicists for a seminar on Quantum Computing.",
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Quantum mechanics
+    },
+    {
+      department: "Chemistry",
+      achievement: "Green Chemistry Innovation",
+      description:
+        "Developed an eco-friendly alternative to industrial solvents.",
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Green chemistry
+    },
+  ],
+});
+
+
   console.log("Seed data inserted successfully!");
 }
 

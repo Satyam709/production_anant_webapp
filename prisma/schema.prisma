@@ -64,6 +64,12 @@ model User{
   third_prize_comp Competitions[] @relation(name: "third_prize_comp")
 
   Internship Internship[] @relation(name: "internship")
+
+  // blogs written
+  blogs Blog[]     @relation("blogs-written")
+
+  // newsletters written
+  newsletters NewsLetter[] @relation("newsletter-written")
 }
 
 model Notice{
@@ -184,6 +190,15 @@ model Internship {
 
   created_at  DateTime  @default(now())
   user        User      @relation(fields: [user_id], references: [id] , name: "internship")
+}
+
+model DepartmentAchievements {
+  id          Int      @id @default(autoincrement())
+  department   String
+  achievement  String
+  description String?
+  imageURL    String?
+  created_at  DateTime @default(now())
 }
 
 enum InternshipDepartment {
@@ -322,3 +337,41 @@ model AlbumImages {
   album   Album   @relation(fields: [albumId], references: [id])
 }
 
+
+// blog section
+model Blog {
+  id String @id @default(uuid())
+  title String
+  category blog_cat
+  cover_picture String?
+  description String?
+  body String  
+  isVerified Boolean
+  userID String
+  writtenBy User @relation(name: "blogs-written", fields: [userID], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+enum blog_cat{
+  Mathematics
+  Trading
+  Ancient_Mathematics
+  Algebra
+  Probabilty_and_Games
+  Application_Of_Differential_Equations
+  Mathematics_in_Nature
+  Others
+}
+
+model NewsLetter{
+  id String @id @default(uuid())
+  title String
+  description String?
+  cover_picture String?
+  body String
+  userID String
+  writtenBy User @relation(name: "newsletter-written", fields: [userID], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}

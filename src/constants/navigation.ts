@@ -5,13 +5,15 @@ export const navItems = {
       { label: "Vision", href: "/" },
       { label: "Team", href: "/team" },
       { label: "Photos", href: "/gallery" },
-      { label: "Timeline", href: "/timeline" },
+      { label: "ContactUs", href: "/contact" },
+      { label: "Policy", href: "/policy" },
     ],
   },
   Community: {
     label: "Community",
     items: [
       { label: "Events", href: "/events" },
+      { label: "Internships", href: "/internship" },
       { label: "Competitions", href: "/compete" },
       { label: "Shop", href: "/shop" },
     ],
@@ -27,7 +29,6 @@ export const navItems = {
   // opportunities: {
   //   label: 'Opportunities',
   //   items: [
-  //     { label: 'Internships', href: '/' },
   //     { label: 'Research', href: '/' },
   //     { label: 'Projects', href: '/' }
   //   ]
