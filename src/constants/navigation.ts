@@ -13,7 +13,7 @@ export const navItems = {
     label: "Community",
     items: [
       { label: "Events", href: "/events" },
-      { label: 'Internships', href: '/internship' },
+      { label: "Internships", href: "/internship" },
       { label: "Competitions", href: "/compete" },
       { label: "Shop", href: "/shop" },
     ],
