@@ -135,10 +135,13 @@ export default function LoginPage() {
                 href="/register"
                 className="text-sm text-gray-400 hover:text-white transition-colors"
               >
-                Don't have an account?
-                <span className="ml-1 text-primary-cyan hover:text-primary-blue">
-                  Sign up
-                </span>
+                Don't have an account?  &nbsp;&nbsp;&nbsp;
+              </Link>
+              <Link
+                href="/forget-password"
+                className="text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Reset Password!
               </Link>
             </div>
           </div>

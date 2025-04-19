@@ -3,7 +3,6 @@ import prisma from "@/lib/PrismaClient/db";
 import bcryptjs from "bcryptjs";
 import redis from "@/helpers/redis";
 import z from "zod";
-import { error } from "console";
 
 const changePasswordSchema = z.object({
     roll_number: z

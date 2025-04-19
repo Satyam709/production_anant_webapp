@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
             time: Date.now(),
         };
         await redis.set(roll_number, JSON.stringify(value));
+        console.log(OTP);
         
         if (!process.env.MAIL_ID) {
             return NextResponse.json({ message: ".env missing" }, { status: 500 });
