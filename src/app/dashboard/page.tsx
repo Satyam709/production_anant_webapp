@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Trophy,
@@ -46,12 +46,12 @@ type TabType =
   | "internships"
   | "achievements";
 
-async function App() {
+function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const session = useSession();
   const router = useRouter();
-  const isadmin = await isAdmin();
-  const issuperadmin = await isSuperAdmin();
+  const [isadmin, setIsadmin] = useState(false);
+  const [issuperadmin, setIssuperadmin] = useState(false);
   const defTab = isadmin ? "notices" : "teams";
   const [activeTab, setActiveTab] = useState<TabType>(defTab);
 
@@ -63,6 +63,18 @@ async function App() {
     if (session.status === "unauthenticated") {
       router.push("/login");
     }
+    
+    const checkRoles = async () => {
+      const admin = await isAdmin();
+      const superadmin = await isSuperAdmin();
+      setIsadmin(admin);
+      setIssuperadmin(superadmin);
+      const defTab = superadmin ? "notices" : (admin ? "notices" : "teams");
+      setActiveTab(defTab as TabType);
+    };
+
+  checkRoles();
+
   }, [session.status, router]);
 
   const normaltabs = [
@@ -199,10 +211,7 @@ const Shop = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
       <div className="p-8 text-center">
         <div className="py-8">
-          <h2 className="text-2xl font-bold mb-4">Hello!</h2>
-          <p className="text-lg mb-6">
-            Click the button below to enter the shop admin panel.
-          </p>
+          <h2 className="text-2xl font-bold mb-4">Welcome To Infinity Shop!</h2>
           <button
             onClick={handleClick}
             className="px-6 py-3 bg-primary-cyan text-white rounded-lg hover:bg-primary-cyan/80 transition-colors duration-200"
