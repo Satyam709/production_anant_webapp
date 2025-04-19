@@ -1,15 +1,45 @@
 "use client";
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(ScrollToPlugin);
 
+interface Achievement {
+  id: number;
+  department: string;
+  achievement: string;
+  description: string | null;
+  imageURL: string | null;
+  created_at: string;
+}
+
 export default function MathematicsDepartment() {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      try {
+        const response = await fetch('/api/departments/achievements');
+        const data = await response.json();
+        if (data.achievements) {
+          setAchievements(data.achievements);
+        }
+      } catch (error) {
+        console.error('Failed to fetch achievements:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAchievements();
+  }, []);
+
   const handleNavClick = (target: string) => {
     gsap.to(window, {
       duration: 1,
@@ -289,34 +319,52 @@ export default function MathematicsDepartment() {
 
         {/* Achievements Section */}
         <section id="achievements" className="py-20 px-6">
-          <div className="mx-auto max-w-4xl">
+          <div className="px-auto w-full">
             <h2 className="mb-12 text-4xl font-bold text-center">
               Department Achievements
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Placeholder achievement cards */}
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="relative group overflow-hidden rounded-xl"
-                >
-                  <div className="aspect-square bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/30 group-hover:border-gray-600/30">
-                    <div className="h-full w-full bg-[url('/homeImages/image_${(i % 3) + 3}.avif')] bg-cover bg-center group-hover:scale-110 transition-all duration-300">
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-6">
-                    <div className="w-full">
-                      <p className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                        Achievement {i}
-                      </p>
-                      <p className="text-sm text-gray-300 mt-2">
-                        Click to learn more about this achievement
-                      </p>
-                    </div>
-                  </div>
+            <div className="w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {loading ? (
+                <div className="col-span-full flex justify-center items-center min-h-[300px]">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
-              ))}
+              ) : achievements.length === 0 ? (
+                <div className="col-span-full text-center min-h-[300px] flex items-center justify-center">
+                  <p className="text-gray-400 text-lg">No achievements found</p>
+                </div>
+              ) : (
+                achievements.map((achievement) => (
+                  <div
+                    key={achievement.id}
+                    className="relative group overflow-hidden rounded-xl"
+                  >
+                    <div className="aspect-square bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/30 group-hover:border-gray-600/30">
+                      <div className="h-full w-full bg-cover bg-center group-hover:scale-110 transition-all duration-300">
+                        <Image
+                          src={achievement.imageURL || "/mathematics/placeholder.jpg"}
+                          alt={achievement.achievement}
+                          width={600}
+                          height={600}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-6">
+                      <div className="w-full">
+                        <p className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                          {achievement.achievement}
+                        </p>
+                        {achievement.description && (
+                          <p className="text-sm text-gray-300 mt-2">
+                            {achievement.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </section>
@@ -325,3 +373,4 @@ export default function MathematicsDepartment() {
     </>
   );
 }
+
