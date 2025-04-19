@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
 import { getSession } from "@/lib/actions/Sessions";
-import isAdmin from "@/lib/actions/Admin";
+import isSuperAdmin from "@/lib/actions/Admin";
 import z from "zod"
 
 const competitionSchema = z.object({
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         const schema = competitionSchema.safeParse(body);
         const session = await getSession();
 
-        if (!session?.user || !(await isAdmin())) {
+        if (!session?.user || !(await isSuperAdmin())) {
             return NextResponse.json(
               { error: "Failed to create meeting! Unauthenticated" },
               { status: 400 }

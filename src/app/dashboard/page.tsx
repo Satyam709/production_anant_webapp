@@ -24,13 +24,14 @@ import NoticeForm from "@/components/forms/NoticeForm";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeamDashboard from "@/components/teams/TeamDashboard";
 import { signOut, useSession } from "next-auth/react";
-import { position_options } from "@prisma/client";
 import {  useRouter } from "next/navigation";
 import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 import BlogDashBoard from "@/components/blogs/BlogDashBoard";
 import InternshipDashboard from "@/components/internship/Dashboard";
 import AchievementForm from "@/components/forms/AchievementForm";
 import NewsLetterDashboard from "@/components/newsletter/NewsLetterDashboard";
+import isAdmin from "@/lib/actions/Admin";
+import isSuperAdmin  from "@/lib/actions/Admin";
 
 type TabType =
   | "competitions"
@@ -45,12 +46,13 @@ type TabType =
   | "internships"
   | "achievements";
 
-function App() {
+async function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const session = useSession();
   const router = useRouter();
-  const isAdmin =session?.data?.user.info?.position && session?.data?.user.info?.position != position_options.Member;
-  const defTab = isAdmin ? "notices" : "teams";
+  const isadmin = await isAdmin();
+  const issuperadmin = await isSuperAdmin();
+  const defTab = isadmin ? "notices" : "teams";
   const [activeTab, setActiveTab] = useState<TabType>(defTab);
 
   const handleLogout = () => {
@@ -64,10 +66,19 @@ function App() {
   }, [session.status, router]);
 
   const normaltabs = [
-    { id: "teams", label: "Teams", icon: UserPlus },
+    { id: "teams", label: "Teams", icon: UserPlus }
   ];
 
   const adminTabs = [
+    { id: "meetings", label: "Meetings", icon: Users },
+    { id: "notices", label: "Notices", icon: Bell },
+    { id: "teams", label: "Teams", icon: UserPlus },
+    { id: "gallery", label: "Gallery", icon: ImageIcon },
+    { id: "blogs", label: "Blogs", icon: Pencil },
+    { id: "internships", label: "Internships", icon: Briefcase },
+  ];
+
+  const superadminTabs = [
     { id: "competitions", label: "Competitions", icon: Trophy },
     { id: "events", label: "Events", icon: Calendar },
     { id: "meetings", label: "Meetings", icon: Users },
@@ -79,9 +90,9 @@ function App() {
     { id: "blogs", label: "Blogs", icon: Pencil },
     { id: "internships", label: "Internships", icon: Briefcase },
     { id: "achievements", label: "Achievements", icon: Star },
-  ];
+  ]
 
-  const tabs = isAdmin ? adminTabs : normaltabs;
+  const tabs = issuperadmin? superadminTabs: (isadmin ? adminTabs : normaltabs);
 
 
   return (
@@ -107,7 +118,7 @@ function App() {
         <header className="p-6 border-b border-gray-800/50">
           <div className="flex items-center space-x-3">
             <LayoutDashboard className="h-8 w-8 text-primary-cyan" />
-            <h1 className="text-xl font-bold">{isAdmin?"Admin Dashboard":"Dashboard"}</h1>
+            <h1 className="text-xl font-bold">{isadmin?"Admin Dashboard":"Dashboard"}</h1>
           </div>
         </header>
 

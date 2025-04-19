@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
 import { getSession } from "@/lib/actions/Sessions";
-import isAdmin from "@/lib/actions/Admin";
+import isSuperAdmin from "@/lib/actions/Admin";
 
 export async function GET(request: Request) {
   try {
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     // Verify admin access
-    const isAdminUser = await isAdmin();
+    const isAdminUser = await isSuperAdmin();
     if (!isAdminUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
