@@ -238,77 +238,83 @@ export const AnantTeam = [
 ];
 
 export const officeBearersData = [
-    {
-      id: 1,
-      name: "Mamta Saini",
-      role: "Overall Coordinator",
-      image:
-        "/team/office/mamta.png",
-      email: "723410004@nitkkr.ac.in",
-      phone: "+917827902202",
-      website: "https://myselfdk03.wixsite.com/mamtasaini",
-      instagram: null,
-      linkedin: null,
-    },
-    {
-      id: 2,
-      name: "Manoj Solanki",
-      role: "Coordinator (PG)",
-      image:
-       "/team/office/manoj.png",
-      email: "723410009@nitkkr.ac.in",
-      phone: "+919351266108",
-      website: "https://manojmsmaths.wixsite.com/manoj-solanki",
-      instagram: "https://www.instagram.com/manoj.solanki_ms/",
-      linkedin: "https://www.linkedin.com/in/manoj-solanki-05950a273/",
-    },
-    {
-      id: 3,
-      name: "Saurav Jain",
-      role: "Coordinator (PG)",
-      image:
-        "/team/office/saurav.png",
-      email: "723410001@nitkkr.ac.in",
-      phone: "+917896515900",
-      website: null,
-      instagram: "https://www.instagram.com/100rav_____/",
-      linkedin: "https://linkedin.com/in/saurav-jain-7738a8251",
-    },
-    {
-      id: 4,
-      name: "Sanskar Aggarwal",
-      role: "Coordinator (UG)",
-      image:
-        "/team/office/sanskar.png",
-      email: "123110024@nitkkr.ac.in",
-      phone: "+918198951981",
-      website: null,
-      instagram: "https://www.instagram.com/sanskaraggarwal720/",
-      linkedin: null,
-    },
-    {
-      id: 5,
-      name: "Anushika Jindal",
-      role: "Coordinator (UG)",
-      image:
-        "/team/office/anushika.png",
-      email: "123110027@nitkkr.ac.in",
-      phone: "+919023230312",
-      website: null,
-      instagram: "https://www.instagram.com/its_anushika_here/",
-      linkedin: "https://www.linkedin.com/in/anushikajindal/",
-    },
-    {
-      id: 6,
-      name: "Rajveer Pathak",
-      role: "Coordinator (UG)",
-      image:
-        "/team/office/rajveer.png",
-      email: "123110041@nitkkr.ac.in",
-      phone: "+918854958743",
-      website: null,
-      instagram: "https://www.instagram.com/rajveer_pathak1/",
-      linkedin:
-        "https://www.linkedin.com/in/rajveer-pathak-668582276?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-    },
-  ];
+  {
+    id: 1,
+    name: "Mamta Saini",
+    role: "Overall Coordinator",
+    image: "/team/office/mamta.png",
+    email: "723410004@nitkkr.ac.in",
+    phone: "+917827902202",
+    website: "https://myselfdk03.wixsite.com/mamtasaini",
+    instagram: null,
+    linkedin: null,
+  },
+  {
+    id: 2,
+    name: "Manoj Solanki",
+    role: "Coordinator (PG)",
+    image: "/team/office/manoj.png",
+    email: "723410009@nitkkr.ac.in",
+    phone: "+919351266108",
+    website: "https://manojmsmaths.wixsite.com/manoj-solanki",
+    instagram: "https://www.instagram.com/manoj.solanki_ms/",
+    linkedin: "https://www.linkedin.com/in/manoj-solanki-05950a273/",
+  },
+  {
+    id: 3,
+    name: "Saurav Jain",
+    role: "Coordinator (PG)",
+    image: "/team/office/saurav.png",
+    email: "723410001@nitkkr.ac.in",
+    phone: "+917896515900",
+    website: null,
+    instagram: "https://www.instagram.com/100rav_____/",
+    linkedin: "https://linkedin.com/in/saurav-jain-7738a8251",
+  },
+  {
+    id: 4,
+    name: "Sanskar Aggarwal",
+    role: "Coordinator (UG)",
+    image: "/team/office/sanskar.png",
+    email: "123110024@nitkkr.ac.in",
+    phone: "+918198951981",
+    website: null,
+    instagram: "https://www.instagram.com/sanskaraggarwal720/",
+    linkedin: null,
+  },
+  {
+    id: 5,
+    name: "Anushika Jindal",
+    role: "Coordinator (UG)",
+    image: "/team/office/anushika.png",
+    email: "123110027@nitkkr.ac.in",
+    phone: "+919023230312",
+    website: null,
+    instagram: "https://www.instagram.com/its_anushika_here/",
+    linkedin: "https://www.linkedin.com/in/anushikajindal/",
+  },
+  {
+    id: 6,
+    name: "Rajveer Pathak",
+    role: "Coordinator (UG)",
+    image: "/team/office/rajveer.png",
+    email: "123110041@nitkkr.ac.in",
+    phone: "+918854958743",
+    website: null,
+    instagram: "https://www.instagram.com/rajveer_pathak1/",
+    linkedin:
+      "https://www.linkedin.com/in/rajveer-pathak-668582276?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+  },
+];
+
+export const teamGroups = AnantTeam.reduce(
+  (acc: Record<string, typeof AnantTeam>, member) => {
+    const team = member.Team || "Uncategorized";
+    if (!acc[team]) {
+      acc[team] = [];
+    }
+    acc[team].push(member);
+    return acc;
+  },
+  {}
+);

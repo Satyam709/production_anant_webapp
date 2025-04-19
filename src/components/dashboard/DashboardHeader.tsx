@@ -1,8 +1,8 @@
 import React from 'react';
-import { Trophy, Calendar, Users, Bell, UserPlus, Send, ImageIcon, Newspaper, Pencil,  } from 'lucide-react';
+import { Trophy, Calendar, Users, Bell, UserPlus, Send, ImageIcon, Newspaper, Pencil, Briefcase, Star } from 'lucide-react';
 
 type Props = {
-  activeTab: 'competitions' | 'events' | 'meetings' | 'notices' | 'teams' | 'shop' | 'gallery' | 'newsletter' | 'blogs';
+  activeTab: 'competitions' | 'events' | 'meetings' | 'notices' | 'teams' | 'shop' | 'gallery' | 'newsletter' | 'blogs' | 'internships' | 'achievements';
 };
 
 const tabConfig = {
@@ -50,6 +50,16 @@ const tabConfig = {
     title: "Blogs",
     description: "Create and manage blogs",
     icon: Pencil,
+  },
+  internships: {
+    title: "Manage Internships",
+    description: "Add and manage internship experiences",
+    icon: Briefcase,
+  },
+  achievements: {
+    title: "Department Achievements",
+    description: "Add and manage department achievements",
+    icon: Star,
   },
 };
 

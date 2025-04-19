@@ -88,7 +88,7 @@ const OfficeBearers = () => {
   );
 
   return (
-    <section className="mb-20 px-6">
+    <section className="mb-20 px-6" id="office-bearers">
       <h2 className="text-4xl font-extrabold mb-12 text-center text-gray-200">
         Executive Heads
       </h2>

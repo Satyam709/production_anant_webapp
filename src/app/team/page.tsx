@@ -2,7 +2,6 @@
 
 import TeamHeader from '@/components/team/TeamHeader'
 import OfficeBearers from '@/components/team/OfficeBearers'
-import ExecutiveHeads from '@/components/team/ExecutiveHeads'
 import Members from '@/components/team/Members'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'

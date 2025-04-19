@@ -13,7 +13,9 @@ import {
   Send,
   ImageIcon,
   Newspaper,
-  Pencil
+  Pencil,
+  Briefcase,
+  Star
 } from "lucide-react";
 import CompForm from "@/components/forms/CompForm";
 import EventForm from "@/components/forms/EventForm";
@@ -26,7 +28,9 @@ import { position_options } from "@prisma/client";
 import {  useRouter } from "next/navigation";
 import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 import BlogDashBoard from "@/components/blogs/BlogDashBoard";
-import NewsLetterDashboard from "@/components/newsletter/NewsLetterDashboard"
+import InternshipDashboard from "@/components/internship/Dashboard";
+import AchievementForm from "@/components/forms/AchievementForm";
+import NewsLetterDashboard from "@/components/newsletter/NewsLetterDashboard";
 
 type TabType =
   | "competitions"
@@ -37,7 +41,9 @@ type TabType =
   | "shop"
   | "gallery"
   | "newsletter"
-  | "blogs";
+  | "blogs"
+  | "internships"
+  | "achievements";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -71,6 +77,8 @@ function App() {
     { id: "gallery", label: "Gallery", icon: ImageIcon },
     { id: "newsletter", label: "Newsletter", icon: Newspaper },
     { id: "blogs", label: "Blogs", icon: Pencil },
+    { id: "internships", label: "Internships", icon: Briefcase },
+    { id: "achievements", label: "Achievements", icon: Star },
   ];
 
   const tabs = isAdmin ? adminTabs : normaltabs;
@@ -87,56 +95,58 @@ function App() {
       </button>
 
       {/* Sidebar */}
-      <div
+      <aside
         className={`
         fixed top-0 left-0 h-full w-64 bg-gray-900/50 backdrop-blur-xl border-r border-gray-800/50
         transform transition-transform duration-200 ease-in-out z-40
+        flex flex-col
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0
       `}
       >
-        <div className="p-6">
-          <div className="flex items-center space-x-3 mb-10">
+        <header className="p-6 border-b border-gray-800/50">
+          <div className="flex items-center space-x-3">
             <LayoutDashboard className="h-8 w-8 text-primary-cyan" />
             <h1 className="text-xl font-bold">{isAdmin?"Admin Dashboard":"Dashboard"}</h1>
           </div>
+        </header>
 
-          <nav className="space-y-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as TabType)}
-                className={`
-                  w-full flex items-center space-x-3 px-4 py-3 rounded-lg
-                  transition-all duration-200
-                  ${
-                    activeTab === tab.id
-                      ? "bg-gradient-to-r from-primary-blue/20 to-primary-cyan/20 text-white border border-primary-blue/20"
-                      : "text-gray-400 hover:bg-gray-800/50 hover:text-white"
-                  }
-                `}
-              >
-                <tab.icon
-                  className={`h-5 w-5 ${
-                    activeTab === tab.id ? "text-primary-cyan" : ""
-                  }`}
-                />
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
+        <nav className="flex-1 overflow-y-auto px-6 py-4 space-y-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as TabType)}
+              className={`
+                w-full flex items-center space-x-3 px-4 py-3 rounded-lg
+                transition-all duration-200
+                ${
+                  activeTab === tab.id
+                    ? "bg-gradient-to-r from-primary-blue/20 to-primary-cyan/20 text-white border border-primary-blue/20"
+                    : "text-gray-400 hover:bg-gray-800/50 hover:text-white"
+                }
+              `}
+            >
+              <tab.icon
+                className={`h-5 w-5 ${
+                  activeTab === tab.id ? "text-primary-cyan" : ""
+                }`}
+              />
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 space-y-2">
+        <footer className="p-6 border-t border-gray-800/50 bg-gray-900/50 backdrop-blur-xl mt-auto">
           <button
             onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-200"
+            onDoubleClick={handleLogout} // Require double click for logout
           >
             <LogOut className="h-5 w-5" />
             <span>Logout</span>
           </button>
-        </div>
-      </div>
+        </footer>
+      </aside>
 
       {/* Main Content */}
       <div
@@ -157,7 +167,9 @@ function App() {
             {activeTab === "shop" && <Shop />}
             {activeTab === "gallery" && <PhotoGallery />}
             {activeTab === "blogs" && <BlogDashBoard />}
-            {activeTab === "newsletter" && <NewsLetterDashboard/>}
+            {activeTab === "newsletter" && <NewsLetterDashboard />}
+            {activeTab === "internships" && <InternshipDashboard />}
+            {activeTab === "achievements" && <AchievementForm />}
           </div>
         </div>
       </div>
