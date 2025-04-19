@@ -26,7 +26,7 @@ export default function MathematicsDepartment() {
     const fetchAchievements = async () => {
       try {
         const response = await fetch('/api/departments/achievements');
-        const data = await response.json();
+        const data = await response.json();        
         if (data.achievements) {
           setAchievements(data.achievements);
         }
@@ -110,7 +110,7 @@ export default function MathematicsDepartment() {
 
           {/* Navigation Buttons */}
           <div
-            className="flex justify-center gap-6 backdrop-blur-md py-4 
+            className="flex justify-center gap-6 backdrop-blur-md 
             border-t border-b border-gray-800/50 mt-4"
           >
             <button

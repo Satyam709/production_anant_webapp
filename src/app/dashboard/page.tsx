@@ -14,7 +14,8 @@ import {
   ImageIcon,
   Newspaper,
   Pencil,
-  Briefcase
+  Briefcase,
+  Star
 } from "lucide-react";
 import CompForm from "@/components/forms/CompForm";
 import EventForm from "@/components/forms/EventForm";
@@ -28,6 +29,7 @@ import {  useRouter } from "next/navigation";
 import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 import BlogDashBoard from "@/components/blogs/BlogDashBoard";
 import InternshipDashboard from "@/components/internship/Dashboard";
+import AchievementForm from "@/components/forms/AchievementForm";
 
 type TabType =
   | "competitions"
@@ -39,7 +41,8 @@ type TabType =
   | "gallery"
   | "newsletter"
   | "blogs"
-  | "internships";
+  | "internships"
+  | "achievements";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -74,6 +77,7 @@ function App() {
     { id: "newsletter", label: "Newsletter", icon: Newspaper },
     { id: "blogs", label: "Blogs", icon: Pencil },
     { id: "internships", label: "Internships", icon: Briefcase },
+    { id: "achievements", label: "Achievements", icon: Star },
   ];
 
   const tabs = isAdmin ? adminTabs : normaltabs;
@@ -163,6 +167,7 @@ function App() {
             {activeTab === "gallery" && <PhotoGallery />}
             {activeTab === "blogs" && <BlogDashBoard />}
             {activeTab === "internships" && <InternshipDashboard />}
+            {activeTab === "achievements" && <AchievementForm />}
           </div>
         </div>
       </div>
