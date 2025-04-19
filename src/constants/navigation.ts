@@ -14,6 +14,7 @@ export const navItems = {
     items: [
       { label: "Events", href: "/events" },
       { label: "Internships", href: "/internship" },
+      { label: "Math Department", href: "/department" },
       { label: "Competitions", href: "/compete" },
       { label: "Shop", href: "/shop" },
     ],
