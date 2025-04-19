@@ -1058,6 +1058,66 @@ await prisma.departmentAchievements.createMany({
 });
 
 
+  await prisma.blog.createMany({
+    data: [
+      {
+        title: "Quantum Computing Seminar",
+        category: "Trading",
+        cover_picture:
+          "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop",
+        description:
+          "Invited top physicists for a seminar on Quantum Computing.",
+        body: "We hosted a highly insightful seminar featuring experts in quantum computing and quantum mechanics.",
+        isVerified: true,
+        userID: user2.id,
+      },
+      {
+        title: "Green Chemistry Innovation",
+        category: "Probabilty_and_Games",
+        cover_picture:
+          "https://images.unsplash.com/photo-1509228627152-72ae9ae6848c?q=80&w=2664&auto=format&fit=crop",
+        description:
+          "Developed an eco-friendly alternative to industrial solvents.",
+        body: "Our chemistry department created a biodegradable solvent with industrial applicability.",
+        isVerified: true,
+        userID: user4.id,
+      },
+      {
+        title: "Advancements in AI Chips",
+        category: "Ancient_Mathematics",
+        cover_picture:
+          "https://images.unsplash.com/photo-1581090700227-1e8f08dc5af3?q=80&w=2664&auto=format&fit=crop",
+        description:
+          "Overview of AI-specific hardware acceleration innovations.",
+        body: "We explore the latest silicon architectures designed for neural networks and large-scale AI training.",
+        isVerified: true,
+        userID: user1.id,
+      },
+      {
+        title: "CRISPR Gene Editing Breakthrough",
+        category: "Algebra",
+        cover_picture:
+          "https://images.unsplash.com/photo-1606112219348-204d7d8b94ee?q=80&w=2664&auto=format&fit=crop",
+        description: "Enhanced CRISPR accuracy for targeted gene therapy.",
+        body: "The biotech lab successfully tested new CRISPR variants with higher precision and fewer off-target effects.",
+        isVerified: true,
+        userID: user3.id,
+      },
+      {
+        title: "Mathematical Models in Epidemics",
+        category: "Mathematics",
+        cover_picture:
+          "https://images.unsplash.com/photo-1610540073049-78b3c2fd453d?q=80&w=2664&auto=format&fit=crop",
+        description:
+          "Simulation and prediction of disease spread using SIR models.",
+        body: "Using differential equations, we modeled the COVID-19 outbreak to predict peak infection periods.",
+        isVerified: true,
+        userID: user4.id,
+      },
+    ],
+  });
+
+
   console.log("Seed data inserted successfully!");
 }
 

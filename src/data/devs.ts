@@ -45,7 +45,7 @@ export const developers: Developer[] = [
   {
     id: 3,
     name: "Keshav",
-    role: "Full Stack Developer",
+    role: "Front End Developer",
     image: "/team/b077a242-f85e-422b-bf75-3ea7017f9aae.jpg",
     github: "https://github.com/keshav0479",
     linkedin: "https://linkedin.com/in/alexj",
