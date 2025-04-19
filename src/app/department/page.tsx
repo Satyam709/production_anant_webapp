@@ -110,8 +110,8 @@ export default function MathematicsDepartment() {
 
           {/* Navigation Buttons */}
           <div
-            className="flex justify-center gap-6 backdrop-blur-md 
-            border-t border-b border-gray-800/50 mt-4"
+            className="flex text-sm sm:text-base justify-center gap-2 md:gap-6 backdrop-blur-md 
+            border-t border-b border-gray-800/50 mt-4 px-2"
           >
             <button
               onClick={() => handleNavClick("vision")}
