@@ -192,6 +192,15 @@ model Internship {
   user        User      @relation(fields: [user_id], references: [id] , name: "internship")
 }
 
+model DepartmentAchievements {
+  id          Int      @id @default(autoincrement())
+  department   String
+  achievement  String
+  description String?
+  imageURL    String?
+  created_at  DateTime @default(now())
+}
+
 enum InternshipDepartment {
   Mathematics
 }

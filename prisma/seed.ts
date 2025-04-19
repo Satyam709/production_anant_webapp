@@ -1014,6 +1014,45 @@ async function main() {
     },
   });
 
+await prisma.departmentAchievements.createMany({
+  data: [
+    {
+      department: "Computer Science",
+      achievement: "AI Research Paper Published",
+      description:
+        "Our AI research paper was published in an international journal.",
+      imageURL: "https://images.unsplash.com/photo-1581092335945-1e7f7f5c1d2d", // AI concept
+    },
+    {
+      department: "Electronics",
+      achievement: "Robotics Competition Winner",
+      description: "Won the national robotics competition held in Bangalore.",
+      imageURL: "https://images.unsplash.com/photo-1603354350317-6b79c70b46ac", // Robotics
+    },
+    {
+      department: "Mathematics",
+      achievement: "Data Science Workshop Conducted",
+      description:
+        "Organized a national-level workshop on data science and analytics.",
+      imageURL: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a1c", // Data analysis
+    },
+    {
+      department: "Physics",
+      achievement: "Quantum Mechanics Seminar",
+      description: "Invited top physicists for a seminar on Quantum Computing.",
+      imageURL: "https://images.unsplash.com/photo-1526378723328-40207d1bab3f", // Quantum mechanics
+    },
+    {
+      department: "Chemistry",
+      achievement: "Green Chemistry Innovation",
+      description:
+        "Developed an eco-friendly alternative to industrial solvents.",
+      imageURL: "https://images.unsplash.com/photo-1581093588401-9e44f0b5e1e0", // Green chemistry
+    },
+  ],
+});
+
+
   console.log("Seed data inserted successfully!");
 }
 
