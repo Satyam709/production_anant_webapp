@@ -222,14 +222,20 @@ enum branch_options {
   ME
   CE
   IIOT
+  PIE 
+  VLSI
+  RA 
+  SET 
 }
 
 enum position_options {
   Member
-  Coordinator
-  Secretary
-  InCharge
   President
+  VicePresident
+  Secretary
+  Coordinator
+  Executive_Head
+  Website_Developer
 }
 
 enum club_dept_options {
