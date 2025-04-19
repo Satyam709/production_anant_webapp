@@ -6,7 +6,7 @@ import Link from "next/link";
 
 async function getInternships() {
   const response = await fetch(`${process.env.API_URL}/api/internships`, {
-    next: { revalidate: 3600 } // Revalidate every hour
+    next: { revalidate: 300 } // Revalidate every hour
   });
   
   if (!response.ok) {
