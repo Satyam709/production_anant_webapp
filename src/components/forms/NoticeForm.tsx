@@ -48,7 +48,6 @@ const NoticeForm = () => {
       const res = await fetch('/api/notices/');
       const parsed_response = await res.json();
       const notices = parsed_response.notices;
-      console.log(notices);
 
       const modified_notices = notices.map((notice: any) => {
         return {

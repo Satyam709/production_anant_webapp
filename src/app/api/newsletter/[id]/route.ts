@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
 import isAdmin from "@/lib/actions/Admin";
-import { getSession } from "@/lib/actions/Sessions";
+import { UTApi } from "uploadthing/server";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string }}){
     try{
@@ -47,48 +47,66 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-// export async function DELETE(req: NextRequest, { params }: { params: { id: string }}){
-//     try{
-//         const {id} = await params;
-//         let authorized = await isAdmin();
-//         const session = await getSession();
+export async function DELETE(req: NextRequest, { params }: { params: { id: string }}){
 
-//         const blog = await prisma.blog.findUnique({
-//             where:{
-//                 id: id
-//             }
-//         });
+    try{
+        const {id} = await params;
+        let authorized = await isAdmin();
+        const utapi = new UTApi();
 
-//         if(!blog){
-//             return NextResponse.json(
-//                 { message: "Blog not found" },
-//                 { status: 404 }
-//             );
-//         }
+        const newsLetter = await prisma.newsLetter.findUnique({
+            where:{
+                id: id
+            }
+        });
 
-//         if(!authorized && blog.userID !== session?.user.id){
-//             return NextResponse.json(
-//                 { message: "Unauthorized" },
-//                 { status: 401 }
-//             );
-//         }
+        if(!newsLetter){
+            return NextResponse.json(
+                { message: "Newsletter not found" },
+                { status: 404 }
+            );
+        }
 
+        if(!authorized){
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const key = newsLetter.fileUrl.split("/").pop() as string;
+
+        const file_delete = await utapi.deleteFiles(key);
         
-//         await prisma.blog.delete({
-//             where:{
-//                 id: id
-//             }
-//         });
+        if(!file_delete){
+            return NextResponse.json(
+                { message: "File deletion failed" },
+                { status: 500 }
+            );
+        }
 
-//         return NextResponse.json(
-//             { message: "Blog deleted" },{status:200}
-//         )
+        const psql_delete = await prisma.newsLetter.delete({
+            where:{
+                id: id
+            }
+        });
 
-//     }
-//     catch(err){
-//         return NextResponse.json(
-//             { message: "Internal Server Error" },
-//             { status: 500 }
-//         );
-//     }
-// }
+        if(!psql_delete){
+            return NextResponse.json(
+                { message: "File deleted but entry remains!" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: "Newsletter deleted" },{status:200}
+        )
+
+    }
+    catch(err){
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}

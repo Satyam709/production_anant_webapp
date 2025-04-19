@@ -4,13 +4,15 @@ import { NewsLetter } from '@prisma/client';
 
 interface NewsletterListProps {
   newsletters: NewsLetter[];
+  onDelete: any,
+  deleteOpt: boolean
 }
 
-const NewsletterList: React.FC<NewsletterListProps> = ({ newsletters }) => {
+const NewsletterList: React.FC<NewsletterListProps> = ({ newsletters, onDelete, deleteOpt }) => {
   return (
     <div className="space-y-4">
       {newsletters.map(newsletter => (
-        <NewsletterCard key={newsletter.id} newsletter={newsletter} />
+        <NewsletterCard key={newsletter.id} newsletter={newsletter} onDelete={onDelete} deleteopt={deleteOpt}/>
       ))}
     </div>
   );

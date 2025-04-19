@@ -26,6 +26,7 @@ import { position_options } from "@prisma/client";
 import {  useRouter } from "next/navigation";
 import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 import BlogDashBoard from "@/components/blogs/BlogDashBoard";
+import NewsLetterDashboard from "@/components/newsletter/NewsLetterDashboard"
 
 type TabType =
   | "competitions"
@@ -156,6 +157,7 @@ function App() {
             {activeTab === "shop" && <Shop />}
             {activeTab === "gallery" && <PhotoGallery />}
             {activeTab === "blogs" && <BlogDashBoard />}
+            {activeTab === "newsletter" && <NewsLetterDashboard/>}
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ export default async function NewsLetterPage() {
         <main className="relative z-10 container mx-auto px-4 py-20">
         <div className="max-w-6xl mx-auto">
             <NewsLetterHeader />
-            <NewsletterList newsletters={newsletters} />
+            <NewsletterList newsletters={newsletters} deleteOpt={false} onDelete={null}/>
         </div>
         </main>
 
