@@ -1021,33 +1021,38 @@ await prisma.departmentAchievements.createMany({
       achievement: "AI Research Paper Published",
       description:
         "Our AI research paper was published in an international journal.",
-      imageURL: "https://images.unsplash.com/photo-1581092335945-1e7f7f5c1d2d", // AI concept
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // AI concept
     },
     {
       department: "Electronics",
       achievement: "Robotics Competition Winner",
       description: "Won the national robotics competition held in Bangalore.",
-      imageURL: "https://images.unsplash.com/photo-1603354350317-6b79c70b46ac", // Robotics
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Robotics
     },
     {
       department: "Mathematics",
       achievement: "Data Science Workshop Conducted",
       description:
         "Organized a national-level workshop on data science and analytics.",
-      imageURL: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a1c", // Data analysis
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Data analysis
     },
     {
       department: "Physics",
       achievement: "Quantum Mechanics Seminar",
       description: "Invited top physicists for a seminar on Quantum Computing.",
-      imageURL: "https://images.unsplash.com/photo-1526378723328-40207d1bab3f", // Quantum mechanics
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Quantum mechanics
     },
     {
       department: "Chemistry",
       achievement: "Green Chemistry Innovation",
       description:
         "Developed an eco-friendly alternative to industrial solvents.",
-      imageURL: "https://images.unsplash.com/photo-1581093588401-9e44f0b5e1e0", // Green chemistry
+      imageURL:
+        "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=2664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Green chemistry
     },
   ],
 });
