@@ -1,58 +1,76 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/PrismaClient/db";
 import z from "zod";
-import { getSession } from "@/lib/actions/Sessions";
+import { uploadAdminServerSideFile } from "@/lib/actions/uploadthing";
+import isAdmin  from "@/lib/actions/Admin";
+import { getSession } from "@/lib/actions/Sessions";    
 
-const newsLetterSchema = z.object({
-    title: z.string().min(1, "NewsLetter Title is required"),
-    content: z.string().min(1, "NewsLetter Content Cannot Be Empty"),
-    cover_picture: z.string().optional(),
-    description: z.string().optional(),
+const newsletterSchema = z.object({
+    title: z.string().min(1).max(100),
+    file: z
+      .custom<File>()
+      .refine((file) => {
+        if (!file) return false;
+        return file.type === "application/pdf";
+      }, {
+        message: "Only PDF files are allowed.",
+      })
 });
 
-export async function POST(req: NextRequest){
+export async function POST(request: NextRequest) {
     try{
-        const body = await req.json();
-        const schema = newsLetterSchema.safeParse(body);
+        const admin = await isAdmin();
         const session = await getSession();
-
-        if(!session?.user){
-            return NextResponse.json({error: "User not logged in!"},{status: 400});
-        }
-
-        if(!schema.success){
-            const errorMessages = schema.error.errors.map((err) => err.message);
-            return NextResponse.json({error: "Invalid Body Format", messages: errorMessages},{status: 400});
-        }
         
-        const {title, content, cover_picture, description} = schema.data;
+        if(!session || !admin) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        const id = session.user.id;
 
-        const newsLetter = await prisma.newsLetter.create({
-            data:{
-                title,
-                cover_picture,
-                body: content,
-                description: description,  
-                writtenBy:{
-                    connect:{
-                        id: session.user.id
+        const formData = await request.formData();
+
+        const title = formData.get("title");
+        const file = formData.get("file") as File | null;
+
+        const result = newsletterSchema.safeParse({
+            title,
+            file,
+        });
+
+        if (!result.success) {
+            console.error("Validation errors:", result.error.format());
+            return NextResponse.json({ error: result.error.format() }, { status: 400 });
+        }
+
+        const data = result.data;
+        const uploadFile = await uploadAdminServerSideFile(data.file);
+
+        if(!uploadFile) {
+            return NextResponse.json({ error: "File upload failed" }, { status: 500 });
+        }
+
+        const fileUrl = uploadFile?.ufsUrl;
+
+        const newsletter = await prisma.newsLetter.create({
+            data: {
+                title: data.title,
+                fileUrl: fileUrl,
+                writtenBy: {
+                    connect: {
+                        id: id
                     }
                 }
-            }
+            },
         });
 
-        if(!newsLetter){
-            return NextResponse.json({status: 400, message: "Failed to create NewsLetter"});
+        if (!newsletter) {
+            return NextResponse.json({ error: "Failed to create newsletter" }, { status: 500 });
         }
-
-        return NextResponse.json({status: 200, message: "NewsLetter successfully created"});
-
+        
+        return NextResponse.json({ message: "Newsletter created successfully", newsletter }, { status: 200 });
     }
-    catch(err){
-        console.log(err);
-        return NextResponse.json({
-            status: 500,
-            message: "Internal Server Error"
-        });
+    catch(error) {
+        console.error("Error in POST handler:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

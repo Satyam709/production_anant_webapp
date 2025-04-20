@@ -1,49 +1,49 @@
-"use client";
 import React from 'react';
-import { User } from 'lucide-react';
-import {NewsLetter} from "@prisma/client"
-import { placeholder } from '@/lib/images/placeholder';
-import { useRouter } from 'next/navigation';
+import { Download, Trash2 } from 'lucide-react';
+import { NewsLetter } from '@prisma/client';
+import {formatDate} from '@/helpers/formatDate';
 
-const NewsLetterCard: React.FC<NewsLetter> = ({
-  id,
-  title,
-  description,
-  cover_picture,
-  userID,
-}) => {
+interface NewsletterCardProps {
+  newsletter: NewsLetter;
+  onDelete: (id: string) => void;
+  deleteopt?: boolean;
+}
 
-  const router = useRouter();
-
+const NewsletterCard: React.FC<NewsletterCardProps> = ({ newsletter, onDelete, deleteopt }) => {
   return (
-<div className="p-4">
-  <div
-    className="bg-gray-900 rounded-xl overflow-hidden shadow-lg 
-               hover:shadow-cyan-500/30 hover:scale-[1.02] hover:ring-1 hover:ring-cyan-400/30 
-               transition-all duration-300 cursor-pointer transform"
-    onClick={() => router.push(`/newsletter/${id}`)}
-  >
-    <div className="p-3 pb-0">
-      <img
-        src={cover_picture || placeholder}
-        alt={title}
-        className="w-full h-48 object-cover rounded-lg"
-      />
-    </div>
-    <div className="p-6 pt-4">
-      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
-      <p className="text-gray-400 mb-4 line-clamp-3">{description}</p>
-      <div className="flex items-center gap-4 text-sm text-gray-500">
-        <div className="flex items-center gap-1">
-          <User size={16} className="text-cyan-500" />
-          <span>{userID}</span>
+    <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:bg-gray-750 hover:border-gray-600 group">
+      <div className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors duration-300">
+            {newsletter.title}
+          </h2>
+          <p className="text-gray-400">
+            Published: {formatDate(newsletter.publisedAt)}
+          </p>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <a 
+            href={newsletter.fileUrl}
+            className="flex items-center justify-center bg-gray-700 hover:bg-emerald-600 text-white py-3 px-6 rounded-md transition-all duration-300 ease-in-out transform hover:scale-105 shadow-sm"
+            download
+          >
+            <Download className="h-5 w-5 mr-2" />
+            <span>Download</span>
+          </a>
+          
+          {deleteopt && <button
+            onClick={() => onDelete(newsletter.id)}
+            className="flex items-center justify-center bg-gray-700 hover:bg-red-600 text-white py-3 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-105 shadow-sm"
+            aria-label="Delete newsletter"
+          >
+            <Trash2 className="h-5 w-5" />
+          </button>
+          }
         </div>
       </div>
     </div>
-  </div>
-</div>
-
   );
 };
 
-export default NewsLetterCard;
+export default NewsletterCard;

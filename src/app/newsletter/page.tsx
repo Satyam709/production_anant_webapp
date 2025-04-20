@@ -1,13 +1,11 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsLetterHeader from "@/components/newsletter/NewsLetterHeader";
-import NewsLetterCard from "@/components/newsletter/NewsLetterCard";
-import {NewsLetter} from "@prisma/client"
+import NewsletterList from "@/components/newsletter/NewsLetterList";
 
 export default async function NewsLetterPage() {
 
     const { newsletters } = await getNewsLetter();
-    console.log(newsletters);
 
     return (
         <div className="min-h-screen bg-[#0A0A0A] text-white">
@@ -19,12 +17,10 @@ export default async function NewsLetterPage() {
         <Navbar />
 
         <main className="relative z-10 container mx-auto px-4 py-20">
+        <div className="max-w-6xl mx-auto">
             <NewsLetterHeader />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
-            {newsletters.map((newsletter: NewsLetter) => (
-                <NewsLetterCard key={newsletter.id} {...newsletter}/>
-            ))}
-            </div>
+            <NewsletterList newsletters={newsletters} deleteOpt={false} onDelete={null}/>
+        </div>
         </main>
 
         <div className="relative z-10">

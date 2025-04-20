@@ -4,6 +4,7 @@ import { User} from 'lucide-react';
 import {Blog} from "@prisma/client"
 import { placeholder } from '@/lib/images/placeholder';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const BlogCard: React.FC<Blog> = ({
   id,
@@ -25,9 +26,11 @@ const BlogCard: React.FC<Blog> = ({
     onClick={() => router.push(`/blogs/${id}`)}
   >
     <div className="p-3 pb-0">
-      <img
+      <Image
         src={cover_picture || placeholder}
         alt={title}
+        width={500}
+        height={300}
         className="w-full h-48 object-cover rounded-lg"
       />
     </div>

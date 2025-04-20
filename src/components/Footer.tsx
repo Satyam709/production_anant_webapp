@@ -17,7 +17,7 @@ const Footer = () => {
     { name: "Team Anant", href: "/team" },
     { name: "Events", href: "/events" },
     { name: "Blog", href: "/blog" },
-    { name: "Math Dept.", href: "/department" },
+    { name: "Math Department", href: "/department" },
   ];
 
   const contactInfo = [

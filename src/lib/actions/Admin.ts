@@ -29,3 +29,38 @@ export default async function isAdmin() {
   
   return true;
 }
+
+export async function isSuperAdmin(userId: string) {
+  const session = await getSession();
+
+  // Check if user is authenticated
+  if (!session?.user) {
+    return false;
+  }
+
+  try {
+    // Find the user in the database
+    const user = await prisma.user.findUnique({
+      where: {
+        id: session.user.id,
+      },
+    });
+
+    // Verify user position
+    if (!user?.position) {
+      return false;
+    }
+
+    if (user.position === "President" || user.position === "VicePresident" || user.position === "Secretary" || user.position === "Website_Developer") {
+      return true;
+    }
+
+    return false;
+
+  } catch (err) {
+    console.log("cannot get the position of user ", err);
+    return false;
+  }
+  
+  return true;
+}

@@ -4,10 +4,17 @@ import NewsTickerSection from "./NewsTickerSection";
 import WelcomeSection from "./WelcomeSection";
 import HomeEventsSection from "./HomeEventsSection";
 import HomeBlogsSection from "./HomeBlogsSection";
-import HomeProjectsSection from "./HomeProjectsSection";
 import HomeInternshipSection from "./HomeInternshipSection";
 import { Notice, Events } from "@prisma/client";
 import { NewsItem } from "@/components/home/NewsTickerSection";
+
+interface Blog {
+  id: number;
+  title: string;
+  author: string;
+  image: string;
+  category: string;
+}
 
 const defaultNews = ["Welcome to the Mathematics Department!"];
 const photos = [
@@ -28,6 +35,7 @@ const photos = [
 
 const HomeContent = () => {
   const [latestEvents, setLatestEvents] = useState<Events[]>([]);
+  const [latestBlogs, setLatestBlogs] = useState<Blog[]>([]);
   const [news, setNews] = useState<NewsItem[]>([{
     id: "0",
     title: defaultNews[0],
@@ -37,13 +45,20 @@ const HomeContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [noticesRes, eventsRes] = await Promise.all([
+        const [noticesRes, eventsRes, blogsRes] = await Promise.all([
           fetch("/api/notices"),
           fetch("/api/events"),
+          fetch("/api/blogs"),
         ]);
 
         if (!eventsRes.ok) {
           throw new Error("Failed to fetch events");
+        }
+
+        // Handle blogs
+        if (blogsRes.ok) {
+          const blogsData = await blogsRes.json();
+          setLatestBlogs(blogsData.blogs.slice(0, 3));
         }
 
         // Handle notices
@@ -86,7 +101,7 @@ const HomeContent = () => {
       <NewsTickerSection news={news} />
       <WelcomeSection photos={photos} />
       <HomeEventsSection events={latestEvents} />
-      <HomeBlogsSection blogs={[]} />
+      <HomeBlogsSection blogs={latestBlogs} />
       <div className="bg-black/15 backdrop-blur-sm">
         <HomeInternshipSection />
       </div>

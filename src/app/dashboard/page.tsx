@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Trophy,
@@ -24,12 +24,14 @@ import NoticeForm from "@/components/forms/NoticeForm";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeamDashboard from "@/components/teams/TeamDashboard";
 import { signOut, useSession } from "next-auth/react";
-import { position_options } from "@prisma/client";
 import {  useRouter } from "next/navigation";
 import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 import BlogDashBoard from "@/components/blogs/BlogDashBoard";
 import InternshipDashboard from "@/components/internship/Dashboard";
 import AchievementForm from "@/components/forms/AchievementForm";
+import NewsLetterDashboard from "@/components/newsletter/NewsLetterDashboard";
+import isAdmin from "@/lib/actions/Admin";
+import isSuperAdmin  from "@/lib/actions/Admin";
 
 type TabType =
   | "competitions"
@@ -48,8 +50,9 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const session = useSession();
   const router = useRouter();
-  const isAdmin =session?.data?.user.info?.position && session?.data?.user.info?.position != position_options.Member;
-  const defTab = isAdmin ? "notices" : "teams";
+  const [isadmin, setIsadmin] = useState(false);
+  const [issuperadmin, setIssuperadmin] = useState(false);
+  const defTab = isadmin ? "notices" : "teams";
   const [activeTab, setActiveTab] = useState<TabType>(defTab);
 
   const handleLogout = () => {
@@ -60,13 +63,34 @@ function App() {
     if (session.status === "unauthenticated") {
       router.push("/login");
     }
+    
+    const checkRoles = async () => {
+      const admin = await isAdmin();
+      const superadmin = await isSuperAdmin();
+      setIsadmin(admin);
+      setIssuperadmin(superadmin);
+      const defTab = superadmin ? "notices" : (admin ? "notices" : "teams");
+      setActiveTab(defTab as TabType);
+    };
+
+  checkRoles();
+
   }, [session.status, router]);
 
   const normaltabs = [
-    { id: "teams", label: "Teams", icon: UserPlus },
+    { id: "teams", label: "Teams", icon: UserPlus }
   ];
 
   const adminTabs = [
+    { id: "meetings", label: "Meetings", icon: Users },
+    { id: "notices", label: "Notices", icon: Bell },
+    { id: "teams", label: "Teams", icon: UserPlus },
+    { id: "gallery", label: "Gallery", icon: ImageIcon },
+    { id: "blogs", label: "Blogs", icon: Pencil },
+    { id: "internships", label: "Internships", icon: Briefcase },
+  ];
+
+  const superadminTabs = [
     { id: "competitions", label: "Competitions", icon: Trophy },
     { id: "events", label: "Events", icon: Calendar },
     { id: "meetings", label: "Meetings", icon: Users },
@@ -78,9 +102,9 @@ function App() {
     { id: "blogs", label: "Blogs", icon: Pencil },
     { id: "internships", label: "Internships", icon: Briefcase },
     { id: "achievements", label: "Achievements", icon: Star },
-  ];
+  ]
 
-  const tabs = isAdmin ? adminTabs : normaltabs;
+  const tabs = issuperadmin? superadminTabs: (isadmin ? adminTabs : normaltabs);
 
 
   return (
@@ -106,7 +130,7 @@ function App() {
         <header className="p-6 border-b border-gray-800/50">
           <div className="flex items-center space-x-3">
             <LayoutDashboard className="h-8 w-8 text-primary-cyan" />
-            <h1 className="text-xl font-bold">{isAdmin?"Admin Dashboard":"Dashboard"}</h1>
+            <h1 className="text-xl font-bold">{isadmin?"Admin Dashboard":"Dashboard"}</h1>
           </div>
         </header>
 
@@ -166,6 +190,7 @@ function App() {
             {activeTab === "shop" && <Shop />}
             {activeTab === "gallery" && <PhotoGallery />}
             {activeTab === "blogs" && <BlogDashBoard />}
+            {activeTab === "newsletter" && <NewsLetterDashboard />}
             {activeTab === "internships" && <InternshipDashboard />}
             {activeTab === "achievements" && <AchievementForm />}
           </div>
@@ -186,10 +211,7 @@ const Shop = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
       <div className="p-8 text-center">
         <div className="py-8">
-          <h2 className="text-2xl font-bold mb-4">Hello!</h2>
-          <p className="text-lg mb-6">
-            Click the button below to enter the shop admin panel.
-          </p>
+          <h2 className="text-2xl font-bold mb-4">Welcome To Infinity Shop!</h2>
           <button
             onClick={handleClick}
             className="px-6 py-3 bg-primary-cyan text-white rounded-lg hover:bg-primary-cyan/80 transition-colors duration-200"
