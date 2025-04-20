@@ -13,6 +13,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         const blog = await prisma.blog.findUnique({
             where:{
                 id: id
+            },
+            include:{
+                writtenBy: {
+                    select:{
+                        name: true,
+                    }
+                }
             }
         });
 

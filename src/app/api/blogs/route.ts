@@ -23,6 +23,13 @@ export async function GET(req:NextRequest){
             skip: (pageNumber-1)*size,
             orderBy:{
                 createdAt: "asc"
+            },
+            include:{
+                writtenBy: {
+                    select:{
+                        name: true,
+                    }
+                }
             }
         });
 

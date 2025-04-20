@@ -6,13 +6,17 @@ import { placeholder } from '@/lib/images/placeholder';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-const BlogCard: React.FC<Blog> = ({
+type BlogProp = Blog & {
+  writtenBy: { name: string };
+};
+
+const BlogCard: React.FC<BlogProp> = ({
   id,
   title,
   description,
   cover_picture,
-  userID,
-  category
+  category,
+  writtenBy,
 }) => {
 
   const router = useRouter();
@@ -43,7 +47,7 @@ const BlogCard: React.FC<Blog> = ({
       <div className="flex items-center gap-4 text-sm text-gray-500">
         <div className="flex items-center gap-1">
           <User size={16} className="text-cyan-500" />
-          <span>{userID}</span>
+          <span>{writtenBy.name}</span>
         </div>
       </div>
     </div>
