@@ -1,21 +1,26 @@
-import { Extension } from '@tiptap/core';
-import katex from 'katex';
+import { Node, mergeAttributes, type Command } from "@tiptap/core";
+import katex from "katex";
 
 export interface MathOptions {
   katexOptions?: katex.KatexOptions;
 }
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    math: {
+    mathInline: {
       setMathInline: (content: string) => ReturnType;
+    };
+    mathBlock: {
       setMathBlock: (content: string) => ReturnType;
     };
   }
 }
 
-export const MathInline = Extension.create<MathOptions>({
-  name: 'mathInline',
+export const MathInline = Node.create<MathOptions>({
+  name: "mathInline",
+  group: "inline",
+  inline: true,
+  atom: true,
 
   addOptions() {
     return {
@@ -28,11 +33,12 @@ export const MathInline = Extension.create<MathOptions>({
   addAttributes() {
     return {
       content: {
-        default: '',
-        parseHTML: (element:any) => element.getAttribute('data-content'),
-        renderHTML: (attributes:any) => {
+        default: "",
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute("data-content"),
+        renderHTML: (attributes: { content: string }) => {
           return {
-            'data-content': attributes.content,
+            "data-content": attributes.content,
           };
         },
       },
@@ -43,60 +49,65 @@ export const MathInline = Extension.create<MathOptions>({
     return [
       {
         tag: 'span[data-type="math-inline"]',
-        getAttrs: (node:any) => {
-          if (typeof node === 'string') return null;
-          const element = node as HTMLElement;
+        getAttrs: (element) => {
+          if (typeof element === "string") return false;
           return {
-            content: element.getAttribute('data-content'),
+            content: element.getAttribute("data-content"),
           };
         },
       },
     ];
   },
 
-  renderHTML({ node, HTMLAttributes }: {node: any , HTMLAttributes: any}) {
+  renderHTML({ node, HTMLAttributes }) {
     const content = node.attrs.content;
-    let renderedContent = '';
     try {
-      renderedContent = katex.renderToString(content, {
+      const rendered = katex.renderToString(content, {
         ...this.options.katexOptions,
         displayMode: false,
       });
-    } catch (error) {
-      renderedContent = `<span class="text-red-500">${error}</span>`;
-    }
 
-    return [
-      'span',
-      {
-        'data-type': 'math-inline',
-        'data-content': content,
-        ...HTMLAttributes,
-      },
-      {
-        innerHTML: renderedContent,
-      },
-    ];
+      return [
+        "span",
+        mergeAttributes(HTMLAttributes, {
+          "data-type": "math-inline",
+          "data-content": content,
+          "data-math": "true",
+        }),
+        ["span", { class: "math-render" }, rendered],
+      ];
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Invalid math";
+      return [
+        "span",
+        mergeAttributes(HTMLAttributes, {
+          "data-type": "math-inline",
+          "data-content": content,
+          class: "text-red-500",
+          title: errorMsg,
+        }),
+        ["span", { class: "math-render text-red-500" }, `\\(${content}\\)`],
+      ];
+    }
   },
 
   addCommands() {
     return {
       setMathInline:
-        (content: string) =>
-        ({ commands }) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: {
-              content,
-            },
-          });
+        (content: string): Command =>
+        ({ tr, dispatch }) => {
+          if (dispatch) {
+            const node = this.type.create({ content });
+            tr.replaceSelectionWith(node);
+          }
+          return true;
         },
     };
   },
 });
 
-export const MathBlock = Extension.create<MathOptions>({
-  name: 'mathBlock',
+export const MathBlock = Node.create<MathOptions>({
+  name: "mathBlock",
 
   addOptions() {
     return {
@@ -106,17 +117,20 @@ export const MathBlock = Extension.create<MathOptions>({
     };
   },
 
-  group: 'block',
-  content: 'inline*',
+  group: "block",
+  inline: false,
+  isolating: true,
+  atom: true,
 
   addAttributes() {
     return {
       content: {
-        default: '',
-        parseHTML: (element:any) => element.getAttribute('data-content'),
-        renderHTML: (attributes:any) => {
+        default: "",
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute("data-content"),
+        renderHTML: (attributes: { content: string }) => {
           return {
-            'data-content': attributes.content,
+            "data-content": attributes.content,
           };
         },
       },
@@ -127,54 +141,59 @@ export const MathBlock = Extension.create<MathOptions>({
     return [
       {
         tag: 'div[data-type="math-block"]',
-        getAttrs: (node:any) => {
-          if (typeof node === 'string') return null;
-          const element = node as HTMLElement;
+        getAttrs: (element) => {
+          if (typeof element === "string") return false;
           return {
-            content: element.getAttribute('data-content'),
+            content: element.getAttribute("data-content"),
           };
         },
       },
     ];
   },
 
-  renderHTML({ node, HTMLAttributes }: {node: any , HTMLAttributes: any}) {
+  renderHTML({ node, HTMLAttributes }) {
     const content = node.attrs.content;
-    let renderedContent = '';
     try {
-      renderedContent = katex.renderToString(content, {
+      const rendered = katex.renderToString(content, {
         ...this.options.katexOptions,
         displayMode: true,
       });
-    } catch (error) {
-      renderedContent = `<div class="text-red-500">${error}</div>`;
-    }
 
-    return [
-      'div',
-      {
-        'data-type': 'math-block',
-        'data-content': content,
-        class: 'my-4 text-center',
-        ...HTMLAttributes,
-      },
-      {
-        innerHTML: renderedContent,
-      },
-    ];
+      return [
+        "div",
+        mergeAttributes(HTMLAttributes, {
+          "data-type": "math-block",
+          "data-content": content,
+          "data-math": "true",
+          class: "my-4 text-center",
+        }),
+        ["div", { class: "math-render" }, rendered],
+      ];
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "Invalid math";
+      return [
+        "div",
+        mergeAttributes(HTMLAttributes, {
+          "data-type": "math-block",
+          "data-content": content,
+          class: "text-red-500 my-4 text-center",
+          title: errorMsg,
+        }),
+        ["div", { class: "math-render text-red-500" }, `\\[${content}\\]`],
+      ];
+    }
   },
 
   addCommands() {
     return {
       setMathBlock:
-        (content: string) =>
-        ({ commands }) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: {
-              content,
-            },
-          });
+        (content: string): Command =>
+        ({ tr, dispatch }) => {
+          if (dispatch) {
+            const node = this.type.create({ content });
+            tr.replaceSelectionWith(node);
+          }
+          return true;
         },
     };
   },
