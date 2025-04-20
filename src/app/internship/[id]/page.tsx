@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Linkedin, Link2 } from "lucide-react";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 export default async function InternshipDetailPage({ 
   params 
@@ -12,7 +13,7 @@ export default async function InternshipDetailPage({
   const internshipPromise = Promise.resolve().then(async () => {
     const response = await fetch(`${process.env.API_URL}/api/internships/${params.id}`);
     if (!response.ok) {
-      throw new Error("Failed to fetch internship");
+      notFound();
     }
     return response.json() as Promise<InternshipWithUser>;
   });
@@ -20,11 +21,7 @@ export default async function InternshipDetailPage({
   const internship = await internshipPromise;
 
   if (!internship) {
-    return (
-      <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center">
-        <p className="text-blue-200/60">Internship not found</p>
-      </div>
-    );
+      notFound();
   }
 
   return (

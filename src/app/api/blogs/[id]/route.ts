@@ -3,10 +3,10 @@ import prisma from "@/lib/PrismaClient/db";
 import isAdmin from "@/lib/actions/Admin";
 import { getSession } from "@/lib/actions/Sessions";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string }}){
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }>}){
     try{
         const {id} = await params;
-        let authorized = await isAdmin();
+        const authorized = await isAdmin();
         const session = await getSession();
 
 
@@ -45,11 +45,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string }}){
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }>}){
     try{
 
         const {id} = await params;
-        let authorized = await isAdmin();
+        const authorized = await isAdmin();
         const session = await getSession();
 
         const blog = await prisma.blog.findUnique({
