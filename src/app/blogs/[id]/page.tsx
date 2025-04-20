@@ -1,15 +1,15 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogPost from "@/components/blogs/BlogPost";
-import Page404 from "@/components/Page404";
+import { notFound } from "next/navigation";
 
-export default async function BlogPostPage({ params }: { params: { id: string } }) {
+export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
 
     const {id} = await params;
     const { blog } = await getBlog(id);
 
     if(blog==null){
-        return <Page404/>
+        notFound();
     }
     
     return (

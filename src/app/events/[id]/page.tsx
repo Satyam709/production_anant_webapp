@@ -5,11 +5,17 @@ import Register_Button from "@/components/events/Register_Button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getSession } from "@/lib/actions/Sessions";
+import { notFound } from "next/navigation";
 
-async function EventDetails({ params }: { params: { id: string } }) {
+async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const response = await getEvents(id);
   const event = response.data;
+
+  if (!event) {
+    notFound();
+  }
+  
   const isRegistrationOpen = new Date() < new Date(event.registration_deadline);
   const session = await getSession();
   const isLoggedin = session?.user? true : false;

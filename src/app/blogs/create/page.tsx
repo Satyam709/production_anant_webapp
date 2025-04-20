@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { BlogPreview } from '@/components/blogs/BlogPreview';
 // import { createBlog } from '@/lib/blog';
 // import { Blog } from '@prisma/client';
 import TiptapEditor from '@/components/blogs/editor/tiptap-editor';
@@ -13,17 +13,15 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Card } from '@/components/ui/Card';
-import { ArrowLeft, Save, Eye, Sigma } from 'lucide-react';
-import { toast } from 'sonner';
+import { ArrowLeft, Save, Eye } from 'lucide-react';
 
 interface BlogFormData {
     title: string;
     content: string;
-    contentJson: any | null;
+    contentJson: Record<string, unknown> | null;
 }
 
 export default function CreateBlogPage() {
-  const router = useRouter();
   const [formData, setFormData] = useState<BlogFormData>({
     title: '',
     content: '',
@@ -32,7 +30,7 @@ export default function CreateBlogPage() {
   const [activeTab, setActiveTab] = useState('edit');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleContentChange = (html: string, json: any) => {
+  const handleContentChange = (html: string, json: Record<string, unknown>) => {
     setFormData(prev => ({
       ...prev,
       content: html,
@@ -84,11 +82,15 @@ export default function CreateBlogPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-       
-       <Navbar/>
+    <div className="min-h-screen bg-[#0A0A0A] text-white">
+      <div className="fixed inset-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-blue/10 rounded-full blur-[100px]" />
+        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
+      </div>
 
-      <main className="flex-grow container py-8">
+      <Navbar/>
+
+      <main className="relative z-10 container mx-auto px-4 py-20">
         <div className="flex items-center mb-6 gap-4">
           <Link href="/blog">
             <Button variant="ghost" size="icon">
@@ -106,17 +108,17 @@ export default function CreateBlogPage() {
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="Enter a descriptive title for your math blog..."
-              className="text-lg"
+              className="text-lg bg-[#1a1a1a] border-[#333] text-white placeholder:text-gray-500"
             />
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="flex justify-between items-center mb-4">
-              <TabsList>
-                <TabsTrigger value="edit" className="gap-2">
+              <TabsList className="bg-[#1a1a1a] border-[#333]">
+                <TabsTrigger value="edit" className="gap-2 data-[state=active]:bg-[#252525]">
                   <span>Edit</span>
                 </TabsTrigger>
-                <TabsTrigger value="preview" className="gap-2">
+                <TabsTrigger value="preview" className="gap-2 data-[state=active]:bg-[#252525]">
                   <span>Preview</span>
                 </TabsTrigger>
               </TabsList>
@@ -124,7 +126,7 @@ export default function CreateBlogPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="gap-2"
+                className="gap-2 bg-primary-purple hover:bg-primary-purple/90"
               >
                 <Save className="h-4 w-4" />
                 {isSubmitting ? 'Publishing...' : 'Publish Blog'}
@@ -140,7 +142,7 @@ export default function CreateBlogPage() {
             </TabsContent>
             
             <TabsContent value="preview" className="mt-0">
-              <Card className="p-6">
+              <Card className="p-6 bg-[#1a1a1a] border-[#333] text-white">
                 {!formData.title && !formData.content ? (
                   <div className="text-center py-10 text-muted-foreground">
                     <Eye className="h-12 w-12 mx-auto mb-4 opacity-20" />
@@ -150,7 +152,7 @@ export default function CreateBlogPage() {
                   <div className="space-y-4">
                     <h1 className="text-3xl font-bold">{formData.title || 'Untitled Blog'}</h1>
                     {formData.content ? (
-                      <div dangerouslySetInnerHTML={{ __html: formData.content }} />
+                      <BlogPreview content={formData.content} />
                     ) : (
                       <p className="text-muted-foreground">No content to preview yet.</p>
                     )}
@@ -162,7 +164,9 @@ export default function CreateBlogPage() {
         </form>
       </main>
 
-      <Footer/>
+      <div className="relative z-10">
+        <Footer/>
+      </div>
     </div>
   );
 }
