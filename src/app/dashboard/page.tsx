@@ -78,7 +78,8 @@ function App() {
   }, [session.status, router]);
 
   const normaltabs = [
-    { id: "teams", label: "Teams", icon: UserPlus }
+    { id: "teams", label: "Teams", icon: UserPlus },
+    { id: "internships", label: "Internships", icon: Briefcase },
   ];
 
   const adminTabs = [
