@@ -80,6 +80,7 @@ function App() {
   const normaltabs = [
     { id: "teams", label: "Teams", icon: UserPlus },
     { id: "internships", label: "Internships", icon: Briefcase },
+    { id: "blogs", label: "Blogs", icon: Pencil },
   ];
 
   const adminTabs = [
