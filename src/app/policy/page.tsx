@@ -10,7 +10,6 @@ import { FaChevronDown } from "react-icons/fa";
 export default function PolicyPage() {
   const [anantOpen, setAnantOpen] = useState(false);
   const session = useSession();
-  const admin = session.data?.user.info?.position !== "Member";
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
