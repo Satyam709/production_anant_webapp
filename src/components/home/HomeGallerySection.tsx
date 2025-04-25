@@ -12,8 +12,13 @@ const HomeGallerySection = ({ photos }: HomeGallerySectionProps) => {
     <section className="py-16">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-blue-200">Photo Gallery</h2>
-          <Link href="/photos" className="text-[#f5c722] hover:text-[#f7d452] flex items-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-blue-200">
+            Photo Gallery
+          </h2>
+          <Link
+            href="/photos"
+            className="text-[#00E0FF] hover:text-[#f7d452] flex items-center"
+          >
             View All <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>

@@ -12,12 +12,12 @@ interface PhotoSlideshowProps {
   className?: string;
 }
 
-export default function PhotoSlideshow({ 
-  photos, 
-  width = 800, 
-  height = 450, 
+export default function PhotoSlideshow({
+  photos,
+  width = 800,
+  height = 450,
   showGalleryLink = true,
-  className = ""
+  className = "",
 }: PhotoSlideshowProps) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
@@ -30,7 +30,9 @@ export default function PhotoSlideshow({
   }, [photos.length]);
 
   return (
-    <div className={`relative aspect-video rounded-xl overflow-hidden shadow-xl ${className}`}>
+    <div
+      className={`relative aspect-video rounded-xl overflow-hidden shadow-xl ${className}`}
+    >
       <Image
         src={photos[currentPhotoIndex]}
         alt={`Photo ${currentPhotoIndex + 1}`}
@@ -39,14 +41,11 @@ export default function PhotoSlideshow({
         className="w-full p-1 h-full object-cover rounded-xl shadow-2xl"
         priority
       />
-      
+
       {/* Gradient Overlay */}
       <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
         {showGalleryLink && (
-          <Link
-            href="/gallery"
-            className="text-[#f5c722] hover:text-[#f7d452]"
-          >
+          <Link href="/gallery" className="text-[#00E0FF] hover:text-[#f7d452]">
             View All Photos
           </Link>
         )}
@@ -59,7 +58,7 @@ export default function PhotoSlideshow({
               onClick={() => setCurrentPhotoIndex(index)}
               className={`w-2 h-2 rounded-full transition-all ${
                 index === currentPhotoIndex
-                  ? "bg-[#f5c722] w-4"
+                  ? "bg-[#00E0FF] w-4"
                   : "bg-white/50 hover:bg-white/80"
               }`}
               aria-label={`Go to photo ${index + 1}`}

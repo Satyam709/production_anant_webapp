@@ -25,7 +25,7 @@ const WelcomeSection = ({ photos }: WelcomeSectionProps) => {
             </p>
             <a
               href="/about"
-              className="inline-flex items-center px-5 py-3 text-[#f5c722] hover:text-[#f7d452] transition-colors font-medium"
+              className="inline-flex items-center px-5 py-3 text-[#00E0FF] hover:text-[#f7d452] transition-colors font-medium"
             >
               Read More <ArrowRight className="ml-2 h-5 w-5" />
             </a>

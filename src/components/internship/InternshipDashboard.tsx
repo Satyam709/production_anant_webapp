@@ -81,7 +81,9 @@ const InternshipDashboard = () => {
                   {internship.company_name} • {internship.duration}
                 </p>
                 {internship.description && (
-                  <p className="text-blue-200/60 mt-2">{internship.description}</p>
+                  <p className="text-blue-200/60 mt-2">
+                    {internship.description}
+                  </p>
                 )}
                 <div className="mt-4">
                   <span className="text-sm text-blue-200/40">
@@ -100,7 +102,7 @@ const InternshipDashboard = () => {
 
             <button
               onClick={() => router.push(`/internship/${internship.id}`)}
-              className="inline-block mt-4 text-[#f5c722] hover:text-[#f5c722]/80 transition-colors"
+              className="inline-block mt-4 text-[#00E0FF] hover:text-[#00E0FF]/80 transition-colors"
             >
               View Details →
             </button>
