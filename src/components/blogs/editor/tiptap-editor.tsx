@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Superscript from "@tiptap/extension-superscript";
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 
 export interface EditorProps {
   content?: string;
-  onChange?: (html: string, json: any) => void;
+  onChange?: (html: string, json: JSONContent) => void;
   placeholder?: string;
   className?: string;
   readOnly?: boolean;
@@ -40,15 +40,26 @@ export default function TiptapEditor({
       StarterKit.configure({
         heading: {
           levels: [1, 2, 3],
+          HTMLAttributes: {
+            class: 'relative cursor-text block',
+          },
         },
       }),
       Underline,
       Superscript,
       Subscript,
       TextAlign.configure({
-        types: ["heading", "paragraph"],
+        types: ["heading", "paragraph", "image"],
+        alignments: ["left", "center", "right"],
       }),
-      Image,
+      Image.configure({
+        inline: true,
+        HTMLAttributes: {
+          class: "rounded-lg max-w-full mx-auto my-4",
+          contenteditable: false,
+        },
+        allowBase64: true,
+      }),
       Table.configure({
         resizable: true,
       }),
@@ -59,17 +70,46 @@ export default function TiptapEditor({
       MathBlock,
       Placeholder.configure({
         placeholder,
+        showOnlyCurrent: false,
       }),
     ],
     content,
     editorProps: {
+      handleDrop: (view, event, slice, moved) => {
+        const isImage = event.dataTransfer?.files[0]?.type.startsWith('image');
+        if (!moved && isImage) {
+          return true; // Let editor handle image drops
+        }
+        return false;
+      },
+      handleKeyDown: (view, event) => {
+        // Allow writing next to images without removing them
+        if (event.key === 'Backspace') {
+          const { empty, anchor } = view.state.selection;
+          const node = view.state.doc.nodeAt(anchor);
+          if (empty && node?.type.name === 'image') {
+            return true; // Prevent backspace from deleting image
+          }
+        }
+        return false;
+      },
+      handleClick: (view, pos, event) => {
+        // Prevent accidental image selection/deletion
+        const node = view.state.doc.nodeAt(pos);
+        if (node?.type.name === 'image') {
+          event.preventDefault();
+          return true;
+        }
+        return false;
+      },
       attributes: {
         class: cn(
           "prose prose-sm sm:prose dark:prose-invert focus:outline-none max-w-none",
           "prose-headings:font-semibold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl",
-          "prose-p:my-2 prose-img:rounded-md",
+          "prose-p:my-2 prose-img:rounded-md prose-img:my-4 prose-img:mx-auto",
           "prose-pre:bg-[#1a1a1a] prose-code:text-white",
-          "prose-blockquote:border-l-primary-purple prose-blockquote:text-gray-300"
+          "prose-blockquote:border-l-primary-purple prose-blockquote:text-gray-300",
+          "[&_.ProseMirror-selectednode]:ring-2 [&_.ProseMirror-selectednode]:ring-primary-purple"
         ),
       },
     },
@@ -79,6 +119,11 @@ export default function TiptapEditor({
       }
     },
     editable: !readOnly,
+    enableInputRules: true,
+    enablePasteRules: true,
+    parseOptions: {
+      preserveWhitespace: 'full',
+    },
   });
 
   // Fix for hydration mismatch
@@ -91,7 +136,12 @@ export default function TiptapEditor({
   }
 
   return (
-    <Card className={cn("p-4 overflow-hidden bg-[#1a1a1a] border-[#333] text-white", className)}>
+    <Card
+      className={cn(
+        "p-4 overflow-hidden bg-[#1a1a1a] border-[#333] text-white",
+        className
+      )}
+    >
       {!readOnly && editor && <EditorMenuBar editor={editor} />}
       <EditorContent
         editor={editor}

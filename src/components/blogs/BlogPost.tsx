@@ -2,6 +2,7 @@ import React from 'react';
 import { Calendar, User, Tag, Clock } from 'lucide-react';
 import {Blog} from "@prisma/client";
 import { placeholder } from '@/lib/images/placeholder';
+import Image from 'next/image';
 
 type BlogProp = Blog & {
   writtenBy: { name: string };
@@ -21,9 +22,11 @@ const BlogPost: React.FC<BlogProp> = ({
     <article className="max-w-4xl mx-auto my-4 bg-gray-900 rounded-2xl overflow-hidden shadow-xl">
     {/* Cover Image */}
     <div className="h-[400px] mb-8">
-      <img
+      <Image
         src={cover_picture || placeholder}
         alt={title}
+        width={800}
+        height={400}
         className="w-full h-full object-cover"
       />
     </div>
