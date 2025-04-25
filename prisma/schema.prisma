@@ -379,3 +379,14 @@ model NewsLetter{
   userID String
   writtenBy User @relation(name: "newsletter-written", fields: [userID], references: [id])
 }
+
+model Certificate{
+  id String @id @default(uuid())
+  issuesFor String
+  issuedTo String
+  fileUrl String
+  issuedDate DateTime? @default(now())
+  roll_number String?
+  branch String?
+  ranking Int?
+}
