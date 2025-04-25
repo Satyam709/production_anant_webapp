@@ -32,6 +32,11 @@ const OfficeBearerCard: React.FC<{ member: (typeof officeBearersData)[0] }> = ({
           {member.email}
         </p>
       )}
+      {member.email && (
+        <p className="text-xs text-gray-400 hover:text-gray-300 transition-colors duration-200">
+          {member.phone}
+        </p>
+      )}
 
       {/* Social Links */}
       <div className="flex gap-4 justify-center mt-auto">
