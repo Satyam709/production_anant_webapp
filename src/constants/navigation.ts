@@ -41,6 +41,7 @@ export const navItems = {
     items: [
       { label: "Profile", href: "/profile" },
       { label: "Meetings", href: "/meet" },
+      { label: "Notices", href: "/notices" },
       { label: "Blogs", href: "/blogs" },
       {label: "Newsletters", href: "/newsletter"},
     ],

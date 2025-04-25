@@ -4,11 +4,10 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { postPolicy, anantPolicy } from "@/data/policy";
+import { anantPolicy } from "@/data/policy";
 import { FaChevronDown } from "react-icons/fa";
 
 export default function PolicyPage() {
-  const [postOpen, setPostOpen] = useState(false);
   const [anantOpen, setAnantOpen] = useState(false);
   const session = useSession();
   const admin = session.data?.user.info?.position !== "Member";
@@ -30,32 +29,6 @@ export default function PolicyPage() {
           </h1>
         </div>
 
-        {/* POST POLICY DROPDOWN */}
-        {admin && (
-          <div className="mb-8 border border-white/20 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm">
-            <button
-              onClick={() => setPostOpen(!postOpen)}
-              className="w-full text-left flex items-center justify-between px-6 py-4 font-semibold text-lg bg-white/10 hover:bg-white/20 transition"
-            >
-              <span>Post Policy</span>
-              <FaChevronDown
-                className={`transition-transform duration-300 ${
-                  postOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-            <div
-              className={`transition-all duration-300 px-6 overflow-hidden ${
-                postOpen ? "max-h-[1000px] py-6" : "max-h-0"
-              }`}
-            >
-              <div
-                className="text-gray-100 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent"
-                dangerouslySetInnerHTML={{ __html: postPolicy }}
-              />
-            </div>
-          </div>
-        )}
 
         {/* ANANT POLICY DROPDOWN */}
         <div className="mb-8 border border-white/20 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm">
