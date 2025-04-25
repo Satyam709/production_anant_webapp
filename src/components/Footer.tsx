@@ -33,10 +33,10 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <Linkedin className="h-4 w-4" />, href: "#", label: "LinkedIn" },
-    { icon: <Instagram className="h-4 w-4" />, href: "#", label: "Instagram" },
-    { icon: <Twitter className="h-4 w-4" />, href: "#", label: "Twitter" },
-    { icon: <Youtube className="h-4 w-4" />, href: "#", label: "YouTube" },
+    { icon: <Linkedin className="h-4 w-4" />, href: "https://www.linkedin.com/company/anant-the-mathematical-society/", label: "LinkedIn" },
+    { icon: <Instagram className="h-4 w-4" />, href: "https://www.instagram.com/anant_nit_kkr/", label: "Instagram" },
+    { icon: <Twitter className="h-4 w-4" />, href: "https://x.com/MathDept_nitkkr", label: "Twitter" },
+    { icon: <Youtube className="h-4 w-4" />, href: "https://www.youtube.com/@anant_nitkkr", label: "YouTube" },
   ];
 
   return (
