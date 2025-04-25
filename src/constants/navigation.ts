@@ -4,48 +4,58 @@ export const navItems = {
   about: {
     label: "About",
     items: [
-      { label: "Vision", href: "/" },
-      { label: "Team", href: "/team" },
+      { label: "About Us", href: "/about" },
+      { label: "Team Anant", href: "/team_anant" },
       { label: "Photos", href: "/gallery" },
-      { label: "ContactUs", href: "/contact" },
-      { label: "Policy", href: "/policy" },
+      { label: "Developers", href: "/developers" },
+    ],
+  },
+  Maths_Dept:{
+    label: "Maths Department",
+    items: [
+      { label: "Maths Department", href: "/department" }
     ],
   },
   Community: {
     label: "Community",
     items: [
-      { label: "Events", href: "/events" },
       { label: "Internships", href: "/internship" },
-      { label: "Math Department", href: "/department" },
-      { label: "Competitions", href: "/compete" },
       { label: "Shop", href: "/shop" },
     ],
   },
-  // Puzzles: {
-  //   label: 'Puzzles',
-  //   items: [
-  //     { label: 'Weekly Challenge', href: '/' },
-  //     { label: 'Archives', href: '/' },
-  //     { label: 'Submit a Puzzle', href: '/' }
-  //   ]
-  // },
-  // opportunities: {
-  //   label: 'Opportunities',
-  //   items: [
-  //     { label: 'Research', href: '/' },
-  //     { label: 'Projects', href: '/' }
-  //   ]
-  // },
+  events: {
+    label: "Events",
+    items: [
+      { label: "Event", href: "/events" },
+      { label: "Team Events/Compitition", href: "/compete" },
+    ],
+  },
   Student: {
     label: "Student",
     items: [
       { label: "Profile", href: "/profile" },
       { label: "Meetings", href: "/meet" },
-      { label: "Notices", href: "/notices" },
-      { label: "Blogs", href: "/blogs" },
-      {label: "Newsletters", href: "/newsletter"},
+      { label: "Notices", href: "/notices" }
     ],
   },
+  Blogs:{
+    label: "Blogs",
+    items: [
+      { label: "Blogs", href: "/blogs" }
+    ],
+  },
+  NewsLetter:{
+    label: "News Letter",
+    items: [
+      { label: "News Letter", href: "/newsletter" }
+    ],
+  },
+  ContactUs:{
+    label: "Contact Us",
+    items: [
+      { label: "Contact Us", href: "/contact" }
+    ],
+  }
 };
 
 
