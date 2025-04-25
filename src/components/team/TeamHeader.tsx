@@ -38,12 +38,6 @@ const TeamHeader = () => {
         >
           Executive Heads
         </button>
-        <Link
-          className="px-6 py-2 rounded-lg bg-primary-blue/10 text-primary-cyan border border-primary-blue/20 hover:bg-primary-blue/20 transition-all"
-          href={"/team/members"}
-        >
-          Members
-        </Link>
       </div>
     </div>
   );
