@@ -5,13 +5,15 @@ import { Linkedin, Link2 } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export default async function InternshipDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
+export default async function InternshipDetailPage({
+  params,
+}: {
+  params: { id: string };
 }) {
   const internshipPromise = Promise.resolve().then(async () => {
-    const response = await fetch(`${process.env.API_URL}/api/internships/${params.id}`);
+    const response = await fetch(
+      `${process.env.API_URL}/api/internships/${params.id}`
+    );
     if (!response.ok) {
       notFound();
     }
@@ -21,7 +23,7 @@ export default async function InternshipDetailPage({
   const internship = await internshipPromise;
 
   if (!internship) {
-      notFound();
+    notFound();
   }
 
   return (
@@ -65,12 +67,20 @@ export default async function InternshipDetailPage({
           <div className="bg-black/20 backdrop-blur-sm border border-blue-900/50 rounded-xl p-6 mb-8">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h2 className="text-sm font-medium text-blue-200/60 mb-1">Company</h2>
-                <p className="text-xl font-semibold text-blue-100">{internship.company_name}</p>
+                <h2 className="text-sm font-medium text-blue-200/60 mb-1">
+                  Company
+                </h2>
+                <p className="text-xl font-semibold text-blue-100">
+                  {internship.company_name}
+                </p>
               </div>
               <div>
-                <h2 className="text-sm font-medium text-blue-200/60 mb-1">Duration</h2>
-                <p className="text-xl font-semibold text-blue-100">{internship.duration}</p>
+                <h2 className="text-sm font-medium text-blue-200/60 mb-1">
+                  Duration
+                </h2>
+                <p className="text-xl font-semibold text-blue-100">
+                  {internship.duration}
+                </p>
               </div>
             </div>
           </div>
@@ -78,22 +88,26 @@ export default async function InternshipDetailPage({
           {/* Description */}
           {internship.description && (
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-blue-100 mb-4">About the Internship</h2>
-              <p className="text-blue-200/80 whitespace-pre-wrap">{internship.description}</p>
+              <h2 className="text-xl font-semibold text-blue-100 mb-4">
+                About the Internship
+              </h2>
+              <p className="text-blue-200/80 whitespace-pre-wrap">
+                {internship.description}
+              </p>
             </div>
           )}
 
           {/* Links */}
-          {(internship.link) && (
+          {internship.link && (
             <div className="flex flex-wrap gap-4">
               {internship.link && (
                 <a
                   href={internship.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 text-[#f5c722] hover:text-[#f7d452] transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-[#00E0FF] hover:text-[#f7d452] transition-colors"
                 >
-                  {internship.link.includes('linkedin.com') ? (
+                  {internship.link.includes("linkedin.com") ? (
                     <>
                       <Linkedin className="h-5 w-5" />
                       <span>View LinkedIn</span>

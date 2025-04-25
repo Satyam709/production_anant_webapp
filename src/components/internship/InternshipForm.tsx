@@ -64,7 +64,6 @@ const InternshipForm = () => {
         class: InternshipClass.MSc,
         email: "",
       });
-
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -78,7 +77,7 @@ const InternshipForm = () => {
         {/* Basic Information */}
         <div className="bg-black/20 backdrop-blur-sm border border-blue-900/50 rounded-xl p-6 space-y-4">
           <h3 className="text-xl font-bold text-blue-100">Basic Information</h3>
-          
+
           <div>
             <label htmlFor="title" className="block text-blue-200/80 mb-2">
               Internship Title *
@@ -92,7 +91,7 @@ const InternshipForm = () => {
                 setFormData({ ...formData, title: e.target.value });
               }}
               required
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
               placeholder="e.g., Data Science Intern"
             />
           </div>
@@ -105,9 +104,11 @@ const InternshipForm = () => {
               type="text"
               id="company"
               value={formData.company_name}
-              onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, company_name: e.target.value })
+              }
               required
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
               placeholder="e.g., Google"
             />
           </div>
@@ -120,9 +121,11 @@ const InternshipForm = () => {
               type="text"
               id="duration"
               value={formData.duration}
-              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, duration: e.target.value })
+              }
               required
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
               placeholder="e.g., 3 months"
             />
           </div>
@@ -130,18 +133,25 @@ const InternshipForm = () => {
 
         {/* Additional Details */}
         <div className="bg-black/20 backdrop-blur-sm border border-blue-900/50 rounded-xl p-6 space-y-4">
-          <h3 className="text-xl font-bold text-blue-100">Additional Details</h3>
-          
+          <h3 className="text-xl font-bold text-blue-100">
+            Additional Details
+          </h3>
+
           <div>
-            <label htmlFor="description" className="block text-blue-200/80 mb-2">
+            <label
+              htmlFor="description"
+              className="block text-blue-200/80 mb-2"
+            >
               Description
             </label>
             <textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               rows={4}
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
               placeholder="Describe your internship experience..."
             />
           </div>
@@ -154,8 +164,10 @@ const InternshipForm = () => {
               type="url"
               id="link"
               value={formData.link}
-              onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              onChange={(e) =>
+                setFormData({ ...formData, link: e.target.value })
+              }
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
               placeholder="https://"
             />
           </div>
@@ -168,8 +180,10 @@ const InternshipForm = () => {
               type="email"
               id="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
               placeholder="your@email.com"
             />
           </div>
@@ -178,7 +192,7 @@ const InternshipForm = () => {
         {/* Department & Class Selection */}
         <div className="bg-black/20 backdrop-blur-sm border border-blue-900/50 rounded-xl p-6 space-y-4">
           <h3 className="text-xl font-bold text-blue-100">Category</h3>
-          
+
           <div>
             <label htmlFor="department" className="block text-blue-200/80 mb-2">
               Department *
@@ -186,9 +200,14 @@ const InternshipForm = () => {
             <select
               id="department"
               value={formData.department}
-              onChange={(e) => setFormData({ ...formData, department: e.target.value as InternshipDepartment })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  department: e.target.value as InternshipDepartment,
+                })
+              }
               required
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
             >
               {Object.values(InternshipDepartment).map((dept) => (
                 <option key={dept} value={dept}>
@@ -205,9 +224,14 @@ const InternshipForm = () => {
             <select
               id="class"
               value={formData.class}
-              onChange={(e) => setFormData({ ...formData, class: e.target.value as InternshipClass })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  class: e.target.value as InternshipClass,
+                })
+              }
               required
-              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#f5c722] focus:ring-1 focus:ring-[#f5c722] transition-colors"
+              className="w-full bg-black/40 border border-blue-900/50 rounded-lg p-3 text-blue-100 focus:border-[#00E0FF] focus:ring-1 focus:ring-[#00E0FF] transition-colors"
             >
               {Object.values(InternshipClass).map((cls) => (
                 <option key={cls} value={cls}>

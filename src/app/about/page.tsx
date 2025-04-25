@@ -28,10 +28,10 @@ export default function AboutPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-center text-blue-100 mb-8">
               About Anant
             </h1>
-            <PhotoSlideshow 
-              photos={photos} 
-              width={1024} 
-              height={576} 
+            <PhotoSlideshow
+              photos={photos}
+              width={1024}
+              height={576}
               className="w-full"
             />
           </div>
@@ -43,55 +43,92 @@ export default function AboutPage() {
             Welcome to Anant - The Mathematical Society
           </h2>
           <div className="text-lg text-blue-100/80 space-y-6">
-            <p>At Anant - The Mathematical Society, our mission is to ignite and nurture a love for mathematics and technology.</p>
-            
+            <p>
+              At Anant - The Mathematical Society, our mission is to ignite and
+              nurture a love for mathematics and technology.
+            </p>
+
             <div>
               <p>We strive to:</p>
-              <p>Encourage Mathematical Excellence: Inspire the exploration and understanding of math concepts through fun activities, workshops, and seminars. Promote Technological Innovation: Provide a platform for students to develop and showcase their tech skills through hackathons, coding competitions, and project displays.</p>
-              <p>Share Knowledge: Offer opportunities to learn from experts via guest lectures, panel discussions, and mentorship programs.</p>
-              <p>Build a Collaborative Community: Foster an inclusive environment where students can work together, share ideas, and support each other&apos;s academic and professional growth.</p>
+              <p>
+                Encourage Mathematical Excellence: Inspire the exploration and
+                understanding of math concepts through fun activities,
+                workshops, and seminars. Promote Technological Innovation:
+                Provide a platform for students to develop and showcase their
+                tech skills through hackathons, coding competitions, and project
+                displays.
+              </p>
+              <p>
+                Share Knowledge: Offer opportunities to learn from experts via
+                guest lectures, panel discussions, and mentorship programs.
+              </p>
+              <p>
+                Build a Collaborative Community: Foster an inclusive environment
+                where students can work together, share ideas, and support each
+                other&apos;s academic and professional growth.
+              </p>
             </div>
 
             <div>
               <p>Join Us:</p>
-              <p>Whether you&apos;re passionate about math, fascinated by technology, or just curious about how these fields connect, Anant - The Mathematical Society welcomes you. By joining Anant, you become part of a supportive community that values curiosity, creativity, and critical thinking.</p>
+              <p>
+                Whether you&apos;re passionate about math, fascinated by
+                technology, or just curious about how these fields connect,
+                Anant - The Mathematical Society welcomes you. By joining Anant,
+                you become part of a supportive community that values curiosity,
+                creativity, and critical thinking.
+              </p>
             </div>
 
-            <p>Together, let&apos;s explore the endless possibilities of mathematics and technology and make meaningful contributions to the world.</p>
+            <p>
+              Together, let&apos;s explore the endless possibilities of
+              mathematics and technology and make meaningful contributions to
+              the world.
+            </p>
           </div>
         </section>
 
         {/* Action Buttons */}
         <section className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link 
+          <Link
             href="/team"
-            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#f5c722]/50 rounded-xl p-6 text-center transition-all group"
+            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#00E0FF]/50 rounded-xl p-6 text-center transition-all group"
           >
-            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#f5c722] mb-2">Team Anant</h3>
+            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#00E0FF] mb-2">
+              Team Anant
+            </h3>
             <p className="text-blue-200/60">Meet our dedicated team members</p>
           </Link>
-          
-          <Link 
+
+          <Link
             href="/gallery"
-            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#f5c722]/50 rounded-xl p-6 text-center transition-all group"
+            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#00E0FF]/50 rounded-xl p-6 text-center transition-all group"
           >
-            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#f5c722] mb-2">Photo Gallery</h3>
+            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#00E0FF] mb-2">
+              Photo Gallery
+            </h3>
             <p className="text-blue-200/60">View our events and activities</p>
           </Link>
-          
-          <Link 
+
+          <Link
             href="/members"
-            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#f5c722]/50 rounded-xl p-6 text-center transition-all group"
+            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#00E0FF]/50 rounded-xl p-6 text-center transition-all group"
           >
-            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#f5c722] mb-2">Members Policy</h3>
-            <p className="text-blue-200/60">Learn about membership guidelines</p>
+            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#00E0FF] mb-2">
+              Members Policy
+            </h3>
+            <p className="text-blue-200/60">
+              Learn about membership guidelines
+            </p>
           </Link>
-          
-          <Link 
+
+          <Link
             href="/contact"
-            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#f5c722]/50 rounded-xl p-6 text-center transition-all group"
+            className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#00E0FF]/50 rounded-xl p-6 text-center transition-all group"
           >
-            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#f5c722] mb-2">Contact Us</h3>
+            <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#00E0FF] mb-2">
+              Contact Us
+            </h3>
             <p className="text-blue-200/60">Get in touch with our team</p>
           </Link>
         </section>

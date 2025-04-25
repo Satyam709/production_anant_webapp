@@ -18,6 +18,7 @@ const Footer = () => {
     { name: "Events", href: "/events" },
     { name: "Blog", href: "/blog" },
     { name: "Math Department", href: "/department" },
+    { name: "Developers", href: "/developers" },
   ];
 
   const contactInfo = [

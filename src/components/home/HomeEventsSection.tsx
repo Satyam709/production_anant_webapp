@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ArrowRight} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Events } from "@prisma/client";
 import EventCard from "@/components/events/EventCard";
@@ -18,7 +18,7 @@ const HomeEventsSection = ({ events }: HomeEventsSectionProps) => {
           </h2>
           <Link
             href="/events"
-            className="text-[#f5c722] hover:text-[#f7d452] flex items-center"
+            className="text-[#00E0FF] hover:text-[#f7d452] flex items-center"
           >
             View All <ArrowRight className="ml-1 h-4 w-4" />
           </Link>

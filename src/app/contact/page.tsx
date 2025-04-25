@@ -68,7 +68,7 @@ export default function ContactPage() {
               <div>
                 <Link
                   href="/team"
-                  className="inline-flex items-center gap-2 bg-blue-900/20 hover:bg-blue-900/30 border border-blue-900/50 px-6 py-3 rounded-lg text-[#f5c722] hover:text-[#f7d452] transition-all"
+                  className="inline-flex items-center gap-2 bg-blue-900/20 hover:bg-blue-900/30 border border-blue-900/50 px-6 py-3 rounded-lg text-[#00E0FF] hover:text-[#f7d452] transition-all"
                 >
                   Team Anant
                   <ExternalLink className="h-4 w-4" />
@@ -87,7 +87,7 @@ export default function ContactPage() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-100/80 hover:text-[#f5c722] transition-colors"
+                      className="text-blue-100/80 hover:text-[#00E0FF] transition-colors"
                       title={link.label}
                     >
                       {link.icon}
@@ -104,7 +104,7 @@ export default function ContactPage() {
                 </h3>
                 <a
                   href="mailto:mathematics@nitkkr.ac.in"
-                  className="inline-flex items-center gap-2 text-[#f5c722] hover:text-[#f7d452] transition-colors"
+                  className="inline-flex items-center gap-2 text-[#00E0FF] hover:text-[#f7d452] transition-colors"
                 >
                   <Mail className="h-5 w-5" />
                   mathematics@nitkkr.ac.in

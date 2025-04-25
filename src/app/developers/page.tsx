@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Image from "next/image";
 
 interface CommitData {
   month: string;
@@ -72,13 +73,12 @@ const DeveloperCard = ({ dev, loading, index, rank }: DeveloperCardProps) => {
             className="absolute inset-0 bg-gradient-to-r from-blue-500/50 to-purple-500/50 rounded-2xl blur-xl opacity-50"
             whileHover={{ opacity: 0.7 }}
           />
-          <motion.img
+          <Image
             src={dev.image}
             alt={dev.name}
+            width={160}
+            height={160}
             className="relative w-full h-full object-cover rounded-2xl border-2 border-white/10 transition-all duration-300 group-hover:border-purple-500/50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
           />
         </motion.div>
 

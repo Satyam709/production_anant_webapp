@@ -38,7 +38,7 @@ export default function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
             priority
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
           />
-          
+
           {/* Glass overlay */}
           <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" />
         </motion.div>
@@ -51,7 +51,7 @@ export default function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
             key={index}
             className={`w-2 h-2 rounded-full transition-all ${
               index === currentIndex
-                ? "bg-[#f5c722] w-4"
+                ? "bg-[#00E0FF] w-4"
                 : "bg-white/50 hover:bg-white/80"
             }`}
             onClick={() => setCurrentIndex(index)}

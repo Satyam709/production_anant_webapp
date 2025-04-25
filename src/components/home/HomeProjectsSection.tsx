@@ -22,7 +22,10 @@ const HomeProjectsSection = ({ projects }: HomeProjectsSectionProps) => {
           <h2 className="text-2xl md:text-3xl font-bold text-blue-200">
             Projects & Internships
           </h2>
-          <Link href="/projects" className="text-[#f5c722] hover:text-[#f7d452] flex items-center">
+          <Link
+            href="/projects"
+            className="text-[#00E0FF] hover:text-[#f7d452] flex items-center"
+          >
             View All <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
@@ -48,7 +51,7 @@ const HomeProjectsSection = ({ projects }: HomeProjectsSectionProps) => {
                 </div>
                 <Link
                   href={`/projects/${project.id}`}
-                  className="inline-flex items-center text-[#f5c722] hover:text-[#f7d452]"
+                  className="inline-flex items-center text-[#00E0FF] hover:text-[#f7d452]"
                 >
                   Read More <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
