@@ -13,6 +13,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         const blog = await prisma.blog.findUnique({
             where:{
                 id: id
+            },
+            include:{
+                writtenBy: {
+                    select:{
+                        name: true,
+                    }
+                }
             }
         });
 
@@ -24,7 +31,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         }
 
         // for unverified blogs visitors can only see the blog if they are the author of the blog or an admin
-        if(blog.isVerified && !authorized && blog.userID !== session?.user.id){
+        if(!blog.isVerified && !authorized && blog.userID !== session?.user.id){
             console.log("Authorized: "+authorized);
             return NextResponse.json(
                 { message: "Unauthorized" },

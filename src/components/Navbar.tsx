@@ -60,14 +60,28 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center justify-center flex-1 ml-8">
-              {Object.values(navItems).map((item) => (
-                <NavDropdown
-                  key={item.label}
-                  label={item.label}
-                  items={item.items}
-                />
-              ))}
+              {Object.values(navItems).map((item) => {
+                const isSingleItem = item.items.length === 1;
+                return isSingleItem ? (
+                  <a
+                    key={item.label}
+                    href={item.items[0].href}
+                    className="text-gray-300 hover:text-white px-3 py-2 rounded-xl 
+          text-sm font-medium transition-all duration-300 ease-out hover:bg-gradient-to-r 
+          from-primary-blue/10 to-primary-purple/10"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <NavDropdown
+                    key={item.label}
+                    label={item.label}
+                    items={item.items}
+                  />
+                );
+              })}
             </div>
+
 
             {/* Auth & Mobile Menu Button */}
             <div className="flex items-center gap-3">
@@ -115,56 +129,81 @@ const Navbar = () => {
               }`}
           >
             <div className="px-2 py-3 max-h-[85vh] overflow-y-auto">
-              {Object.values(navItems).map((section) => (
-                <div key={section.label} className="mb-2 last:mb-0">
-                  {/* Section Header */}
-                  <button
-                    onClick={() => toggleSection(section.label)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl
-                      bg-gradient-to-r from-gray-800/30 to-gray-700/30 
-                      hover:from-primary-blue/10 hover:to-primary-purple/10
-                      transition-all duration-300"
-                  >
-                    <span className="text-sm font-medium text-white">
-                      {section.label}
-                    </span>
-                    <ChevronRight
-                      className={`h-4 w-4 text-gray-400 transition-transform duration-300
-                        ${activeSection === section.label ? "rotate-90" : ""}`}
-                    />
-                  </button>
+              {Object.values(navItems).map((section) => {
+                const isSingleItem = section.items.length === 1;
+                const item = section.items[0];
 
-                  {/* Section Content */}
-                  <div
-                    className={`overflow-hidden transition-all duration-300 ease-in-out
-                      ${
-                        activeSection === section.label
-                          ? "max-h-96 mt-2"
-                          : "max-h-0"
-                      }`}
-                  >
-                    <div className="space-y-1 pl-4">
-                      {section.items.map((item) => (
-                        <Link
-                          key={item.label}
-                          href={item.href}
-                          className="flex items-center px-4 py-2.5 rounded-lg text-gray-300
-                            hover:text-white hover:bg-gradient-to-r from-primary-blue/5 to-primary-purple/5
-                            transition-all duration-300 group border border-transparent
-                            hover:border-gray-800"
-                          onClick={() => {
-                            setIsOpen(false);
-                            setActiveSection(null);
-                          }}
+                return (
+                  <div key={section.label} className="mb-2 last:mb-0">
+                    {isSingleItem ? (
+                      // Render as direct link if only one item
+                      <Link
+                        href={item.href}
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-xl
+                          bg-gradient-to-r from-gray-800/30 to-gray-700/30 
+                          hover:from-primary-blue/10 hover:to-primary-purple/10
+                          transition-all duration-300 text-sm font-medium text-white"
+                        onClick={() => {
+                          setIsOpen(false);
+                          setActiveSection(null);
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <>
+                        {/* Section Header */}
+                        <button
+                          onClick={() => toggleSection(section.label)}
+                          className="w-full flex items-center justify-between px-4 py-3 rounded-xl
+                            bg-gradient-to-r from-gray-800/30 to-gray-700/30 
+                            hover:from-primary-blue/10 hover:to-primary-purple/10
+                            transition-all duration-300"
                         >
-                          <span className="text-sm">{item.label}</span>
-                        </Link>
-                      ))}
-                    </div>
+                          <span className="text-sm font-medium text-white">
+                            {section.label}
+                          </span>
+                          <ChevronRight
+                            className={`h-4 w-4 text-gray-400 transition-transform duration-300
+                              ${activeSection === section.label ? "rotate-90" : ""}`}
+                          />
+                        </button>
+
+                        {/* Section Content */}
+                        <div
+                          className={`overflow-hidden transition-all duration-300 ease-in-out
+                            ${
+                              activeSection === section.label
+                                ? "max-h-96 mt-2"
+                                : "max-h-0"
+                            }`}
+                        >
+                          <div className="space-y-1 pl-4">
+                            {section.items.map((item) => (
+                              <Link
+                                key={item.label}
+                                href={item.href}
+                                className="flex items-center px-4 py-2.5 rounded-lg text-gray-300
+                                  hover:text-white hover:bg-gradient-to-r from-primary-blue/5 to-primary-purple/5
+                                  transition-all duration-300 group border border-transparent
+                                  hover:border-gray-800"
+                                onClick={() => {
+                                  setIsOpen(false);
+                                  setActiveSection(null);
+                                }}
+                              >
+                                <span className="text-sm">{item.label}</span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
+
           </div>
         </div>
       </div>

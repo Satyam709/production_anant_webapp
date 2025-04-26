@@ -2,13 +2,18 @@ import React from 'react';
 import { Calendar, User, Tag, Clock } from 'lucide-react';
 import {Blog} from "@prisma/client";
 import { placeholder } from '@/lib/images/placeholder';
+import Image from 'next/image';
 
-const BlogPost: React.FC<Blog> = ({
+type BlogProp = Blog & {
+  writtenBy: { name: string };
+};
+
+const BlogPost: React.FC<BlogProp> = ({
   title,
   description,
   cover_picture,
   body,
-  userID,
+  writtenBy,
   createdAt,
   updatedAt,
   category,
@@ -17,9 +22,11 @@ const BlogPost: React.FC<Blog> = ({
     <article className="max-w-4xl mx-auto my-4 bg-gray-900 rounded-2xl overflow-hidden shadow-xl">
     {/* Cover Image */}
     <div className="h-[400px] mb-8">
-      <img
+      <Image
         src={cover_picture || placeholder}
         alt={title}
+        width={800}
+        height={400}
         className="w-full h-full object-cover"
       />
     </div>
@@ -50,7 +57,7 @@ const BlogPost: React.FC<Blog> = ({
         <div className="grid gap-4">
           <div className="flex items-center gap-2">
             <User size={20} className="text-cyan-500" />
-            <span className="text-gray-300">Written by <span className="text-white font-medium">{userID}</span></span>
+            <span className="text-gray-300">Written by <span className="text-white font-medium">{writtenBy.name}</span></span>
           </div>
           <div className="flex items-center gap-2">
             <Calendar size={20} className="text-cyan-500" />

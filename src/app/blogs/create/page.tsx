@@ -1,81 +1,117 @@
 "use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { BlogPreview } from '@/components/blogs/BlogPreview';
-// import { createBlog } from '@/lib/blog';
-// import { Blog } from '@prisma/client';
-import TiptapEditor from '@/components/blogs/editor/tiptap-editor';
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import { Card } from '@/components/ui/Card';
-import { ArrowLeft, Save, Eye } from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { BlogPreview } from "@/components/blogs/BlogPreview";
+import TiptapEditor from "@/components/blogs/editor/tiptap-editor";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { Card } from "@/components/ui/Card";
+import { ArrowLeft, Save, Eye, ImageIcon } from "lucide-react";
+import { uploadServerSideFile } from "@/lib/actions/uploadthing";
 
 interface BlogFormData {
-    title: string;
-    content: string;
-    contentJson: Record<string, unknown> | null;
+  title: string;
+  shortDescription: string;
+  coverImage?: string;
+  content: string;
+  contentJson: Record<string, unknown> | null;
+}
+
+interface UploadError extends Error {
+  message: string;
 }
 
 export default function CreateBlogPage() {
   const [formData, setFormData] = useState<BlogFormData>({
-    title: '',
-    content: '',
+    title: "",
+    shortDescription: "",
+    content: "",
     contentJson: null,
   });
-  const [activeTab, setActiveTab] = useState('edit');
+  const [file, setFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("edit");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleContentChange = (html: string, json: Record<string, unknown>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       content: html,
       contentJson: json,
     }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // if (!formData.title.trim()) {
-    //   toast({
-    //     title: "Title is required",
-    //     description: "Please add a title for your blog post.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
-    
-    // if (!formData.content.trim()) {
-    //   toast({
-    //     title: "Content is required",
-    //     description: "Please add some content to your blog post.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
-    
+    setError("");
+    setSuccess("");
+
+    if (!formData.title.trim()) {
+      setError("Title is required");
+      return;
+    }
+
+    if (!formData.shortDescription.trim()) {
+      setError("Short description is required");
+      return;
+    }
+
+    if (!formData.content.trim()) {
+      setError("Content is required");
+      return;
+    }
+
+    if (!file && !formData.coverImage) {
+      setError("Cover image is required");
+      return;
+    }
+
     setIsSubmitting(true);
-    
+
     try {
-    //   const newBlog = await createB0log(formData);
-    //   toast({
-    //     title: "Blog created!",
-    //     description: "Your blog post has been published successfully.",
-    //   });
-    //   router.push(`/blog/${newBlog.id}`);
-        console.log("Posting");
-    } catch (error) {
-      console.error('Error creating blog:', error);
-    //   toast({
-    //     title: "Failed to create blog",
-    //     description: "There was an error creating your blog post. Please try again.",
-    //     variant: "destructive",
-    //   });
+      let coverImageURL: string | undefined = formData.coverImage;
+
+      if (file) {
+        const res = await uploadServerSideFile(file);
+        if (!res) {
+          throw new Error("Failed to upload cover image");
+        }
+        coverImageURL = res.ufsUrl;
+      }
+
+      const payload = {
+        ...formData,
+        coverImage: coverImageURL,
+      };
+
+      console.log("Posting blog with payload:", payload);
+      setSuccess("Blog created successfully!");
+    } catch (error: unknown) {
+      console.error("Error creating blog:", error);
+      const uploadError = error as UploadError;
+      setError(uploadError.message || "Failed to create blog");
     } finally {
       setIsSubmitting(false);
     }
@@ -88,7 +124,7 @@ export default function CreateBlogPage() {
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
       </div>
 
-      <Navbar/>
+      <Navbar />
 
       <main className="relative z-10 container mx-auto px-4 py-20">
         <div className="flex items-center mb-6 gap-4">
@@ -100,47 +136,109 @@ export default function CreateBlogPage() {
           <h1 className="text-3xl font-bold">Create New Blog</h1>
         </div>
 
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/50 rounded-lg text-green-500">
+            {success}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="Enter a descriptive title for your math blog..."
-              className="text-lg bg-[#1a1a1a] border-[#333] text-white placeholder:text-gray-500"
-            />
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                placeholder="Enter a descriptive title for your math blog..."
+                className="text-lg bg-[#1a1a1a] border-[#333] text-white placeholder:text-gray-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="shortDescription">Short Description</Label>
+              <textarea
+                id="shortDescription"
+                value={formData.shortDescription}
+                onChange={(e) =>
+                  setFormData({ ...formData, shortDescription: e.target.value })
+                }
+                placeholder="Enter a brief description of your blog..."
+                className="w-full min-h-[100px] px-4 py-2.5 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-purple"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="coverImage" className="flex items-center gap-2">
+                <ImageIcon className="w-4 h-4" />
+                Cover Image
+              </Label>
+              <input
+                type="file"
+                id="coverImage"
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={handleImageChange}
+                className="w-full text-white file:bg-primary-purple file:border-none file:rounded-md file:p-2 file:text-sm file:font-bold cursor-pointer"
+              />
+              {imagePreview && (
+                <div className="mt-2 relative h-48 rounded-lg overflow-hidden bg-black/30">
+                  <Image
+                    src={imagePreview}
+                    alt="Cover image preview"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <div className="flex justify-between items-center mb-4">
               <TabsList className="bg-[#1a1a1a] border-[#333]">
-                <TabsTrigger value="edit" className="gap-2 data-[state=active]:bg-[#252525]">
+                <TabsTrigger
+                  value="edit"
+                  className="gap-2 data-[state=active]:bg-[#252525]"
+                >
                   <span>Edit</span>
                 </TabsTrigger>
-                <TabsTrigger value="preview" className="gap-2 data-[state=active]:bg-[#252525]">
+                <TabsTrigger
+                  value="preview"
+                  className="gap-2 data-[state=active]:bg-[#252525]"
+                >
                   <span>Preview</span>
                 </TabsTrigger>
               </TabsList>
-              
-              <Button 
-                type="submit" 
+
+              <Button
+                type="submit"
                 disabled={isSubmitting}
                 className="gap-2 bg-primary-purple hover:bg-primary-purple/90"
               >
                 <Save className="h-4 w-4" />
-                {isSubmitting ? 'Publishing...' : 'Publish Blog'}
+                {isSubmitting ? "Publishing..." : "Publish Blog"}
               </Button>
             </div>
-            
+
             <TabsContent value="edit" className="mt-0">
-              <TiptapEditor 
+              <TiptapEditor
                 content={formData.content}
                 onChange={handleContentChange}
                 placeholder="Start writing your mathematics blog..."
               />
             </TabsContent>
-            
+
             <TabsContent value="preview" className="mt-0">
               <Card className="p-6 bg-[#1a1a1a] border-[#333] text-white">
                 {!formData.title && !formData.content ? (
@@ -150,11 +248,28 @@ export default function CreateBlogPage() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <h1 className="text-3xl font-bold">{formData.title || 'Untitled Blog'}</h1>
+                    <h1 className="text-3xl font-bold">
+                      {formData.title || "Untitled Blog"}
+                    </h1>
+                    {formData.shortDescription && (
+                      <p className="text-gray-400">{formData.shortDescription}</p>
+                    )}
+                    {imagePreview && (
+                      <div className="relative h-48 rounded-lg overflow-hidden bg-black/30">
+                        <Image
+                          src={imagePreview}
+                          alt="Cover image preview"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    )}
                     {formData.content ? (
                       <BlogPreview content={formData.content} />
                     ) : (
-                      <p className="text-muted-foreground">No content to preview yet.</p>
+                      <p className="text-muted-foreground">
+                        No content to preview yet.
+                      </p>
                     )}
                   </div>
                 )}
@@ -165,7 +280,7 @@ export default function CreateBlogPage() {
       </main>
 
       <div className="relative z-10">
-        <Footer/>
+        <Footer />
       </div>
     </div>
   );

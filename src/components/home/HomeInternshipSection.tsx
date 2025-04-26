@@ -35,9 +35,9 @@ export default function HomeInternshipSection() {
           <h2 className="text-2xl md:text-3xl font-bold text-blue-200">
             Latest Internships
           </h2>
-          <Link 
-            href="/internship" 
-            className="text-[#f5c722] hover:text-[#f7d452] flex items-center"
+          <Link
+            href="/internship"
+            className="text-[#00E0FF] hover:text-[#f7d452] flex items-center"
           >
             View All <ArrowRight className="ml-1 h-4 w-4" />
           </Link>

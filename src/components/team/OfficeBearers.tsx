@@ -32,6 +32,11 @@ const OfficeBearerCard: React.FC<{ member: (typeof officeBearersData)[0] }> = ({
           {member.email}
         </p>
       )}
+      {member.email && (
+        <p className="text-xs text-gray-400 hover:text-gray-300 transition-colors duration-200">
+          {member.phone}
+        </p>
+      )}
 
       {/* Social Links */}
       <div className="flex gap-4 justify-center mt-auto">
@@ -90,7 +95,7 @@ const OfficeBearers = () => {
   return (
     <section className="mb-20 px-6" id="office-bearers">
       <h2 className="text-4xl font-extrabold mb-12 text-center text-gray-200">
-        Executive Heads
+        Office Bearers
       </h2>
 
       {/* Overall Coordinator */}

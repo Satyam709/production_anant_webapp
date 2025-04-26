@@ -7,6 +7,13 @@ import {Martel} from "next/font/google";
 export const metadata: Metadata = {
   title: "Anant: Next App",
   description: "Anant Next.js App",
+  icons: [
+    { rel: "icon", url: "/favicon.ico" },
+    { rel: "icon", type: "image/png", sizes: "32x32", url: "/favicon-32x32.png" },
+    { rel: "icon", type: "image/png", sizes: "16x16", url: "/favicon-16x16.png" },
+    { rel: "apple-touch-icon", url: "/apple-touch-icon.png" },
+    { rel: "manifest", url: "/site.webmanifest" }, 
+  ],
 };
 
 const martel = Martel({

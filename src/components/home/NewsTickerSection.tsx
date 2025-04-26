@@ -42,7 +42,7 @@ const NewsTickerSection = ({ news }: NewsTickerSectionProps) => {
       <div className="container mx-auto px-4 py-4">
         {/* Top ticker row */}
         <div className="flex items-center overflow-hidden relative">
-          <div className="mr-4 px-3 py-1 bg-[#f5c722] text-blue-950 font-bold rounded">
+          <div className="mr-4 px-3 py-1 bg-[#00E0FF] text-blue-950 font-bold rounded">
             LATEST
           </div>
 

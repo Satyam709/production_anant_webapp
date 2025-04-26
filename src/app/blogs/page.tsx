@@ -4,6 +4,10 @@ import BlogsHeader from "@/components/blogs/BlogsHeader";
 import BlogCard from "@/components/blogs/BlogCard";
 import {Blog} from "@prisma/client"
 
+type BlogProp = Blog & {
+    writtenBy: { name: string };
+};
+
 export default async function BlogsPage() {
 
     const { blogs } = await getBlogs();
@@ -20,7 +24,7 @@ export default async function BlogsPage() {
         <main className="relative z-10 container mx-auto px-4 py-20">
             <BlogsHeader />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
-            {blogs.map((blog: Blog) => (
+            {blogs.map((blog: BlogProp) => (
                 <BlogCard key={blog.id} {...blog}/>
             ))}
             </div>

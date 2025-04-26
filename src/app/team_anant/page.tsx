@@ -1,6 +1,5 @@
 'use client'
 
-import TeamHeader from '@/components/team/TeamHeader'
 import OfficeBearers from '@/components/team/OfficeBearers'
 import Members from '@/components/team/Members'
 import Navbar from '@/components/Navbar'
@@ -17,7 +16,6 @@ export default function TeamPage() {
       <Navbar />
       
       <main className="relative z-10 container mx-auto px-4 py-20">
-        <TeamHeader />
         <OfficeBearers />
         <Members />
       </main>     

@@ -13,7 +13,7 @@ const InternshipCard = ({ internship }: InternshipCardProps) => {
   const router = useRouter();
 
   return (
-    <div 
+    <div
       onClick={() => router.push(`/internship/${internship.id}`)}
       className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-blue-800/50 rounded-xl overflow-hidden transition-all cursor-pointer group"
     >
@@ -21,7 +21,7 @@ const InternshipCard = ({ internship }: InternshipCardProps) => {
       <div className="flex items-center gap-4 p-6 border-b border-blue-900/30">
         <div className="relative w-16 h-16">
           <Image
-            className="rounded-full bg-blue-900/20 object-cover" 
+            className="rounded-full bg-blue-900/20 object-cover"
             src={internship.user.imageURL || "/placeholder-avatar.png"}
             alt={internship.user.name}
             fill
@@ -30,7 +30,7 @@ const InternshipCard = ({ internship }: InternshipCardProps) => {
           />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#f5c722] transition-colors">
+          <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#00E0FF] transition-colors">
             {internship.title}
           </h3>
           <p className="text-blue-200/80">
@@ -46,10 +46,10 @@ const InternshipCard = ({ internship }: InternshipCardProps) => {
           <p className="text-blue-200/70 mb-4">{internship.duration}</p>
         </div>
 
-        <div className="flex items-center gap-2 text-[#f5c722]">
+        <div className="flex items-center gap-2 text-[#00E0FF]">
           {internship.link && (
             <>
-              {internship.link.includes('linkedin.com') ? (
+              {internship.link.includes("linkedin.com") ? (
                 <Linkedin className="h-4 w-4" />
               ) : (
                 <Link2 className="h-4 w-4" />

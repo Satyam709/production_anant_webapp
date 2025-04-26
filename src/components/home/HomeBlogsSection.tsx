@@ -23,7 +23,10 @@ const HomeBlogsSection = ({ blogs }: HomeBlogsSectionProps) => {
           <h2 className="text-2xl md:text-3xl font-bold text-blue-200">
             Latest Blogs
           </h2>
-          <Link href="/blogs" className="text-[#f5c722] hover:text-[#f7d452] flex items-center">
+          <Link
+            href="/blogs"
+            className="text-[#00E0FF] hover:text-[#f7d452] flex items-center"
+          >
             View All <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
@@ -40,7 +43,7 @@ const HomeBlogsSection = ({ blogs }: HomeBlogsSectionProps) => {
                   alt={blog.title}
                   className="w-full h-48 object-cover"
                 />
-                <div className="absolute top-4 right-4 bg-[#f5c722] text-blue-950 font-medium text-xs px-2 py-1 rounded">
+                <div className="absolute top-4 right-4 bg-[#00E0FF] text-blue-950 font-medium text-xs px-2 py-1 rounded">
                   {blog.category}
                 </div>
               </div>
@@ -54,7 +57,7 @@ const HomeBlogsSection = ({ blogs }: HomeBlogsSectionProps) => {
                 </div>
                 <Link
                   href={`/blogs/${blog.id}`}
-                  className="inline-flex items-center text-[#f5c722] hover:text-[#f7d452]"
+                  className="inline-flex items-center text-[#00E0FF] hover:text-[#f7d452]"
                 >
                   Read More <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
