@@ -24,19 +24,22 @@ export async function POST(req: NextRequest){
 
         if(!schema.success){
             const errorMessages = schema.error.errors.map((err) => err.message);
+            console.log(schema.error);
+            
             return NextResponse.json({error: "Invalid Body Format", messages: errorMessages},{status: 400});
         }
         
         const {title, category, content, cover_picture, description} = schema.data;
 
+        // Create blog with content field mapped to body
         const blog = await prisma.blog.create({
             data:{
                 title,
                 category,
                 cover_picture,
-                body: content,
+                body: content, // Map content to body field
                 isVerified: false,
-                description: description,  
+                description,
                 writtenBy:{
                     connect:{
                         id: session.user.id
@@ -44,6 +47,8 @@ export async function POST(req: NextRequest){
                 }
             }
         });
+
+        console.log("Created blog:", blog);
 
         if(!blog){
             return NextResponse.json({status: 400, message: "Failed to create blog"});

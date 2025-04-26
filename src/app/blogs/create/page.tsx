@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { blog_cat } from "@prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
@@ -21,6 +24,7 @@ interface BlogFormData {
   coverImage?: string;
   content: string;
   contentJson: Record<string, unknown> | null;
+  category: blog_cat;
 }
 
 interface UploadError extends Error {
@@ -33,6 +37,7 @@ export default function CreateBlogPage() {
     shortDescription: "",
     content: "",
     contentJson: null,
+    category: blog_cat.Mathematics,
   });
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -40,6 +45,15 @@ export default function CreateBlogPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login?callbackUrl=/blogs/create");
+    }
+  }, [status, router]);
 
   const handleContentChange = (html: string, json: Record<string, unknown>) => {
     setFormData((prev) => ({
@@ -64,6 +78,10 @@ export default function CreateBlogPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+
+    console.log('Form data submitting');
+    
+
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -101,13 +119,39 @@ export default function CreateBlogPage() {
         coverImageURL = res.ufsUrl;
       }
 
+      if (!session?.user?.id) {
+        throw new Error("User not authenticated");
+      }
+
+      // Format payload to match Zod schema
       const payload = {
-        ...formData,
-        coverImage: coverImageURL,
+        title: formData.title,
+        category: formData.category as blog_cat,
+        content: formData.content,
+        cover_picture: coverImageURL,
+        description: formData.shortDescription
       };
 
-      console.log("Posting blog with payload:", payload);
+      console.log('Submitting blog with payload:', payload);
+      
+
+      console.log('Submitting blog with payload:', JSON.stringify(payload, null, 2));
+
+      const response = await fetch("/api/blogs/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to create blog");
+      }
+
       setSuccess("Blog created successfully!");
+      router.push("/blogs"); // Redirect to blogs list
     } catch (error: unknown) {
       console.error("Error creating blog:", error);
       const uploadError = error as UploadError;
@@ -147,8 +191,31 @@ export default function CreateBlogPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div 
+          className="space-y-6"
+        >
           <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <select
+                id="category"
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData({ 
+                    ...formData, 
+                    category: e.target.value as BlogFormData["category"]
+                  })
+                }
+                className="w-full px-4 py-2.5 bg-[#1a1a1a] border border-[#333] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-purple"
+              >
+                {Object.values(blog_cat).map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
               <Input
@@ -222,7 +289,8 @@ export default function CreateBlogPage() {
               </TabsList>
 
               <Button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={isSubmitting}
                 className="gap-2 bg-primary-purple hover:bg-primary-purple/90"
               >
@@ -276,7 +344,7 @@ export default function CreateBlogPage() {
               </Card>
             </TabsContent>
           </Tabs>
-        </form>
+        </div>
       </main>
 
       <div className="relative z-10">
