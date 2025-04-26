@@ -382,11 +382,12 @@ model NewsLetter{
 
 model Certificate{
   id String @id @default(uuid())
-  issuesFor String
+  issuedFor String
   issuedTo String
   fileUrl String
   issuedDate DateTime? @default(now())
   roll_number String?
   branch String?
   ranking Int?
+  SerialNumber String?
 }
