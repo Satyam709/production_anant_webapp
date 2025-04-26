@@ -46,9 +46,13 @@ const BlogPost: React.FC<BlogProp> = ({
     {/* Blog Content */}
     <div className="max-w-4xl mx-auto px-6 sm:px-6 lg:px-8 py-16">
         <div 
-            className="prose prose-invert prose-cyan max-w-none text-lg leading-relaxed  opacity-80
+            className="prose prose-invert max-w-none text-lg leading-relaxed opacity-80
+                    prose-headings:text-white prose-headings:tracking-tight
                     [&_img]:mx-auto [&_img]:my-12 [&_img]:rounded-lg [&_img]:max-w-2xl 
-                    [&_img]:w-full [&_img]:shadow-xl"
+                    [&_img]:w-full [&_img]:shadow-xl
+                    [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:my-4
+                    [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:my-3
+                    [&_h3]:text-xl [&_h3]:font-bold [&_h3]:my-2"
             dangerouslySetInnerHTML={{ __html: body }}
         />
 
@@ -74,7 +78,7 @@ const BlogPost: React.FC<BlogProp> = ({
   );
 };
 
-function formatDate(date: any) {
+function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",

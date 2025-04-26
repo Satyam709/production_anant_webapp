@@ -130,16 +130,16 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
           className="bg-[#1a1a1a] border-[#333] [&_[data-state=on]]:bg-primary-purple/20 [&_[data-state=on]]:text-primary-purple [&_[data-state=on]]:border-primary-purple"
           value={
             editor.isActive("heading", { level: 1 })
-              ? "h1"
+              ? "heading-1"
               : editor.isActive("heading", { level: 2 })
-              ? "h2"
+              ? "heading-2"
               : editor.isActive("heading", { level: 3 })
-              ? "h3"
+              ? "heading-3"
               : ""
           }
         >
           <ToggleGroupItem
-            value="h1"
+            value="heading-1"
             aria-label="Heading 1"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 1 }).run()
@@ -148,7 +148,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
             <Heading1 className="h-4 w-4" />
           </ToggleGroupItem>
           <ToggleGroupItem
-            value="h2"
+            value="heading-2"
             aria-label="Heading 2"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 2 }).run()
@@ -157,7 +157,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
             <Heading2 className="h-4 w-4" />
           </ToggleGroupItem>
           <ToggleGroupItem
-            value="h3"
+            value="heading-3"
             aria-label="Heading 3"
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 3 }).run()
