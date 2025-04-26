@@ -390,4 +390,5 @@ model Certificate{
   branch String?
   ranking Int?
   SerialNumber String?
+  cop Boolean? @default(false)
 }

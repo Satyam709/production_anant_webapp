@@ -11,7 +11,8 @@ const certificateSchema = z.object({
     branch: z.string().optional(),
     ranking: z.number().optional(),
     fileUrl: z.string(),
-    SerialNumber: z.string().optional()
+    SerialNumber: z.string().optional(),
+    cop: z.boolean().optional()
 });
 
 
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
         if (!result.success) {
             return NextResponse.json({ error: result.error.format() }, { status: 400 });
         }
-        const { issuedFor, issuedTo, issuedDate, roll_number, branch, ranking, fileUrl, SerialNumber } = result.data;
+        const { issuedFor, issuedTo, issuedDate, roll_number, branch, ranking, fileUrl, SerialNumber, cop } = result.data;
         let dateObj: Date | null = null;     // yyyy-mm-dd format
         if(issuedDate) {
             const [year, month, day] = issuedDate.split('-');
@@ -41,7 +42,8 @@ export async function POST(request: NextRequest) {
                 branch,
                 ranking,
                 fileUrl,
-                SerialNumber
+                SerialNumber,
+                cop: cop? cop: false
             }
         });
 
