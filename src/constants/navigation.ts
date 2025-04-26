@@ -50,6 +50,12 @@ export const navItems = {
       { label: "News Letter", href: "/newsletter" }
     ],
   },
+  CertVerify:{
+    label: "Certificate Verification",
+    items: [
+      { label: "Certificate Verification", href: "/certificate-verification" }
+    ],
+  },
   ContactUs:{
     label: "Contact Us",
     items: [
