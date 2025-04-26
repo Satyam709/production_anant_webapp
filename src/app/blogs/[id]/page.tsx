@@ -13,7 +13,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
     }
     
     return (
-        <div className="min-h-screen bg-[#0A0A0A] text-white">
+        <div className="min-h-screen p-1 bg-[#0A0A0A] text-white">
         <div className="fixed inset-0">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-blue/10 rounded-full blur-[100px]" />
             <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
@@ -21,7 +21,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
     
         <Navbar />
     
-        <main className="relative z-10 container mx-auto px-4 py-20">
+        <main className="mt-16 z-10 container mx-auto px-4 py-12 md:py-20">
             <BlogPost key={blog.id} {...blog} />
         </main>
     
@@ -50,4 +50,3 @@ export async function getBlog(id: string) {
       return {blog: null};
     }
   }
-  

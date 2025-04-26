@@ -22,7 +22,7 @@ export async function GET(req:NextRequest){
             take: size,
             skip: (pageNumber-1)*size,
             orderBy:{
-                createdAt: "asc"
+                createdAt: "desc"
             },
             include:{
                 writtenBy: {

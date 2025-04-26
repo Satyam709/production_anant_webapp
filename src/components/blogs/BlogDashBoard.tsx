@@ -5,6 +5,7 @@ import BlogList from './BlogList'
 import {Blog} from "@prisma/client";
 import GradientButton from '../ui/GradientButton';
 import StatusModal from '../ui/StatusModal';
+import Link from 'next/link';
 
 interface StatusMessage {
     type: 'success' | 'error' | 'confirm';
@@ -173,7 +174,7 @@ const BlogsDashboard: React.FC = () => {
         <GradientButton>
           <div className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
-            <span>Write A Blog!</span>
+            <Link href={"/blogs/create"}>Write A Blog!</Link>
           </div>
         </GradientButton>
       </div>

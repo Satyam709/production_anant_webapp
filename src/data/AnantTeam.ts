@@ -241,7 +241,7 @@ export const officeBearersData = [
   {
     id: 1,
     name: "Mamta Saini",
-    role: "Overall Coordinator",
+    role: "President",
     image: "/team/office/mamta.png",
     email: "723410004@nitkkr.ac.in",
     phone: "+917827902202",
