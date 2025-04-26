@@ -83,7 +83,7 @@ const OfficeBearers = () => {
 
   // Separate members by role
   const overallCoordinator = members.filter(
-    (member) => member.role === "Overall Coordinator"
+    (member) => member.role === "President"
   );
   const pgCoordinators = members.filter(
     (member) => member.role === "Coordinator (PG)"
@@ -98,11 +98,11 @@ const OfficeBearers = () => {
         Office Bearers
       </h2>
 
-      {/* Overall Coordinator */}
+      {/* President */}
       {overallCoordinator.length > 0 && (
         <div className="mb-8">
           <h3 className="text-2xl font-semibold mb-4 text-gray-300 text-center">
-            Overall Coordinator
+            President
           </h3>
           <div className="flex justify-center">
             {overallCoordinator.map((member) => (
