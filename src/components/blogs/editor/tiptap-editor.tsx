@@ -88,7 +88,7 @@ export default function TiptapEditor({
       Image.configure({
         inline: true,
         HTMLAttributes: {
-          class: "rounded-lg max-w-full mx-auto my-4",
+          class: "rounded-lg max-w-[600px] max-h-[500px] object-contain mx-auto my-4",
           contenteditable: false,
         },
         allowBase64: true,

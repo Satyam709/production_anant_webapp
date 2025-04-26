@@ -10,6 +10,8 @@ interface BlogPreviewProps {
 
 export function BlogPreview({ content }: BlogPreviewProps) {
   useEffect(() => {
+    console.log(content);
+    
     // Find all math elements and render them with KaTeX
     const mathElements = document.querySelectorAll('[data-math="true"]');
     mathElements.forEach((element) => {
