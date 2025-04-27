@@ -59,6 +59,10 @@ function App() {
     signOut({callbackUrl: '/login'});
   };
 
+  const handleBack2Home = () => {
+    router.push("/");
+  };
+
   useEffect(() => {
     if (session.status === "unauthenticated") {
       router.push("/login");
@@ -162,6 +166,13 @@ function App() {
         </nav>
 
         <footer className="p-6 border-t border-gray-800/50 bg-gray-900/50 backdrop-blur-xl mt-auto">
+          <button
+            onClick={handleBack2Home}
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-200"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Back To Home</span>
+          </button>
           <button
             onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-200"
