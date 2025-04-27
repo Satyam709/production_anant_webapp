@@ -8,6 +8,7 @@ interface BlogListProps {
   onEdit?: (id: string) => void;
   onDelete: (id: string) => void;
   onAccept?: (id: string) => void;
+  onOpen?: (id: string) => void;
 }
 
 const BlogList: React.FC<BlogListProps> = ({
@@ -15,7 +16,8 @@ const BlogList: React.FC<BlogListProps> = ({
   blogs,
   onEdit,
   onDelete,
-  onAccept
+  onAccept,
+  onOpen,
 }) => {
   if (blogs.length === 0) {
     return (
@@ -37,6 +39,7 @@ const BlogList: React.FC<BlogListProps> = ({
             onEdit={onEdit}
             onDelete={onDelete}
             onAccept={onAccept}
+            onOpen={onOpen}
             type={blog.isVerified==true ? "published" : "draft"}
           />
         ))}

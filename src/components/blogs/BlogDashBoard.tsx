@@ -30,6 +30,10 @@ const BlogsDashboard: React.FC = () => {
     router.push(`/edit/${id}`);
   };
 
+  const handleOpen = (id: string) => {
+    router.push(`/blogs/${id}`);
+  }
+
   const handleDelete = (id: string) => {
     setStatusModal({
         type: 'confirm',
@@ -185,6 +189,7 @@ const BlogsDashboard: React.FC = () => {
           blogs={blogs}
           onEdit={handleEdit}
           onDelete={(id) => handleDelete(id)}
+          onOpen={handleOpen}
         />}
 
         {drafts && <BlogList
@@ -192,6 +197,7 @@ const BlogsDashboard: React.FC = () => {
           blogs={drafts}
           onDelete={(id) => handleDelete(id)}
           onAccept={handleAccept}
+          onOpen={handleOpen}
         />}
         
       </div>
