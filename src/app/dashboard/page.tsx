@@ -1,5 +1,5 @@
 "use client"
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Trophy,
@@ -25,13 +25,13 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeamDashboard from "@/components/teams/TeamDashboard";
 import { signOut, useSession } from "next-auth/react";
 import {  useRouter } from "next/navigation";
-import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 import BlogDashBoard from "@/components/blogs/BlogDashBoard";
 import InternshipDashboard from "@/components/internship/Dashboard";
 import AchievementForm from "@/components/forms/AchievementForm";
 import NewsLetterDashboard from "@/components/newsletter/NewsLetterDashboard";
 import isAdmin from "@/lib/actions/Admin";
 import isSuperAdmin  from "@/lib/actions/Admin";
+import GDriveGalleryManage from "@/components/gallery/admin/GDriveGalleryManage";
 
 type TabType =
   | "competitions"
@@ -201,7 +201,7 @@ function App() {
             {activeTab === "notices" && <NoticeForm />}
             {activeTab === "teams" && <TeamDashboard />}
             {activeTab === "shop" && <Shop />}
-            {activeTab === "gallery" && <PhotoGallery />}
+            {activeTab === "gallery" && <GDriveGalleryManage/>}
             {activeTab === "blogs" && <BlogDashBoard />}
             {activeTab === "newsletter" && <NewsLetterDashboard />}
             {activeTab === "internships" && <InternshipDashboard />}
