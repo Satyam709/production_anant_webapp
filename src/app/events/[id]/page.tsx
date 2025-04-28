@@ -85,21 +85,21 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
                     <div className="text-yellow-400">1st Prize:</div>
                     <div className="flex items-center">
                       <User className="w-4 h-4 mr-2" />
-                      {event.first_prize_id || "TBD"}
+                      {event.first_prize_name || "TBD"}
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="text-gray-400">2nd Prize:</div>
                     <div className="flex items-center">
                       <User className="w-4 h-4 mr-2" />
-                      {event.second_prize_id || "TBD"}
+                      {event.second_prize_name || "TBD"}
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="text-bronze-400">3rd Prize:</div>
                     <div className="flex items-center">
                       <User className="w-4 h-4 mr-2" />
-                      {event.third_prize_id || "TBD"}
+                      {event.third_prize_name || "TBD"}
                     </div>
                   </div>
                 </div>

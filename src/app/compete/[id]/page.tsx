@@ -129,7 +129,7 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">First Prize</p>
-                    <p className="font-semibold text-lg">{competition.first_prize_id || "TBD"}</p>
+                    <p className="font-semibold text-lg">{competition.first_prize_name || "TBD"}</p>
                   </div>
                 </div>
                 <div className="text-yellow-400 font-bold">1st</div>
@@ -143,7 +143,7 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Second Prize</p>
-                    <p className="font-semibold text-lg">{competition.second_prize_id || "TBD"}</p>
+                    <p className="font-semibold text-lg">{competition.second_prize_name || "TBD"}</p>
                   </div>
                 </div>
                 <div className="text-gray-400 font-bold">2nd</div>
@@ -157,7 +157,7 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Third Prize</p>
-                    <p className="font-semibold text-lg">{competition.third_prize_id || "TBD"}</p>
+                    <p className="font-semibold text-lg">{competition.third_prize_name || "TBD"}</p>
                   </div>
                 </div>
                 <div className="text-amber-600 font-bold">3rd</div>
