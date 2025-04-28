@@ -34,18 +34,19 @@ const BlogPost: React.FC<BlogProp> = ({
 
       {/* Title and Description */}
       <header className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">{title}</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+          {title}
+        </h1>
         <p className="text-xl text-gray-300 leading-relaxed">{description}</p>
       </header>
 
       {/* Cover Image */}
-      <div className="relative h-[500px] mb-12 rounded-xl overflow-hidden">
+      <div className="relative w-full aspect-video mb-12 rounded-xl overflow-hidden">
         <Image
           src={cover_picture || placeholder}
           alt={title}
-          width={1200}
-          height={600}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
         />
       </div>
 
@@ -58,16 +59,22 @@ const BlogPost: React.FC<BlogProp> = ({
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <User size={20} className="text-cyan-500" />
-              <span className="text-gray-300">By <span className="text-white font-medium">{writtenBy.name}</span></span>
+              <span className="text-gray-300">
+                By{" "}
+                <span className="text-white font-medium">{writtenBy.name}</span>
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Clock size={20} className="text-cyan-500" />
-              <span className="text-gray-300">Updated <span className="text-white">{formatDate(updatedAt)}</span></span>
+              <span className="text-gray-300">
+                Updated{" "}
+                <span className="text-white">{formatDate(updatedAt)}</span>
+              </span>
             </div>
           </div>
         </footer>
-    </div>
-  </article>
+      </div>
+    </article>
   );
 };
 

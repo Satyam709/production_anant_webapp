@@ -20,6 +20,8 @@ const Footer = () => {
     { name: "Math Department", href: "/department" },
     { name: "Developers", href: "/developers" },
     { name: "Certificate-Verification", href: "/certificate-verification" },
+    { name: "Old Website", href: "https://mathematics39.wixsite.com/anantnitkkr" },
+    { name: "Repository", href: "https://github.com/Anant-WebDev/anant_webapp/" }
   ];
 
   const contactInfo = [
