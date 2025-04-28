@@ -7,7 +7,7 @@ interface Blog {
   id: number;
   title: string;
   author: string;
-  image: string;
+  cover_picture: string;
   category: string;
 }
 
@@ -39,7 +39,7 @@ const HomeBlogsSection = ({ blogs }: HomeBlogsSectionProps) => {
             >
               <div className="relative">
                 <img
-                  src={blog.image}
+                  src={blog.cover_picture}
                   alt={blog.title}
                   className="w-full h-48 object-cover"
                 />
