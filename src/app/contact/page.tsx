@@ -67,7 +67,7 @@ export default function ContactPage() {
               {/* Team Anant Button */}
               <div>
                 <Link
-                  href="/team"
+                  href="/team-anant"
                   className="inline-flex items-center gap-2 bg-blue-900/20 hover:bg-blue-900/30 border border-blue-900/50 px-6 py-3 rounded-lg text-[#00E0FF] hover:text-[#f7d452] transition-all"
                 >
                   Team Anant
