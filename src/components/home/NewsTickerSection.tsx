@@ -55,7 +55,7 @@ const NewsTickerSection = ({ news }: NewsTickerSectionProps) => {
               {repeatedNews.map((item, index) => (
                 <Link
                   key={`${item.id}-${index}`}
-                  href={`/notices/${item.id}`}
+                  href={`/notices`}
                   className="text-blue-100 text-lg hover:underline"
                 >
                   {item.title}
