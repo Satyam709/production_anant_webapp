@@ -3,7 +3,10 @@ import prisma from "@/lib/PrismaClient/db";
 
 export async function GET(req: NextRequest) {
   try {
-    const size = 5;
+    // const size = 5;
+    // for now allow unlimited events
+    const size = 1000;
+
     const url = new URL(req.url);
     const searchParams = url.searchParams;
     const pageNumber = parseInt(searchParams.get("page") || "1", 10);
@@ -30,17 +33,6 @@ export async function GET(req: NextRequest) {
         orderBy: {
           registration_deadline: "asc",
         },
-        select: {
-          event_id: true,
-          eventName: true,
-          registration_deadline: true,
-          conductedBy: true,
-          conductedOn: true,
-          imageURL: true,
-          prize: true,
-          venue: true,
-          description: true,
-        },
       });
     }
 
@@ -55,15 +47,6 @@ export async function GET(req: NextRequest) {
         skip: (pageNumber - 1) * size,
         orderBy: {
           registration_deadline: "asc",
-        },
-        select: {
-          event_id: true,
-          eventName: true,
-          registration_deadline: true,
-          conductedBy: true,
-          conductedOn: true,
-          imageURL: true,
-          prize: true,
         },
       });
     }

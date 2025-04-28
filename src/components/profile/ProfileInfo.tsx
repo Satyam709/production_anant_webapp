@@ -55,28 +55,28 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
 
         {/*LinkedIn*/}
         <div>
-          <label className="block text-sm text-gray-300 mb-1">Graduation Year</label>
+          <label className="block text-sm text-gray-300 mb-1">LinkedIn</label>
           <div className="relative flex items-center gap-2">
             <Linkedin className="text-gray-400" />
-            <span className="text-white">{userInfo.batch}</span>
+            <span className="text-white">{}</span>
           </div>
         </div>
 
         {/*GitHub*/}
         <div>
-          <label className="block text-sm text-gray-300 mb-1">Graduation Year</label>
+          <label className="block text-sm text-gray-300 mb-1">GitHub</label>
           <div className="relative flex items-center gap-2">
             <Github className="text-gray-400" />
-            <span className="text-white">{userInfo.batch}</span>
+            <span className="text-white">{}</span>
           </div>
         </div>
 
         {/*Instagram*/}
         <div>
-          <label className="block text-sm text-gray-300 mb-1">Graduation Year</label>
+          <label className="block text-sm text-gray-300 mb-1">Instagram</label>
           <div className="relative flex items-center gap-2">
             <Instagram className="text-gray-400" />
-            <span className="text-white">{userInfo.batch}</span>
+            <span className="text-white">{}</span>
           </div>
         </div>
 

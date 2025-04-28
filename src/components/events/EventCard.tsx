@@ -9,6 +9,9 @@ import { Events } from "@prisma/client";
 import { placeholder } from "@/lib/images/placeholder";
 
 const EventCard: React.FC<Events> = (event) => {
+
+  console.log("card data" ,event);
+  
   const router = useRouter();
   const isRegistrationOpen = new Date(event.registration_deadline) > new Date();
 
