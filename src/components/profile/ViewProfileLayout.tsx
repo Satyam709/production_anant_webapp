@@ -1,13 +1,12 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileTabs from "@/components/profile/ProfileTabs";
-import ProfileInfo from "@/components/profile/ProfileInfo";
+import ViewProfileInfo from "@/components/profile/ViewProfileInfo";
 import AchievementCard from "./AchievementCard";
 import ActivityCard from "./ActivityCard";
 import { getUserInfoType } from "@/lib/actions/Profile";
-import { UpdateProfileImage } from "@/lib/actions/Profile"; // Import the new server action
 
 const tabs = [
   { id: "profile", label: "Profile" },
@@ -23,40 +22,13 @@ function formatDate(date: Date){
   }).format(new Date(date))
 }
 
-const ProfileLayout = ({ userInfo }: { userInfo: getUserInfoType }) => {
+const ViewProfileLayout = ({ userInfo }: { userInfo: getUserInfoType }) => {
   const [activeTab, setActiveTab] = useState("profile");
-  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(
-    userInfo?.imageURL || undefined
-  ); // Local state for avatar URL
-  const [uploadError, setUploadError] = useState<string | null>(null);
-
-  const handleAvatarChange = useCallback(async (file: File) => {
-    setUploadError(null); // Clear any previous errors
-    try {
-      // Call the server action to upload the image and update the URL in the database
-      const newAvatarUrl = await UpdateProfileImage(file);
-      if (newAvatarUrl) {
-        // Update the avatarUrl state with the new URL returned from the server action
-        setAvatarUrl(newAvatarUrl);
-        console.log("Avatar uploaded and URL saved:", newAvatarUrl);
-      } else {
-        setUploadError(
-          "Failed to save avatar. Avatar can only be set once or upload failed."
-        );
-        console.error(
-          "Failed to save avatar. Avatar can only be set once or upload failed."
-        );
-      }
-    } catch (error) {
-      setUploadError("Error uploading avatar: " + (error as any).message);
-      console.error("Error uploading avatar:", error);
-    }
-  }, []);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "profile":
-        return <ProfileInfo userInfo={userInfo} />;
+        return <ViewProfileInfo userInfo={userInfo} />;
       case "achievements":
         return (
           <div className="space-y-4 animate-fadeIn">
@@ -157,10 +129,8 @@ const ProfileLayout = ({ userInfo }: { userInfo: getUserInfoType }) => {
           name={userInfo?.name || "Name"}
           email={`${userInfo?.roll_number}@nitkkr.ac.in`}
           location="NIT Kurukshetra"
-          avatarUrl={avatarUrl}
-          onAvatarChange={handleAvatarChange}
+          avatarUrl={userInfo?.imageURL || undefined}
         />
-        {uploadError && <div className="text-red-500 mt-2">{uploadError}</div>}
         <ProfileStats />
         <ProfileTabs
           tabs={tabs}
@@ -175,4 +145,4 @@ const ProfileLayout = ({ userInfo }: { userInfo: getUserInfoType }) => {
   );
 };
 
-export default ProfileLayout;
+export default ViewProfileLayout;
