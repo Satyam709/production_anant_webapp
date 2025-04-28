@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "wdzdm1owwr.ufs.sh",
+        hostname: "**.ufs.sh",
         pathname: "/f/*",
       },
     ],
@@ -28,12 +28,12 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "15mb",
     },
   },
-  typescript:{
-    ignoreBuildErrors: true
+  typescript: {
+    ignoreBuildErrors: true,
   },
-  eslint:{
-    ignoreDuringBuilds: true
-  }
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
