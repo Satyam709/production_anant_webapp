@@ -16,10 +16,20 @@ export async function UpdateProfile(
   club_dept: club_dept_options[] | undefined,
   linkedIn: string | undefined,
   github: string | undefined,
-  instagram: string | undefined
+  instagram: string | undefined,
+  userId?: string
 ) {
   try {
     if (!(await isAuthenticated())) return false;
+    
+    const session = await getSession();
+    const currentUserId = session?.user.id;
+
+    // If userId is provided, check if it matches the current user's ID
+    if (userId && userId !== currentUserId) {
+      console.log("Unauthorized: Cannot update another user's profile");
+      return false;
+    }
 
     const user = await prisma.user.update({
       where: {
