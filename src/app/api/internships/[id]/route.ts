@@ -46,7 +46,5 @@ export async function GET(
       { error: "Failed to fetch internship" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

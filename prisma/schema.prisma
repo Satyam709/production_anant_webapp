@@ -131,6 +131,11 @@ model Competitions{
   second_prize_id String?
   third_prize_id String?
 
+  // for outside college students
+  first_prize_name String? 
+  second_prize_name String?
+  third_prize_name String?
+
   createdBy User @relation(fields: [creator_id], references: [id])
   teams_participated Team[] @relation(name: "participant_team")
   users_participated User[] @relation(name: "participant_member")
@@ -151,9 +156,15 @@ model Events{
   prize String?
   imageURL String?
   creator_id String
+
   first_prize_id String?
   second_prize_id String?
   third_prize_id String?
+
+  // for outside college students
+  first_prize_name String? 
+  second_prize_name String?
+  third_prize_name String?
 
   users_participated User[] @relation(name: "event_participant_member")
   
@@ -242,7 +253,9 @@ enum club_dept_options {
   General
   Tech
   PR
-  Design
+  Management
+  Content
+  Education_Outreach
 }
 
 enum notice_cat {
@@ -343,6 +356,15 @@ model AlbumImages {
   album   Album   @relation(fields: [albumId], references: [id])
 }
 
+// a simple gallery with gdrive link
+model GDriveGallery {
+  id String @id @default(uuid())
+  title String
+  coverImage String?
+  description String?
+  link String
+  createdAt DateTime @default(now())
+}
 
 // blog section
 model Blog {

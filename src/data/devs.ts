@@ -25,22 +25,23 @@ export const developers: Developer[] = [
       "Deployment",
     ],
     // from dec 2204 to april 2025
-    commitHistory: [32, 29, 22, 28, 24],
+    commitHistory: [32, 29, 22, 28, 32],
   },
   {
     id: 2,
     name: "Ayush Sur",
     role: "Full Stack Developer",
-    image: "/anant_logo.png",
+    image: "/devs/ayush.jpg",
     github: "https://github.com/SurAyush",
-    linkedin: "https://linkedin.com/in/alexj",
+    linkedin: "https://www.linkedin.com/in/ayush-sur-6222b0291/",
     contributions: [
       "Core Architecture",
       "Authentication System",
       "API Integration",
+      "Project Management",
     ],
     // from dec 2204 to april 2025
-    commitHistory: [12, 18, 18, 11, 10],
+    commitHistory: [12, 18, 18, 11, 29],
   },
   {
     id: 3,
@@ -48,8 +49,8 @@ export const developers: Developer[] = [
     role: "Front End Developer",
     image: "/anant_logo.png",
     github: "https://github.com/keshav0479",
-    linkedin: "https://linkedin.com/in/alexj",
-    contributions: ["Core Architecture", "API Integration"],
+    linkedin: "https://www.linkedin.com/in/keshav0479/",
+    contributions: ["UI/UX Design"],
     // from dec 2204 to april 2025
     commitHistory: [5, 0, 5, 0, 0],
   },

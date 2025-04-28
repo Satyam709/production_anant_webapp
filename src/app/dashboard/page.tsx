@@ -1,5 +1,5 @@
 "use client"
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Trophy,
@@ -25,13 +25,13 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeamDashboard from "@/components/teams/TeamDashboard";
 import { signOut, useSession } from "next-auth/react";
 import {  useRouter } from "next/navigation";
-import PhotoGallery from "@/components/gallery/admin/GalleryManage";
 import BlogDashBoard from "@/components/blogs/BlogDashBoard";
 import InternshipDashboard from "@/components/internship/Dashboard";
 import AchievementForm from "@/components/forms/AchievementForm";
 import NewsLetterDashboard from "@/components/newsletter/NewsLetterDashboard";
 import isAdmin from "@/lib/actions/Admin";
 import isSuperAdmin  from "@/lib/actions/Admin";
+import GDriveGalleryManage from "@/components/gallery/admin/GDriveGalleryManage";
 
 type TabType =
   | "competitions"
@@ -57,6 +57,10 @@ function App() {
 
   const handleLogout = () => {
     signOut({callbackUrl: '/login'});
+  };
+
+  const handleBack2Home = () => {
+    router.push("/");
   };
 
   useEffect(() => {
@@ -163,6 +167,13 @@ function App() {
 
         <footer className="p-6 border-t border-gray-800/50 bg-gray-900/50 backdrop-blur-xl mt-auto">
           <button
+            onClick={handleBack2Home}
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-200"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Back To Home</span>
+          </button>
+          <button
             onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-200"
             onDoubleClick={handleLogout} // Require double click for logout
@@ -190,7 +201,7 @@ function App() {
             {activeTab === "notices" && <NoticeForm />}
             {activeTab === "teams" && <TeamDashboard />}
             {activeTab === "shop" && <Shop />}
-            {activeTab === "gallery" && <PhotoGallery />}
+            {activeTab === "gallery" && <GDriveGalleryManage/>}
             {activeTab === "blogs" && <BlogDashBoard />}
             {activeTab === "newsletter" && <NewsLetterDashboard />}
             {activeTab === "internships" && <InternshipDashboard />}

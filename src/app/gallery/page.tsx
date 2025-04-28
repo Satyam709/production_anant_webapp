@@ -1,28 +1,27 @@
-import { AlbumGallery } from "@/components/gallery/AlbumGallery";
+import { AlbumGallery } from "@/components/gallery/AlbumGalleryLinksVersion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { AlbumType } from "@/types/common";
-async function getAlbums() {
-  let albums: AlbumType[] = [];
-  try {
-    const res = await fetch(`${process.env.API_URL}/api/albums`, {
-      cache: "no-store", // Ensures fresh data on each request
-    });
+import { GDriveGallery } from "@prisma/client";
 
-    if (!res.ok) throw new Error("Failed to fetch albums");
-    const data = (await res.json()) as { albums: AlbumType[] };
-    albums = data.albums;
+async function getGalleries() {
+  let galleries: GDriveGallery[] = [];
+  try {
+    const res = await fetch(`${process.env.API_URL}/api/gdrivegallery`);
+
+    if (!res.ok) throw new Error("Failed to fetch galleries");
+    const data = (await res.json()) as { galleries: GDriveGallery[] };
+    galleries = data.galleries;
   } catch (error) {
     console.log(error);    
-    albums = [];
+    galleries = [];
   }
   finally {
-    return { albums };
+    return { galleries };
   }
 }
 
 export default async function GalleryPage() {
-  const { albums } = await getAlbums();
+  const { galleries } = await getGalleries();
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
@@ -43,8 +42,8 @@ export default async function GalleryPage() {
           </p>
         </div>
 
-        {/* Pass fetched albums to AlbumGallery */}
-        <AlbumGallery albums={albums}/>
+        {/* Pass fetched galleries array */}
+        <AlbumGallery albums={galleries} />
       </main>
 
       <div className="relative z-10">

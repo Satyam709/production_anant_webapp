@@ -17,7 +17,7 @@ const InternshipDashboard = () => {
 
   const fetchInternships = async () => {
     try {
-      const response = await fetch("/api/internships");
+      const response = await fetch("/api/internships/my");
       if (!response.ok) {
         throw new Error("Failed to fetch internships");
       }
@@ -87,7 +87,7 @@ const InternshipDashboard = () => {
                 )}
                 <div className="mt-4">
                   <span className="text-sm text-blue-200/40">
-                    Added by {internship.user.name} ({internship.user.batch})
+                    Added by {internship.user.name}
                   </span>
                 </div>
               </div>

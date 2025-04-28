@@ -81,63 +81,17 @@ const OfficeBearerCard: React.FC<{ member: (typeof officeBearersData)[0] }> = ({
 const OfficeBearers = () => {
   const members = officeBearersData;
 
-  // Separate members by role
-  const overallCoordinator = members.filter(
-    (member) => member.role === "President"
-  );
-  const pgCoordinators = members.filter(
-    (member) => member.role === "Coordinator (PG)"
-  );
-  const ugCoordinators = members.filter(
-    (member) => member.role === "Coordinator (UG)"
-  );
-
   return (
     <section className="mb-20 px-6" id="office-bearers">
       <h2 className="text-4xl font-extrabold mb-12 text-center text-gray-200">
         Office Bearers
       </h2>
 
-      {/* President */}
-      {overallCoordinator.length > 0 && (
-        <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-300 text-center">
-            President
-          </h3>
-          <div className="flex justify-center">
-            {overallCoordinator.map((member) => (
-              <div key={member.id} className="w-full max-w-sm">
-                <OfficeBearerCard member={member} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* PG Coordinators */}
-      {pgCoordinators.length > 0 && (
-        <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-300 text-center">
-            PG Coordinators
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {pgCoordinators.map((member) => (
-              <div key={member.id} className="w-full">
-                <OfficeBearerCard member={member} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* UG Coordinators */}
-      {ugCoordinators.length > 0 && (
+      {members.length > 0 && (
         <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-300 text-center">
-            UG Coordinators
-          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {ugCoordinators.map((member) => (
+            {members.map((member) => (
               <div key={member.id} className="w-full">
                 <OfficeBearerCard member={member} />
               </div>

@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
       hashedOTP: hashedOTP,
       time: Date.now(),
     };
+    console.log("OTP: ", OTP);
     await redis.set(roll_number, JSON.stringify(value));
 
     if (!process.env.MAIL_ID) {

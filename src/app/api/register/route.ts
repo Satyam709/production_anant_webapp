@@ -19,7 +19,7 @@ const RegistrationSchema = z.object({
 });
 
 async function parseCSV(rno: Number){
-  const filePath = path.join(process.cwd(), "src/data/users.csv");
+  const filePath = path.join(process.cwd(), "src/data/admins.csv");
   const csvData = fs.readFileSync(filePath, "utf8");
   
   // windows line endings
@@ -143,7 +143,7 @@ export async function POST(req: NextRequest) {
     const user_details = await parseCSV(Number(roll_number));
 
     let user;
-    // not a member of Anant
+    // not an admin
     if (!user_details){
       user = {
         roll_number: Number(roll_number),
@@ -158,6 +158,7 @@ export async function POST(req: NextRequest) {
         roll_number: Number(roll_number),
         name: username,
         password: hashedPassword,
+        batch: user_details["batch"],
         branch: branch_options[user_details["branch"] as keyof typeof branch_options],
         position: position_options[user_details["position"] as keyof typeof position_options],
         club_dept: [club_dept_options[user_details["club_dept"] as keyof typeof club_dept_options]],

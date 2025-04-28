@@ -51,7 +51,7 @@ export async function isSuperAdmin(userId: string) {
       return false;
     }
 
-    if (user.position === "President" || user.position === "VicePresident" || user.position === "Secretary" || user.position === "Website_Developer") {
+    if (user.position === "President" || user.position === "VicePresident" || user.position === "Secretary" || user.position === "Website_Developer" || user.position === "Coordinator") {
       return true;
     }
 

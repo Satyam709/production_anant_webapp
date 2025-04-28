@@ -11,16 +11,9 @@ export const navItems = {
     ],
   },
   Maths_Dept:{
-    label: "Maths Department",
+    label: "Math Deptartment",
     items: [
-      { label: "Maths Department", href: "/department" }
-    ],
-  },
-  Community: {
-    label: "Community",
-    items: [
-      { label: "Internships", href: "/internship" },
-      { label: "Shop", href: "/shop" },
+      { label: "Math Dept.", href: "/department" }
     ],
   },
   events: {
@@ -28,6 +21,7 @@ export const navItems = {
     items: [
       { label: "Event", href: "/events" },
       { label: "Team Events/Compitition", href: "/compete" },
+      { label: "Certificate Verification", href: "/certificate-verification" }
     ],
   },
   Student: {
@@ -38,22 +32,13 @@ export const navItems = {
       { label: "Notices", href: "/notices" }
     ],
   },
-  Blogs:{
-    label: "Blogs",
+  Community: {
+    label: "Community",
     items: [
-      { label: "Blogs", href: "/blogs" }
-    ],
-  },
-  NewsLetter:{
-    label: "News Letter",
-    items: [
-      { label: "News Letter", href: "/newsletter" }
-    ],
-  },
-  CertVerify:{
-    label: "Certificate Verification",
-    items: [
-      { label: "Certificate Verification", href: "/certificate-verification" }
+      { label: "Blogs", href: "/blogs" },
+      { label: "News Letter", href: "/newsletter" },
+      { label: "Internships", href: "/internship" },
+      { label: "Shop", href: "/shop" },
     ],
   },
   ContactUs:{
