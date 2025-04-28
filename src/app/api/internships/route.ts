@@ -83,15 +83,29 @@ export async function DELETE(req: NextRequest) {
   try {
     // Verify admin access
     const isAdminUser = await isSuperAdmin();
-    if (!isAdminUser) {
+    const session = await getSession();
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const userId = session.user.id;
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
 
     if (!id || isNaN(Number(id))) {
       return NextResponse.json({ error: "Invalid internship ID" }, { status: 400 });
+    }
+
+    const internship = await prisma.internship.findUnique({
+      where: { id: Number(id) }
+    });
+
+    if (!internship) {
+      return NextResponse.json({ error: "Internship not found" }, { status: 404 });
+    }
+
+    if (userId != internship.user_id && !isAdminUser) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Delete the internship
