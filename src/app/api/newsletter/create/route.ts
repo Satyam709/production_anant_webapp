@@ -3,10 +3,12 @@ import prisma from "@/lib/PrismaClient/db";
 import z from "zod";
 import { uploadAdminServerSideFile } from "@/lib/actions/uploadthing";
 import isAdmin  from "@/lib/actions/Admin";
-import { getSession } from "@/lib/actions/Sessions";    
+import { getSession } from "@/lib/actions/Sessions";   
 
 const newsletterSchema = z.object({
     title: z.string().min(1).max(100),
+    category: z.enum(["Indian Mathematicians", "Foreign Mathematicians"]),
+    volume: z.string(),
     file: z
       .custom<File>()
       .refine((file) => {
@@ -31,10 +33,14 @@ export async function POST(request: NextRequest) {
 
         const title = formData.get("title");
         const file = formData.get("file") as File | null;
+        const category = formData.get("category") as string | null;
+        const volume = formData.get("volume") as string | null;
 
         const result = newsletterSchema.safeParse({
             title,
             file,
+            category,
+            volume
         });
 
         if (!result.success) {
@@ -55,6 +61,8 @@ export async function POST(request: NextRequest) {
             data: {
                 title: data.title,
                 fileUrl: fileUrl,
+                category: category,
+                volume: volume,
                 writtenBy: {
                     connect: {
                         id: id

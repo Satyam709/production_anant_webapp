@@ -17,6 +17,9 @@ const NewsletterCard: React.FC<NewsletterCardProps> = ({ newsletter, onDelete, d
           <h2 className="text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors duration-300">
             {newsletter.title}
           </h2>
+          {newsletter.category && <p className="text-gray-400">
+            {newsletter.category} : {1.1}
+          </p>}
           <p className="text-gray-400">
             Published: {formatDate(newsletter.publisedAt)}
           </p>
