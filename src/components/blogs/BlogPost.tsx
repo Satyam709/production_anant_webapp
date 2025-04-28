@@ -3,7 +3,7 @@ import { Calendar, User, Tag, Clock } from 'lucide-react';
 import {Blog} from "@prisma/client";
 import { placeholder } from '@/lib/images/placeholder';
 import Image from 'next/image';
-
+import { BlogPreview } from './BlogPreview';
 type BlogProp = Blog & {
   writtenBy: { name: string };
 };
@@ -51,20 +51,7 @@ const BlogPost: React.FC<BlogProp> = ({
 
       {/* Blog Content */}
       <div className="prose-container">
-        <div 
-          className="prose prose-invert max-w-none text-lg leading-relaxed
-                    prose-headings:text-white prose-headings:tracking-tight prose-headings:font-bold
-                    prose-p:text-gray-300 prose-p:leading-relaxed
-                    prose-a:text-cyan-400 prose-a:no-underline hover:prose-a:underline
-                    [&_img]:mx-auto [&_img]:my-12 [&_img]:rounded-xl [&_img]:max-w-3xl 
-                    [&_img]:w-full [&_img]:shadow-2xl
-                    [&_h1]:text-4xl [&_h1]:mb-6 [&_h1]:mt-12
-                    [&_h2]:text-3xl [&_h2]:mb-4 [&_h2]:mt-8
-                    [&_h3]:text-2xl [&_h3]:mb-3 [&_h3]:mt-6
-                    [&_ul]:list-disc [&_ol]:list-decimal
-                    [&_li]:mt-2"
-          dangerouslySetInnerHTML={{ __html: body }}
-        />
+        <BlogPreview content={body}></BlogPreview>
 
         {/* Author Information */}
         <footer className="mt-16 pt-8 border-t border-gray-800/50">
