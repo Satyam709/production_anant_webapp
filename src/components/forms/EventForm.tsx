@@ -5,33 +5,22 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import {
-  Calendar,
-  Loader,
-  Pencil,
-  Trash2,
-  Plus,
-  CalendarClock,
-  Clock,
-  Download,
-} from "lucide-react";
+import { Calendar, Loader, Plus, CalendarClock, Clock, Pencil, Trash2 } from "lucide-react";
 import GradientButton from "../ui/GradientButton";
 import Modal from "@/components/ui/Modal";
-import Image from "next/image";
 import axios from "axios";
 import { uploadServerSideFile } from "@/lib/actions/uploadthing";
-import { Prisma } from "@prisma/client";
-import { Events } from "@prisma/client";
-import { placeholder } from "@/lib/images/placeholder";
-import { deleteEvent, getAllParticipants } from "@/lib/actions/Events";
-import { ConfirmModal } from "./ConfirmModal";
-import { convertToCSV } from "@/helpers/convertToCsv";
+import { Prisma, Events } from "@prisma/client";
+import { deleteEvent } from "@/lib/actions/Events";
+import EventCard from "@/components/events/EventCard";
 
 type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
 
 const EventForm = () => {
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [events, setEvents] = useState<Events[]>([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [upcomingEvents, setUpcomingEvents] = useState<Events[]>([]);
+  const [pastEvents, setPastEvents] = useState<Events[]>([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Events | null>(null);
   const [formData, setFormData] = useState<EventFormInput>({
@@ -69,12 +58,21 @@ const EventForm = () => {
       const res = await axios.get("/api/events");
       console.log(res.data);
       if (!res.data || !res.data.upcomingEvents) {
-        setEvents([]);
+        setUpcomingEvents([]);
+        setError("Failed to fetch events");
         throw new Error("Failed to fetch events");
       }
-      setEvents(res.data.upcomingEvents);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch events");
+      if (!res.data || !res.data.pastEvents) {
+        setPastEvents([]);
+        setError("Failed to fetch events");
+        throw new Error("Failed to fetch events");
+      }
+
+      setUpcomingEvents(res.data.upcomingEvents);
+      setPastEvents(res.data.pastEvents);
+      // setSuccess("Events fetched successfully!");
+    } catch (err: Error | unknown) {
+      setError(err instanceof Error ? err.message : "Failed to fetch events");
     } finally {
       setLoadingEvents(false);
     }
@@ -144,74 +142,29 @@ const EventForm = () => {
       setIsModalOpen(false);
       setEditingEvent(null);
       refetchEvents();
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          (editingEvent ? "Failed to update event" : "Failed to create event")
-      );
+    } catch (err: Error | unknown) {
+      if (
+        err &&
+        typeof err === "object" &&
+        "response" in err &&
+        err.response &&
+        typeof err.response === "object" &&
+        "data" in err.response
+      ) {
+        const axiosError = err.response as { data?: { message?: string } };
+        setError(
+          axiosError.data?.message ||
+            (editingEvent ? "Failed to update event" : "Failed to create event")
+        );
+      } else {
+        setError(
+          editingEvent ? "Failed to update event" : "Failed to create event"
+        );
+      }
       console.error(err);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleEdit = (event: Events) => {
-    setEditingEvent(event);
-    setFormData({
-      eventName: event.eventName,
-      conductedBy: event.conductedBy,
-      conductedOn: event.conductedOn,
-      registration_deadline: event.registration_deadline,
-      venue: event.venue,
-      prize: event.prize,
-      description: event.description,
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleDownload = useCallback(async (id : string) => {
-    try {
-      // Fetch the attendees for the meeting
-      const res = await getAllParticipants(id);
-      if (!res) {
-        setError("Failed to fetch participants");
-      } else {
-        setSuccess("Participants fetched successfully!");
-      }
-
-      if (res.length === 0) {
-        setError("No participants found");
-        return;
-      }
-
-      // Convert the attendees data to CSV
-      const csv = convertToCSV(res);
-
-      // Trigger the download of the CSV file
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", `participants_${id}.csv`);
-        link.style.visibility = "hidden";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (error) {
-      console.error("Error downloading attendees:", error);
-    }
-  }, []);
-
-  const handleDelete = async (id: string) => {
-    const res = await deleteEvent(id);
-    if (res.error) {
-      setError(res.error);
-    } else {
-      setSuccess("Event deleted successfully!");
-    }
-    refetchEvents();
   };
 
   const handleInputChange = (
@@ -272,98 +225,98 @@ const EventForm = () => {
         <div className="flex justify-center">
           <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
         </div>
-      ) : events.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((event) => (
-            <div
-              key={event.event_id}
-              className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
-            >
-              <div className="relative h-48">
-                <Image
-                  src={event.imageURL || placeholder}
-                  alt={event.eventName}
-                  className="w-full h-full object-cover"
-                  fill
-                  sizes="100%"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  {event.eventName}
-                </h3>
-                <div className="space-y-2 text-sm text-gray-300">
-                  <p>
-                    <span className="text-gray-400">By:</span>{" "}
-                    {event.conductedBy}
-                  </p>
-                  <p>
-                    <span className="text-gray-400">Date:</span>{" "}
-                    {new Date(event.conductedOn).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <span className="text-gray-400">Venue:</span> {event.venue}
-                  </p>
-                  {event.prize && (
-                    <p>
-                      <span className="text-gray-400">Prize:</span>{" "}
-                      {event.prize}
-                    </p>
-                  )}
-                </div>
-                <div className="mt-4 flex justify-end space-x-2">
-                  <button
-                    onClick={() => handleDownload(event.event_id)}
-                    className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                  >
-                    <Download className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => handleEdit(event)}
-                    className="p-2 text-gray-400 hover:text-primary-cyan transition-colors"
-                  >
-                    <Pencil className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(true)}
-                    className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Confirmation Modal */}
-              <ConfirmModal
-                isOpen={showDeleteConfirm}
-                title="Delete Meeting"
-                message={
-                  <div className="space-y-4">
-                    <p>Are you sure you want to delete this meeting?</p>
-                    <div className="p-3 bg-gray-800/50 rounded-lg">
-                      <p className="text-white font-medium">
-                        {event.eventName}
-                      </p>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {new Date(event.conductedOn).toLocaleDateString()} at{" "}
-                        {event.venue}
-                      </p>
-                    </div>
-                    <p className="text-sm">This action cannot be undone.</p>
-                  </div>
-                }
-                onConfirm={() => {
-                  handleDelete(event.event_id);
-                  setShowDeleteConfirm(false);
-                }}
-                onCancel={() => setShowDeleteConfirm(false)} // Close the modal when canceled
-              />
-            </div>
-          ))}
-        </div>
       ) : (
-        <div className="text-center text-gray-400">No events found.</div>
+        <div className="space-y-8">
+          {/* Upcoming Events */}
+          <div>
+            <h2 className="text-2xl font-bold mb-6 text-white">
+              Upcoming Events
+            </h2>
+            {upcomingEvents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {upcomingEvents.map((event) => (
+                  <div key={event.event_id} className="relative group">
+                    <EventCard {...event} />
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => {
+                          setFormData({
+                            eventName: event.eventName,
+                            conductedBy: event.conductedBy,
+                            conductedOn: event.conductedOn,
+                            registration_deadline: event.registration_deadline,
+                            venue: event.venue,
+                            prize: event.prize || "",
+                            description: event.description,
+                          });
+                          setEditingEvent(event);
+                          setIsModalOpen(true);
+                        }}
+                        className="p-2 bg-black/50 rounded-full text-white hover:text-primary-cyan transition-colors"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setShowDeleteConfirm(event.event_id)}
+                        className="p-2 bg-black/50 rounded-full text-white hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-gray-400 py-4">
+                No upcoming events found.
+              </div>
+            )}
+          </div>
+
+          {/* Past Events */}
+          <div>
+            <h2 className="text-2xl font-bold mb-6 text-white">Past Events</h2>
+            {pastEvents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {pastEvents.map((event) => (
+                  <div key={event.event_id} className="relative group">
+                    <EventCard {...event} />
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => {
+                          setFormData({
+                            eventName: event.eventName,
+                            conductedBy: event.conductedBy,
+                            conductedOn: event.conductedOn,
+                            registration_deadline: event.registration_deadline,
+                            venue: event.venue,
+                            prize: event.prize || "",
+                            description: event.description,
+                          });
+                          setEditingEvent(event);
+                          setIsModalOpen(true);
+                        }}
+                        className="p-2 bg-black/50 rounded-full text-white hover:text-primary-cyan transition-colors"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setShowDeleteConfirm(event.event_id)}
+                        className="p-2 bg-black/50 rounded-full text-white hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-gray-400 py-4">
+                No past events found.
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
       {/* Create/Edit Modal */}
@@ -572,6 +525,44 @@ const EventForm = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div className="relative bg-gray-900 p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-xl font-semibold mb-4">Delete Event</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete this event? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (showDeleteConfirm) {
+                    const res = await deleteEvent(showDeleteConfirm);
+                    if (res.error) {
+                      setError(res.error);
+                    } else {
+                      setSuccess("Event deleted successfully!");
+                      refetchEvents();
+                    }
+                    setShowDeleteConfirm(null);
+                  }
+                }}
+                className="px-4 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
