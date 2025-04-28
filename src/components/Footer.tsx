@@ -14,14 +14,20 @@ const Footer = () => {
   const quickLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Team Anant", href: "/team" },
+    { name: "Team Anant", href: "/team_anant" },
     { name: "Events", href: "/events" },
     { name: "Blog", href: "/blog" },
     { name: "Math Department", href: "/department" },
     { name: "Developers", href: "/developers" },
     { name: "Certificate-Verification", href: "/certificate-verification" },
-    { name: "Old Website", href: "https://mathematics39.wixsite.com/anantnitkkr" },
-    { name: "Repository", href: "https://github.com/Anant-WebDev/anant_webapp/" }
+    {
+      name: "Old Website",
+      href: "https://mathematics39.wixsite.com/anantnitkkr",
+    },
+    {
+      name: "Repository",
+      href: "https://github.com/Anant-WebDev/anant_webapp/",
+    },
   ];
 
   const contactInfo = [
@@ -36,10 +42,26 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <Linkedin className="h-4 w-4" />, href: "https://www.linkedin.com/company/anant-the-mathematical-society/", label: "LinkedIn" },
-    { icon: <Instagram className="h-4 w-4" />, href: "https://www.instagram.com/anant_nit_kkr/", label: "Instagram" },
-    { icon: <Twitter className="h-4 w-4" />, href: "https://x.com/MathDept_nitkkr", label: "Twitter" },
-    { icon: <Youtube className="h-4 w-4" />, href: "https://www.youtube.com/@anant_nitkkr", label: "YouTube" },
+    {
+      icon: <Linkedin className="h-4 w-4" />,
+      href: "https://www.linkedin.com/company/anant-the-mathematical-society/",
+      label: "LinkedIn",
+    },
+    {
+      icon: <Instagram className="h-4 w-4" />,
+      href: "https://www.instagram.com/anant_nit_kkr/",
+      label: "Instagram",
+    },
+    {
+      icon: <Twitter className="h-4 w-4" />,
+      href: "https://x.com/MathDept_nitkkr",
+      label: "Twitter",
+    },
+    {
+      icon: <Youtube className="h-4 w-4" />,
+      href: "https://www.youtube.com/@anant_nitkkr",
+      label: "YouTube",
+    },
   ];
 
   return (
