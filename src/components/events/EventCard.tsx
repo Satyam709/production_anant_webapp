@@ -50,9 +50,10 @@ const EventCard: React.FC<Events> = (event) => {
             <div className="flex items-center gap-2">
               <Clock size={16} />
               <span>
-                {new Date(event.conductedOn).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
+                {new Date(event.conductedOn).toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
                 })}
               </span>
             </div>
