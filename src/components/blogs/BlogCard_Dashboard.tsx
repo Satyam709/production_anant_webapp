@@ -17,10 +17,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onEdit, onDelete, onAccept, o
   return (
       <div 
       className="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full"
-      onClick={()=> onOpen && onOpen(blog.id)}
       >
         {(blog.cover_picture || placeholder) && (
-          <div className="h-40 overflow-hidden">
+          <div className="h-40 overflow-hidden" onClick={()=> onOpen && onOpen(blog.id)}>
             <img 
               src={blog.cover_picture || placeholder} 
               alt={blog.title} 
