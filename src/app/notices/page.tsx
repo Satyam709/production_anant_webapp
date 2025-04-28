@@ -95,7 +95,7 @@ export default function NoticePage() {
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{notice.headline}</h3>
-                <p className="text-gray-300 text-sm line-clamp-3">{notice.body}</p>
+                <p className="text-gray-300 text-sm">{notice.body}</p>
               </div>
             </div>
           ))}
