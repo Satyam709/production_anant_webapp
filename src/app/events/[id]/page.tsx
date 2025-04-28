@@ -16,10 +16,10 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
   if (!event) {
     notFound();
   }
-  
+
   const isRegistrationOpen = new Date() < new Date(event.registration_deadline);
   const session = await getSession();
-  const isLoggedin = session?.user? true : false;
+  const isLoggedin = session?.user ? true : false;
 
   const formatDate = (date: string) => {
     return new Intl.DateTimeFormat("en-US", {
@@ -37,12 +37,15 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
       <Navbar />
       <div className="min-h-screen bg-[#0A0A0A] text-white p-1">
         <div className="max-w-7xl mx-auto my-32">
-          <div className="relative">
+          <div className="relative  w-full">
             <Image
-              src={event.imageURL == "" ? null : event.imageURL}
+              src={
+                event.imageURL === "" ? "/fallback-image.png" : event.imageURL
+              }
               alt={event.eventName}
-              objectFit="cover"
-              className="w-full h-[400px] object-cover rounded-xl shadow-2xl mb-8"
+              width={800}
+              height={500}
+              className="w-full h-auto object-cover rounded-xl shadow-2xl mb-8"
             />
             {!isRegistrationOpen && (
               <div className="absolute bottom-4 right-4 z-20 bg-red-500 text-white px-4 py-2 rounded-full">
