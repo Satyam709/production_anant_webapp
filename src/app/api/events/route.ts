@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
         take: size,
         skip: (pageNumber - 1) * size,
         orderBy: {
-          registration_deadline: "asc",
+          registration_deadline: "desc",
         },
       });
     }
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
         take: size,
         skip: (pageNumber - 1) * size,
         orderBy: {
-          registration_deadline: "asc",
+          registration_deadline: "desc",
         },
       });
     }
