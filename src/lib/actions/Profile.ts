@@ -2,19 +2,25 @@
 import { getSession, isAuthenticated } from "@/lib/actions/Sessions";
 import prisma from "@/lib/PrismaClient/db";
 import { rollNumberSchema } from "@/types/common";
-import { branch_options, club_dept_options, position_options } from "@prisma/client";
+import {
+  branch_options,
+  club_dept_options,
+  position_options,
+} from "@prisma/client";
 import { uploadServerSideFile } from "@/lib/actions/uploadthing";
+
 export async function UpdateProfile(
   name: string | undefined,
   branch: branch_options | undefined,
   batch: string | undefined,
-  club_dept: club_dept_options[] | undefined
+  club_dept: club_dept_options[] | undefined,
+  linkedIn: string | undefined,
+  github: string | undefined,
+  instagram: string | undefined
 ) {
-  // currently updated that are allowed are name, branch, batch, club_dept,
   try {
     if (!(await isAuthenticated())) return false;
 
-    // update db
     const user = await prisma.user.update({
       where: {
         id: (await getSession())?.user.id,
@@ -24,6 +30,9 @@ export async function UpdateProfile(
         branch: branch,
         batch: batch,
         club_dept: club_dept,
+        linkedIn: linkedIn,
+        github: github,
+        instagram: instagram,
       },
     });
     console.log("user updated", user);
@@ -37,45 +46,62 @@ export async function UpdateProfile(
 }
 
 export type getUserInfoType = {
-    id: string | undefined;
-    roll_number: number | undefined;
-    name: string | undefined;
-    imageURL: string | null | undefined;
-    position: position_options | null | undefined;
-    branch: branch_options| undefined;
-    club_dept: club_dept_options[] | undefined;
-    joined: Date | undefined;
-    batch: string | undefined;
-    first_prize_comp: {
-      conductedOn: Date;
-      competitionName: string 
-}[] | undefined;
-    second_prize_comp: {
-      conductedOn: Date; 
-      competitionName: string 
-}[] | undefined;
-    third_prize_comp: {
-      conductedOn: Date;
-      competitionName: string 
-}[] | undefined;
-    first_prize: {
-      conductedOn: Date; 
-      eventName: string 
-}[] | undefined;
-    second_prize: {
-      conductedOn: Date; 
-      eventName: string 
-}[] | undefined;
-    third_prize: {
-      conductedOn: Date; 
-      eventName: string 
-}[] | undefined;
-    compititions_participated: { competitionName: string, conductedOn: Date }[] | undefined;
-    events_participated: { eventName: string, conductedOn: Date }[] | undefined;
-    meetings_attended: { meeting_id: string, starts: Date }[] | undefined;
-} | null
+  id: string | undefined;
+  roll_number: number | undefined;
+  name: string | undefined;
+  imageURL: string | null | undefined;
+  position: position_options | null | undefined;
+  branch: branch_options | undefined;
+  club_dept: club_dept_options[] | undefined;
+  joined: Date | undefined;
+  batch: string | undefined;
+  linkedIn: string | null | undefined;
+  github: string | null | undefined;
+  instagram: string | null | undefined;
+  first_prize_comp:
+    | {
+        conductedOn: Date;
+        competitionName: string;
+      }[]
+    | undefined;
+  second_prize_comp:
+    | {
+        conductedOn: Date;
+        competitionName: string;
+      }[]
+    | undefined;
+  third_prize_comp:
+    | {
+        conductedOn: Date;
+        competitionName: string;
+      }[]
+    | undefined;
+  first_prize:
+    | {
+        conductedOn: Date;
+        eventName: string;
+      }[]
+    | undefined;
+  second_prize:
+    | {
+        conductedOn: Date;
+        eventName: string;
+      }[]
+    | undefined;
+  third_prize:
+    | {
+        conductedOn: Date;
+        eventName: string;
+      }[]
+    | undefined;
+  compititions_participated:
+    | { competitionName: string; conductedOn: Date }[]
+    | undefined;
+  events_participated: { eventName: string; conductedOn: Date }[] | undefined;
+  meetings_attended: { meeting_id: string; starts: Date }[] | undefined;
+} | null;
 
-export async function getUserInfo() : Promise<getUserInfoType>{
+export async function getUserInfo(): Promise<getUserInfoType> {
   try {
     if (!(await isAuthenticated())) return null;
     const userId = (await getSession())?.user.id;
@@ -83,62 +109,62 @@ export async function getUserInfo() : Promise<getUserInfoType>{
       where: {
         id: userId,
       },
-      include:{
-        first_prize_comp:{
+      include: {
+        first_prize_comp: {
           select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        second_prize_comp:{
+        second_prize_comp: {
           select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        third_prize_comp:{
+        third_prize_comp: {
           select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        first_prize:{
+        first_prize: {
           select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        second_prize:{
+        second_prize: {
           select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        third_prize:{
+        third_prize: {
           select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        compititions_participated:{
-          select:{
+        compititions_participated: {
+          select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        events_participated:{
-          select:{
+        events_participated: {
+          select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        meetings_attended:{
-          select:{
+        meetings_attended: {
+          select: {
             meeting_id: true,
-            starts: true
-          }
-        }
-      }
+            starts: true,
+          },
+        },
+      },
     });
     return {
       id: user?.id,
@@ -150,6 +176,9 @@ export async function getUserInfo() : Promise<getUserInfoType>{
       club_dept: user?.club_dept,
       joined: user?.joined,
       batch: user?.batch || undefined,
+      linkedIn: user?.linkedIn || undefined,
+      github: user?.github || undefined,
+      instagram: user?.instagram || undefined,
       first_prize_comp: user?.first_prize_comp,
       second_prize_comp: user?.second_prize_comp,
       third_prize_comp: user?.third_prize_comp,
@@ -158,86 +187,87 @@ export async function getUserInfo() : Promise<getUserInfoType>{
       third_prize: user?.third_prize,
       compititions_participated: user?.compititions_participated,
       events_participated: user?.events_participated,
-      meetings_attended: user?.meetings_attended
-    }
+      meetings_attended: user?.meetings_attended,
+    };
   } catch (error) {
     console.log("error while getting user info", error);
     return null;
   }
 }
 
-export async function getUserInfoById(roll_number:string) : Promise<getUserInfoType>{
+export async function getUserInfoById(
+  roll_number: string
+): Promise<getUserInfoType> {
   try {
+    const data = rollNumberSchema.safeParse(roll_number);
 
-    const data = rollNumberSchema.safeParse(roll_number)
-
-    if(!data.success){
+    if (!data.success) {
       console.log(data.error.message);
       return null;
     }
 
-    const rollNo = data.data
+    const rollNo = data.data;
     const user = await prisma.user.findUnique({
       where: {
-        roll_number:Number(rollNo)
+        roll_number: Number(rollNo),
       },
-      include:{
-        first_prize_comp:{
+      include: {
+        first_prize_comp: {
           select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        second_prize_comp:{
+        second_prize_comp: {
           select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        third_prize_comp:{
+        third_prize_comp: {
           select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        first_prize:{
+        first_prize: {
           select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        second_prize:{
+        second_prize: {
           select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        third_prize:{
+        third_prize: {
           select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        compititions_participated:{
-          select:{
+        compititions_participated: {
+          select: {
             competitionName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        events_participated:{
-          select:{
+        events_participated: {
+          select: {
             eventName: true,
-            conductedOn: true
-          }
+            conductedOn: true,
+          },
         },
-        meetings_attended:{
-          select:{
+        meetings_attended: {
+          select: {
             meeting_id: true,
-            starts: true
-          }
-        }
-      }
-    }); 
+            starts: true,
+          },
+        },
+      },
+    });
     return {
       id: user?.id,
       roll_number: user?.roll_number,
@@ -248,6 +278,9 @@ export async function getUserInfoById(roll_number:string) : Promise<getUserInfoT
       club_dept: user?.club_dept,
       joined: user?.joined,
       batch: user?.batch || undefined,
+      linkedIn: user?.linkedIn || undefined,
+      github: user?.github || undefined,
+      instagram: user?.instagram || undefined,
       first_prize_comp: user?.first_prize_comp,
       second_prize_comp: user?.second_prize_comp,
       third_prize_comp: user?.third_prize_comp,
@@ -256,8 +289,8 @@ export async function getUserInfoById(roll_number:string) : Promise<getUserInfoT
       third_prize: user?.third_prize,
       compititions_participated: user?.compititions_participated,
       events_participated: user?.events_participated,
-      meetings_attended: user?.meetings_attended
-    }
+      meetings_attended: user?.meetings_attended,
+    };
   } catch (error) {
     console.log("error while getting user info", error);
     return null;
