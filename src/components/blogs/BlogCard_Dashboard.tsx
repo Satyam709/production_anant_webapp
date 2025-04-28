@@ -49,7 +49,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onEdit, onDelete, onAccept, o
             </div>
             
             <div className="flex justify-end space-x-2">
-              {onEdit && (
+              {/* {onEdit && (
                 <button 
                   onClick={() => onEdit(blog.id)}
                   className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-600 rounded-full transition-colors"
@@ -57,7 +57,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onEdit, onDelete, onAccept, o
                 >
                   <Edit size={18} />
                 </button>
-              )}
+              )} */}
               
               {type === 'draft' && onAccept && (
                 <button 
