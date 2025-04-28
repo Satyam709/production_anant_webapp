@@ -343,6 +343,15 @@ model AlbumImages {
   album   Album   @relation(fields: [albumId], references: [id])
 }
 
+// a simple gallery with gdrive link
+model GDriveGallery {
+  id String @id @default(uuid())
+  title String
+  coverImage String?
+  description String?
+  link String
+  createdAt DateTime @default(now())
+}
 
 // blog section
 model Blog {

@@ -45,8 +45,6 @@ export async function GET(request: Request) {
       { error: "Failed to fetch internships" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -74,8 +72,6 @@ export async function POST(req: NextRequest) {
       { error: "Failed to create internship" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -120,7 +116,5 @@ export async function DELETE(req: NextRequest) {
       { error: "Failed to delete internship" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
