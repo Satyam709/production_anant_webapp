@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "postinstall": "prisma generate",
+    "postbuild": "next-sitemap",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -69,6 +70,7 @@
     "lucide-react": "^0.469.0",
     "next": "15.1.2",
     "next-auth": "^4.24.11",
+    "next-sitemap": "^4.2.3",
     "nodemailer": "^6.9.16",
     "prisma": "^6.3.1",
     "qrcode": "^1.5.4",
