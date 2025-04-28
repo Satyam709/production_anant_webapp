@@ -87,7 +87,7 @@ const NewsTickerSection = ({ news }: NewsTickerSectionProps) => {
                 className="flex justify-between items-start gap-3"
               >
                 <Link
-                  href={`/notices/${item.id}`}
+                  href={`/notices`}
                   className="hover:text-yellow-300 transition-colors underline"
                 >
                   {item.title}
