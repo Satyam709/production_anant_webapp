@@ -53,6 +53,7 @@ const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onA
           >
             <option value="Indian Mathematicians">Indian Mathematicians</option>
             <option value="Foreign Mathematicians">Foreign Mathematicians</option>
+            <option value="Anant Report">Anant Report</option>
           </select>
         </div>
 
