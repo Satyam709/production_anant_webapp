@@ -7,7 +7,7 @@ import { getSession } from "@/lib/actions/Sessions";
 
 const newsletterSchema = z.object({
     title: z.string().min(1).max(100),
-    category: z.enum(["Indian Mathematicians", "Foreign Mathematicians"]),
+    category: z.enum(["Indian Mathematicians", "Foreign Mathematicians", "Anant Report"]),
     volume: z.string(),
     file: z
       .custom<File>()
