@@ -71,13 +71,17 @@ const HomePage: React.FC = () => {
     setNewsLetterToDelete(null);
   };
 
-  const handleAddNewsletter = (title: string, file: File | null) => {
+  const handleAddNewsletter = (title: string, file: File | null, category: string, volume: string) => {
 
     const uploadFile = async () => {
         try {
             const formData = new FormData();
             formData.append('title', title);
             formData.append('file', file!);
+            formData.append('category', category);
+            formData.append('volume', volume);
+            console.log(category);
+            console.log(volume);
 
             const response = await fetch('/api/newsletter/create', {
                 method: 'POST',

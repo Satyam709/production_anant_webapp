@@ -400,6 +400,8 @@ model NewsLetter{
   publisedAt DateTime @default(now())
   userID String
   writtenBy User @relation(name: "newsletter-written", fields: [userID], references: [id])
+  category String?
+  volume String?
 }
 
 model Certificate{

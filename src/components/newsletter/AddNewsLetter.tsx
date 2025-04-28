@@ -4,18 +4,22 @@ import Modal from '@/components/ui/Modal';
 interface AddNewsletterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (title: string, file: File | null) => void;
+  onAdd: (title: string, file: File | null, category: string, volume: string) => void;
 }
 
 const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onAdd }) => {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [category, setCategory] = useState('Indian Mathematicians');
+  const [volume, setVolume] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAdd(title, file);
+    onAdd(title, file, category, volume);
     setTitle('');
     setFile(null);
+    setCategory('Indian Mathematicians');
+    setVolume('');
     onClose();
   };
 
@@ -35,7 +39,37 @@ const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onA
             required
           />
         </div>
-        
+
+        <div>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-2">
+            Category
+          </label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            required
+          >
+            <option value="Indian Mathematicians">Indian Mathematicians</option>
+            <option value="Foreign Mathematicians">Foreign Mathematicians</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="volume" className="block text-sm font-medium text-gray-300 mb-2">
+            Volume
+          </label>
+          <input
+            type="text"
+            id="volume"
+            value={volume}
+            onChange={(e) => setVolume(e.target.value)}
+            className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            required
+          />
+        </div>
+
         <div>
           <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">
             PDF File
@@ -68,6 +102,6 @@ const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onA
       </form>
     </Modal>
   );
-}
+};
 
 export default AddNewsLetter;
