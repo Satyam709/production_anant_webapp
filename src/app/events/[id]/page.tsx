@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getSession } from "@/lib/actions/Sessions";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -34,12 +35,14 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-[#0A0A0A] text-white p-1">
+        <div className="max-w-7xl mx-auto my-32">
           <div className="relative">
-            <img
+            <Image
               src={event.imageURL == "" ? null : event.imageURL}
               alt={event.eventName}
+              width={800}
+              height={400}
               className="w-full h-[400px] object-cover rounded-xl shadow-2xl mb-8"
             />
             {!isRegistrationOpen && (
