@@ -41,8 +41,7 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
             <Image
               src={event.imageURL == "" ? null : event.imageURL}
               alt={event.eventName}
-              width={800}
-              height={400}
+              objectFit="cover"
               className="w-full h-[400px] object-cover rounded-xl shadow-2xl mb-8"
             />
             {!isRegistrationOpen && (
@@ -111,7 +110,7 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
 
             <div className="mb-8">
               <h3 className="text-xl font-semibold mb-4">About the Event</h3>
-              <p className="text-gray-300 leading-relaxed">
+              <p className="text-gray-300 leading-relaxed break-words">
                 {event.description}
               </p>
             </div>
