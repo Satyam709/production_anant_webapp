@@ -242,7 +242,9 @@ enum club_dept_options {
   General
   Tech
   PR
-  Design
+  Management
+  Content
+  Education_Outreach
 }
 
 enum notice_cat {
