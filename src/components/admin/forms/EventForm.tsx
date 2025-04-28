@@ -78,8 +78,12 @@ const EventForm = () => {
         description: "",
         imageURL: "",
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to create event");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || "Failed to create event");
+      } else {
+        setError("Failed to create event");
+      }
       console.error(err);
     } finally {
       setLoading(false);
@@ -167,7 +171,7 @@ const EventForm = () => {
                 name="conductedOn"
                 value={
                   formData.conductedOn instanceof Date
-                    ? formData.conductedOn.toISOString().slice(0, 16)
+                    ? new Date(formData.conductedOn.getTime() - formData.conductedOn.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
                     : ""
                 }
                 onChange={(e) =>
@@ -201,7 +205,7 @@ const EventForm = () => {
                 name="registration_deadline"
                 value={
                   formData.registration_deadline instanceof Date
-                    ? formData.registration_deadline.toISOString().slice(0, 16)
+                    ? new Date(formData.registration_deadline.getTime() - formData.registration_deadline.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
                     : ""
                 }
                 onChange={(e) =>

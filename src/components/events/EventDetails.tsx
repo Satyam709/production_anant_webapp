@@ -53,7 +53,11 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
                 <div>
                   <p className="font-semibold">Time</p>
                   <p className="text-gray-400">
-                    {new Date(event.conductedOn).toLocaleTimeString()}
+                    {new Date(event.conductedOn).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: true
+                    })}
                   </p>
                 </div>
               </div>
