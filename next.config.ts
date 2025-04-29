@@ -38,6 +38,38 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  // redirects from old urls to new urls
+  async redirects() {
+    return [
+      {
+        source: "/about-anant-nitkkr",
+        destination: "/about",
+        permanent: true,
+      },
+      {
+        source: "/latest-news",
+        destination: "/notices",
+        permanent: true,
+      },
+      {
+        source: "/math-dept",
+        destination: "/department",
+        permanent: true,
+      },
+      {
+        source: "/team-anant-nitkkr",
+        destination: "/team_anant",
+        permanent: true,
+      },
+      {
+        source: "/anant-event-details",
+        destination: "/events",
+        permanent: true,
+      },
+    ];
+  },
+
 };
 
 export default nextConfig;
