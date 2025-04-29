@@ -99,14 +99,14 @@ export default function AboutPage() {
           </Link>
 
           <Link
-            href="/members"
+            href="/developers"
             className="bg-black/20 backdrop-blur-sm border border-blue-900/50 hover:border-[#00E0FF]/50 rounded-xl p-6 text-center transition-all group"
           >
             <h3 className="text-xl font-bold text-blue-100 group-hover:text-[#00E0FF] mb-2">
-              Members Policy
+              Developers
             </h3>
             <p className="text-blue-200/60">
-              Learn about membership guidelines
+              Know about the team behind this website
             </p>
           </Link>
 
