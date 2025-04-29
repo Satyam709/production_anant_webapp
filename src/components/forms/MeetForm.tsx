@@ -28,6 +28,7 @@ import { deleteMeeting, getAttendies } from "@/lib/actions/MeetAction";
 import Image from "next/image";
 import generateQr from "@/lib/actions/GenerateQr";
 import { convertToCSV } from "@/helpers/convertToCsv";
+import { toLocalDatetimeString } from "@/helpers/toLocalDTString";
 
 type MeetFormInput = Omit<
   Prisma.MeetingCreateInput,
@@ -587,7 +588,7 @@ const MeetForm = () => {
                   type="datetime-local"
                   ref={startsDateRef}
                   name="starts"
-                  value={new Date(formData.starts).toISOString().slice(0, 16)}
+                  value={toLocalDatetimeString(new Date(formData.starts))}
                   onChange={handleInputChange}
                   className="w-full pl-10 px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          appearance-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50

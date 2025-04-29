@@ -23,9 +23,9 @@ import { placeholder } from "@/lib/images/placeholder";
 import axios from "axios";
 import { uploadServerSideFile } from "@/lib/actions/uploadthing";
 import { deleteCompetition, getCompetitionParticipants } from "@/lib/actions/Competitions";
-import { th } from "framer-motion/client";
 import { ConfirmModal } from "./ConfirmModal";
 import { convertToCSV } from "@/helpers/convertToCsv";
+import { toLocalDatetimeString } from "@/helpers/toLocalDTString";
 
 
 type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, "createdBy">;
@@ -468,9 +468,7 @@ const CompForm = () => {
                   type="datetime-local"
                   ref={conductedOnRef}
                   name="conductedOn"
-                  value={new Date(formData.conductedOn)
-                    .toISOString()
-                    .slice(0, 16)}
+                  value={toLocalDatetimeString(new Date(formData.conductedOn))}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -500,9 +498,7 @@ const CompForm = () => {
                   type="datetime-local"
                   ref={deadlineRef}
                   name="registration_deadline"
-                  value={new Date(formData.registration_deadline)
-                    .toISOString()
-                    .slice(0, 16)}
+                  value={toLocalDatetimeString(new Date(formData.registration_deadline))}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,

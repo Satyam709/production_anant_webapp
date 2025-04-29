@@ -13,6 +13,7 @@ import { uploadServerSideFile } from "@/lib/actions/uploadthing";
 import { Prisma, Events } from "@prisma/client";
 import { deleteEvent } from "@/lib/actions/Events";
 import EventCard from "@/components/events/EventCard";
+import { toLocalDatetimeString } from "@/helpers/toLocalDTString";
 
 type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
 
@@ -394,9 +395,7 @@ const EventForm = () => {
                   type="datetime-local"
                   ref={conductedOnRef}
                   name="conductedOn"
-                  value={new Date(formData.conductedOn)
-                    .toISOString()
-                    .slice(0, 16)}
+                  value={toLocalDatetimeString(new Date(formData.conductedOn))}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -426,9 +425,7 @@ const EventForm = () => {
                   type="datetime-local"
                   ref={deadlineRef}
                   name="registration_deadline"
-                  value={new Date(formData.registration_deadline)
-                    .toISOString()
-                    .slice(0, 16)}
+                  value={toLocalDatetimeString(new Date(formData.registration_deadline))}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
