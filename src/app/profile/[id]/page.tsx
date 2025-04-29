@@ -1,10 +1,10 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
-import ProfileLayout from "@/components/profile/ProfileLayout";
+import ViewProfileLayout from "@/components/profile/ViewProfileLayout";
 import Footer from "@/components/Footer";
 import { getUserInfoById } from "@/lib/actions/Profile";
 
-const Profile = async ({ params }: { params: Promise<{ id: string }> }) => {
+const ViewProfile = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;  
   const user = await getUserInfoById(id);
 
@@ -19,7 +19,7 @@ const Profile = async ({ params }: { params: Promise<{ id: string }> }) => {
 
       <main className="relative z-10 container mx-auto px-4 py-20">
         {user ? (
-          <ProfileLayout userInfo={user} />
+          <ViewProfileLayout userInfo={user} />
         ) : (
           <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
             <h1 className="text-3xl font-semibold text-white">User Not Found</h1>
@@ -35,4 +35,4 @@ const Profile = async ({ params }: { params: Promise<{ id: string }> }) => {
   );
 };
 
-export default Profile;
+export default ViewProfile;

@@ -58,20 +58,20 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
   if (!userInfo) return <div>No user information available</div>;
 
   return (
-    <div className="p-8 rounded-2xl bg-black/30">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="p-4 sm:p-8 rounded-2xl bg-black/30">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {/* Full Name */}
         <div>
           <label className="block text-sm text-gray-300 mb-1">Full Name</label>
           <div className="relative flex items-center gap-2">
             <User className="text-gray-400" />
             {isEditing.name ? (
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-2 w-full">
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 min-w-0"
+                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
                   onClick={() => handleSave('name')}
@@ -133,11 +133,11 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <div className="relative flex items-center gap-2">
             <Calendar className="text-gray-400" />
             {isEditing.batch ? (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2 w-full">
                 <select
                   value={formData.batch}
                   onChange={(e) => setFormData(prev => ({ ...prev, batch: e.target.value }))}
-                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 min-w-0"
+                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 >
                   {graduationYears.map(year => (
                     <option key={year} value={year}>{year}</option>
@@ -176,12 +176,12 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <div className="relative flex items-center gap-2">
             <Linkedin className="text-gray-400" />
             {isEditing.linkedIn ? (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2 w-full">
                 <input
                   type="text"
                   value={formData.linkedIn}
                   onChange={(e) => setFormData(prev => ({ ...prev, linkedIn: e.target.value }))}
-                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 min-w-0"
+                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
                   onClick={() => handleSave('linkedIn')}
@@ -216,12 +216,12 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <div className="relative flex items-center gap-2">
             <Github className="text-gray-400" />
             {isEditing.github ? (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2 w-full">
                 <input
                   type="text"
                   value={formData.github}
                   onChange={(e) => setFormData(prev => ({ ...prev, github: e.target.value }))}
-                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 min-w-0"
+                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
                   onClick={() => handleSave('github')}
@@ -256,12 +256,12 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <div className="relative flex items-center gap-2">
             <Instagram className="text-gray-400" />
             {isEditing.instagram ? (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2 w-full">
                 <input
                   type="text"
                   value={formData.instagram}
                   onChange={(e) => setFormData(prev => ({ ...prev, instagram: e.target.value }))}
-                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 min-w-0"
+                  className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
                   onClick={() => handleSave('instagram')}
