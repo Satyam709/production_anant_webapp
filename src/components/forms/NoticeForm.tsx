@@ -5,6 +5,7 @@ import Modal from '../ui/Modal';
 import StatusModal from '../ui/StatusModal';
 import { category } from '@prisma/client';
 import { DeleteNotice } from '@/lib/actions/DeleteNotice';
+import { li } from 'framer-motion/client';
 
 type Notice = {
   id: string;
@@ -12,6 +13,7 @@ type Notice = {
   body: string;
   category: category
   postedOn: Date;
+  link: string;
 };
 
 interface StatusMessage {
@@ -23,7 +25,7 @@ interface StatusMessage {
 // Mock data
 const imageLinks= {
   Technical: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=1000', 
-  General: 'https://images.unsplash.com/photo-1602497223003-531c7a191886?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  General: 'https://tls.or.tz/wp-content/uploads/2023/02/imprtant-notice-icon.png',
   Sponsorship: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=1000'
 }
 
@@ -36,6 +38,7 @@ const NoticeForm = () => {
     headline: '',
     body: '',
     category: 'General',
+    link: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -55,7 +58,8 @@ const NoticeForm = () => {
           headline: notice.headline,
           body: notice.body,
           category: notice.category,
-          postedOn: new Date(notice.postedOn)
+          postedOn: new Date(notice.postedOn),
+          link: notice.link
         }
       });
 
@@ -89,6 +93,7 @@ const NoticeForm = () => {
         headline: '',
         body: '',
         category: 'General',
+        link: ''
       });
       setIsModalOpen(false);
     } catch (err: any) {
@@ -136,7 +141,8 @@ const NoticeForm = () => {
     setFormData({
       headline: '',
       body: '',
-      category: 'General'
+      category: 'General',
+      link: ''
     });
     setIsModalOpen(true);
   };
@@ -206,6 +212,7 @@ const NoticeForm = () => {
                 </span>
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">{notice.headline}</h3>
+              {notice.link && <p className="text-blue-500 text-md my-1"><a href={notice.link}>View Attached File</a></p>}
               <p className="text-gray-300 text-sm line-clamp-3">{notice.body}</p>
               <div className="mt-4 flex justify-end space-x-2 border-t border-gray-800 pt-4">
                 <button
@@ -277,6 +284,22 @@ const NoticeForm = () => {
                        text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
               placeholder="Enter notice content"
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Link
+            </label>
+            <input
+              type="text"
+              name="link"
+              value={formData.link}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
+              placeholder="Enter notice link (optional)"
             />
           </div>
 

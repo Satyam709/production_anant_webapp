@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import { getSession } from "@/lib/actions/Sessions";
 import isAdmin from "@/lib/actions/Admin";
+import { link } from "fs";
 
 const categoryEnum = z.enum(["General", "Technical", "Sponsorship"]);
 
@@ -10,6 +11,7 @@ const noticeSchema = z.object({
   headline: z.string().min(1, "Headline is required"),
   body: z.string().min(1, "Body is required"),
   category: categoryEnum,
+  link: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -36,6 +38,7 @@ export async function POST(req: NextRequest) {
       body: schema.data.body,
       category: schema.data.category,
       userID: session.user.id,
+      link: schema.data.link,
     };
 
     const result = await prisma.notice.create({
