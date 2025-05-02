@@ -10,7 +10,7 @@ import { category } from '@prisma/client';
 
 const imageLinks= {
   Technical: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=1000', 
-  General: 'https://images.unsplash.com/photo-1602497223003-531c7a191886?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  General: 'https://tls.or.tz/wp-content/uploads/2023/02/imprtant-notice-icon.png',
   Sponsorship: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=1000'
 }
 
@@ -20,6 +20,7 @@ type Notice = {
   body: string;
   category: category
   postedOn: Date;
+  link: string|null;
 };
 
 export default function NoticePage() {
@@ -31,7 +32,6 @@ export default function NoticePage() {
         const res = await fetch('/api/notices/');
         const parsed_response = await res.json();
         const notices = parsed_response.notices;
-        console.log(notices);
   
         const modified_notices = notices.map((notice: any) => {
           return {
@@ -39,7 +39,8 @@ export default function NoticePage() {
             headline: notice.headline,
             body: notice.body,
             category: notice.category,
-            postedOn: new Date(notice.postedOn)
+            postedOn: new Date(notice.postedOn),
+            link: notice.link,
           }
         });
   
@@ -95,6 +96,7 @@ export default function NoticePage() {
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{notice.headline}</h3>
+                {notice.link && <p className="text-blue-500 text-md my-1"><a href={notice.link}>View Attached File</a></p>}
                 <p className="text-gray-300 text-sm">{notice.body}</p>
               </div>
             </div>

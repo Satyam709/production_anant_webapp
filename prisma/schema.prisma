@@ -79,6 +79,7 @@ model Notice{
   postedOn DateTime  @default(now())
   category notice_cat
   userID String
+  link String?
   is_active Boolean @default(true)
   postedBy User @relation(name: "notice-posted",fields: [userID], references: [id])
 }
