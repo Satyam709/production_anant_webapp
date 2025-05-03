@@ -25,7 +25,8 @@ export function BlogPreview({ content }: BlogPreviewProps) {
           });
           const renderDiv = element.querySelector('.math-render');
           if (renderDiv) {
-            renderDiv.innerHTML = rendered;
+            // renderDiv.innerHTML = rendered;
+            renderDiv.innerHTML = `<div style="overflow-x: auto; max-width: 100%;"><span>${rendered}</span></div>`;
           }
         } catch (error) {
           console.error('KaTeX rendering error:', error);
