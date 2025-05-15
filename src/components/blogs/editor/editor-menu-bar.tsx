@@ -83,18 +83,22 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size={"sm"}
           variant="outline"
-          pressed={editor.isActive("highlight")}
-          onPressedChange={() =>
-            editor
-              .chain()
-              .focus()
-              .setLink({ href: "https://google.com", target: "_blank" })
-              .run()
-          }
-          aria-label="Toggle highlight"
+          pressed={editor.isActive("link")}
+          onPressedChange={() => {
+            const url = editor.isActive("link")
+              ? false // If link is active, unset it
+              : window.prompt("Enter the URL:", "https://");
+            
+            if (url === false) {
+              editor.chain().focus().unsetLink().run();
+            } else if (url) {
+              editor.chain().focus().setLink({ href: url, target: "_blank" }).run();
+            }
+          }}
+          aria-label="Toggle link"
           className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
         >
-          <Link className="h-4 w-4"></Link>
+          <Link className="h-4 w-4" />
         </Toggle>
 
         <Toggle
