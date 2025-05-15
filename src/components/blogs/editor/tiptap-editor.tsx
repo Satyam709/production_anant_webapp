@@ -291,7 +291,7 @@ export default function TiptapEditor({
       <EditorContent
         editor={editor}
         className={cn(
-          "min-h-[300px] focus-visible:outline-none p-4",
+          "min-h-[200px] max-h-[400px] focus-visible:outline-none p-4 overflow-y-auto",
           readOnly ? "pointer-events-none" : ""
         )}
       />

@@ -27,7 +27,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
         className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
         onClick={onClose}
       />
-      <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 bg-[#0A0A0A]/95 border border-blue-900/50 rounded-xl p-6 focus:outline-none">
+      <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-[800px] max-h-[90vh] -translate-x-1/2 -translate-y-1/2 bg-[#0A0A0A]/95 border border-blue-900/50 rounded-xl p-6 focus:outline-none">
         <div className="flex items-center justify-between mb-4">
           {title && <h2 className="text-xl font-semibold text-blue-100">{title}</h2>}
           <button
@@ -38,7 +38,9 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
             <span className="sr-only">Close</span>
           </button>
         </div>
-        {children}
+        <div className="overflow-y-auto max-h-[calc(90vh-10rem)]">
+          {children}
+        </div>
       </div>
     </div>
   );

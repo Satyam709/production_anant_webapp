@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
+import TiptapEditor from "@/components/blogs/editor/tiptap-editor";
 import { Calendar, Loader, Plus, CalendarClock, Clock, Pencil, Trash2 } from "lucide-react";
 import GradientButton from "../ui/GradientButton";
 import Modal from "@/components/ui/Modal";
@@ -480,16 +481,16 @@ const EventForm = () => {
             <label className="block text-sm font-medium text-gray-300">
               Description
             </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={4}
-              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
+            <TiptapEditor
+              content={formData.description}
+              onChange={(html) => {
+                setFormData(prev => ({
+                  ...prev,
+                  description: html
+                }));
+              }}
               placeholder="Enter event description"
-              required
+              className="min-h-[200px]"
             />
           </div>
 
