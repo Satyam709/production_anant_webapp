@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 import { getSession } from "@/lib/actions/Sessions";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { EditorPreview } from "@/components/blogs/BlogPreview";
+import { Events } from "@prisma/client";
 
 async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -39,9 +41,7 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
         <div className="max-w-7xl mx-auto my-32">
           <div className="relative  w-full">
             <Image
-              src={
-                event.imageURL === "" ? "/fallback-image.png" : event.imageURL
-              }
+              src={!event.imageURL ? "/fallback-image.png" : event.imageURL}
               alt={event.eventName}
               width={800}
               height={500}
@@ -65,13 +65,13 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
                 </div>
                 <div className="flex items-center space-x-3">
                   <Calendar className="w-6 h-6 text-cyan-400" />
-                  <span>Date: {formatDate(event.conductedOn)}</span>
+                  <span>Date: {formatDate(new Date(event.conductedOn).toISOString())}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Clock className="w-6 h-6 text-cyan-400" />
                   <span>
                     Registration Deadline:{" "}
-                    {formatDate(event.registration_deadline)}
+                    {formatDate(new Date(event.registration_deadline).toISOString())}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -113,9 +113,7 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
 
             <div className="mb-8">
               <h3 className="text-xl font-semibold mb-4">About the Event</h3>
-              <p className="text-gray-300 leading-relaxed break-words">
-                {event.description}
-              </p>
+              <EditorPreview content={event.description}></EditorPreview>
             </div>
 
             {event.prize && (
@@ -144,11 +142,12 @@ async function getEvents(id: string) {
   try {
     const res = await fetch(`${process.env.NEXTAUTH_URL}/api/events/${id}`);
     if (!res.ok) {
-      return [];
+      return { data: null };
     }
     const data = await res.json();
-    return data;
+    return data as { data: Events };
   } catch (err) {
-    return [];
+    console.error("Failed to fetch event:", err);
+    return { data: null };
   }
 }
