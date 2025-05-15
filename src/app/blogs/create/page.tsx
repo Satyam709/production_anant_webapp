@@ -8,7 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { BlogPreview } from "@/components/blogs/BlogPreview";
+import { EditorPreview } from "@/components/blogs/BlogPreview";
 import TiptapEditor from "@/components/blogs/editor/tiptap-editor";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -78,9 +78,7 @@ export default function CreateBlogPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-
-    console.log('Form data submitting');
-    
+    console.log("Form data submitting");
 
     e.preventDefault();
     setError("");
@@ -129,13 +127,15 @@ export default function CreateBlogPage() {
         category: formData.category as blog_cat,
         content: formData.content,
         cover_picture: coverImageURL,
-        description: formData.shortDescription
+        description: formData.shortDescription,
       };
 
-      console.log('Submitting blog with payload:', payload);
-      
+      console.log("Submitting blog with payload:", payload);
 
-      console.log('Submitting blog with payload:', JSON.stringify(payload, null, 2));
+      console.log(
+        "Submitting blog with payload:",
+        JSON.stringify(payload, null, 2)
+      );
 
       const response = await fetch("/api/blogs/create", {
         method: "POST",
@@ -191,9 +191,7 @@ export default function CreateBlogPage() {
           </div>
         )}
 
-        <div 
-          className="space-y-6"
-        >
+        <div className="space-y-6">
           <div className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
@@ -201,9 +199,9 @@ export default function CreateBlogPage() {
                 id="category"
                 value={formData.category}
                 onChange={(e) =>
-                  setFormData({ 
-                    ...formData, 
-                    category: e.target.value as BlogFormData["category"]
+                  setFormData({
+                    ...formData,
+                    category: e.target.value as BlogFormData["category"],
                   })
                 }
                 className="w-full px-4 py-2.5 bg-[#1a1a1a] border border-[#333] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-purple"
@@ -312,7 +310,9 @@ export default function CreateBlogPage() {
                 {!formData.title && !formData.content ? (
                   <div className="text-center py-10 text-muted-foreground">
                     <Eye className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                    <p>Your preview will appear here. Start writing to see it.</p>
+                    <p>
+                      Your preview will appear here. Start writing to see it.
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -320,7 +320,9 @@ export default function CreateBlogPage() {
                       {formData.title || "Untitled Blog"}
                     </h1>
                     {formData.shortDescription && (
-                      <p className="text-gray-400">{formData.shortDescription}</p>
+                      <p className="text-gray-400">
+                        {formData.shortDescription}
+                      </p>
                     )}
                     {imagePreview && (
                       <div className="relative h-48 rounded-lg overflow-hidden bg-black/30">
@@ -333,7 +335,7 @@ export default function CreateBlogPage() {
                       </div>
                     )}
                     {formData.content ? (
-                      <BlogPreview content={formData.content} />
+                      <EditorPreview content={formData.content} />
                     ) : (
                       <p className="text-muted-foreground">
                         No content to preview yet.

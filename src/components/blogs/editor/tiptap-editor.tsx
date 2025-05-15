@@ -7,6 +7,7 @@ import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
 import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
@@ -29,7 +30,7 @@ export interface EditorProps {
 export default function TiptapEditor({
   content = "",
   onChange,
-  placeholder = "Start writing your mathematics blog...",
+  placeholder = "Start writing something...",
   className,
   readOnly = false,
 }: EditorProps) {
@@ -44,37 +45,37 @@ export default function TiptapEditor({
         },
         bulletList: {
           HTMLAttributes: {
-            class: 'list-disc ml-4 my-4 space-y-1',
+            class: "list-disc ml-4 my-4 space-y-1",
           },
           keepMarks: true,
           keepAttributes: true,
         },
         orderedList: {
           HTMLAttributes: {
-            class: 'list-decimal ml-4 my-4 space-y-1',
+            class: "list-decimal ml-4 my-4 space-y-1",
           },
           keepMarks: true,
           keepAttributes: true,
         },
         listItem: {
           HTMLAttributes: {
-            class: 'pl-1 my-1',
+            class: "pl-1 my-1",
           },
         },
         blockquote: {
           HTMLAttributes: {
-            class: 'border-l-4 border-primary-purple pl-4 my-4'
-          }
+            class: "border-l-4 border-primary-purple pl-4 my-4",
+          },
         },
         codeBlock: {
           HTMLAttributes: {
-            class: 'bg-[#1a1a1a] rounded-md p-4 my-4'
-          }
+            class: "bg-[#1a1a1a] rounded-md p-4 my-4",
+          },
         },
         horizontalRule: {
           HTMLAttributes: {
-            class: 'border-t border-gray-600 my-8'
-          }
+            class: "border-t border-gray-600 my-8",
+          },
         },
       }),
       Underline,
@@ -83,12 +84,13 @@ export default function TiptapEditor({
       TextAlign.configure({
         types: ["heading", "paragraph", "image"],
         alignments: ["left", "center", "right"],
-        defaultAlignment: 'left',
+        defaultAlignment: "left",
       }),
       Image.configure({
         inline: true,
         HTMLAttributes: {
-          class: "rounded-lg max-w-[600px] max-h-[500px] object-contain mx-auto my-4",
+          class:
+            "rounded-lg max-w-[600px] max-h-[500px] object-contain mx-auto my-4",
           contenteditable: false,
         },
         allowBase64: true,
@@ -105,35 +107,111 @@ export default function TiptapEditor({
         placeholder,
         showOnlyCurrent: false,
       }),
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https",
+        protocols: ["http", "https"],
+        isAllowedUri: (url, ctx) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(":")
+              ? new URL(url)
+              : new URL(`${ctx.defaultProtocol}://${url}`);
+
+            // use default validation
+            if (!ctx.defaultValidate(parsedUrl.href)) {
+              return false;
+            }
+
+            // disallowed protocols
+            const disallowedProtocols = ["ftp", "file"];
+            const protocol = parsedUrl.protocol.replace(":", "");
+
+            if (disallowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // only allow protocols specified in ctx.protocols
+            const allowedProtocols = ctx.protocols.map((p) =>
+              typeof p === "string" ? p : p.scheme
+            );
+
+            if (!allowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // disallowed domains
+            const disallowedDomains = [
+              "example-phishing.com",
+              "malicious-site.net",
+            ];
+            const domain = parsedUrl.hostname;
+
+            if (disallowedDomains.includes(domain)) {
+              return false;
+            }
+
+            // all checks have passed
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        shouldAutoLink: (url) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(":")
+              ? new URL(url)
+              : new URL(`https://${url}`);
+
+              console.log("parsed url" , parsedUrl);
+              
+
+            // only auto-link if the domain is not in the disallowed list
+            const disallowedDomains = [
+              "example-no-autolink.com",
+              "another-no-autolink.com",
+            ];
+            const domain = parsedUrl.hostname;
+
+            return !disallowedDomains.includes(domain);
+          } catch {
+            return false;
+          }
+        },
+      }),
     ],
     content,
     editorProps: {
       handleDrop: (view, event, slice, moved) => {
-        const isImage = event.dataTransfer?.files[0]?.type.startsWith('image');
+        const isImage = event.dataTransfer?.files[0]?.type.startsWith("image");
         if (!moved && isImage) {
           return true;
         }
         return false;
       },
       handleKeyDown: (view, event) => {
-        if (event.key === 'Enter') {
+        if (event.key === "Enter") {
           const { state } = view;
           const { selection } = state;
           const { $from } = selection;
           const node = $from.node();
 
-          if (node.type.name === 'heading') {
+          if (node.type.name === "heading") {
             event.preventDefault();
             // Create a new paragraph after heading
             view.dispatch(
               state.tr
-                .split(selection.$to.pos, 1, [{ type: view.state.schema.nodes.paragraph }])
+                .split(selection.$to.pos, 1, [
+                  { type: view.state.schema.nodes.paragraph },
+                ])
                 .scrollIntoView()
             );
             return true;
           }
 
-          if (node.type.name === 'list_item' && node.textContent === '') {
+          if (node.type.name === "list_item" && node.textContent === "") {
             // Exit list when Enter is pressed on empty list item
             const range = $from.blockRange(selection.$to);
             if (range) {
@@ -143,10 +221,10 @@ export default function TiptapEditor({
           }
         }
 
-        if (event.key === 'Backspace') {
+        if (event.key === "Backspace") {
           const { empty, anchor } = view.state.selection;
           const node = view.state.doc.nodeAt(anchor);
-          if (empty && node?.type.name === 'image') {
+          if (empty && node?.type.name === "image") {
             return true;
           }
         }
@@ -154,7 +232,7 @@ export default function TiptapEditor({
       },
       handleClick: (view, pos, event) => {
         const node = view.state.doc.nodeAt(pos);
-        if (node?.type.name === 'image') {
+        if (node?.type.name === "image") {
           event.preventDefault();
           return true;
         }
@@ -177,7 +255,9 @@ export default function TiptapEditor({
           "[&_h2]:text-3xl [&_h2]:font-bold [&_h2]:my-5 [&_h2]:tracking-tight [&_h2]:text-white",
           "[&_h3]:text-2xl [&_h3]:font-bold [&_h3]:my-4 [&_h3]:tracking-tight [&_h3]:text-white",
           "[&_h1]:mt-10 [&_h2]:mt-8 [&_h3]:mt-6",
-          "[&_h1]:mb-6 [&_h2]:mb-5 [&_h3]:mb-4"
+          "[&_h1]:mb-6 [&_h2]:mb-5 [&_h3]:mb-4",
+          // hyperlink styles
+          "[&_a]:text-primary-purple [&_a]:underline [&_a]:decoration-primary-purple",
         ),
       },
     },

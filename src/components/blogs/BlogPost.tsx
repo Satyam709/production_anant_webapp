@@ -1,9 +1,9 @@
-import React from 'react';
-import { Calendar, User, Tag, Clock } from 'lucide-react';
-import {Blog} from "@prisma/client";
-import { placeholder } from '@/lib/images/placeholder';
-import Image from 'next/image';
-import { BlogPreview } from './BlogPreview';
+import React from "react";
+import { Calendar, User, Tag, Clock } from "lucide-react";
+import { Blog } from "@prisma/client";
+import { placeholder } from "@/lib/images/placeholder";
+import Image from "next/image";
+import { EditorPreview } from "./BlogPreview";
 type BlogProp = Blog & {
   writtenBy: { name: string };
 };
@@ -52,7 +52,7 @@ const BlogPost: React.FC<BlogProp> = ({
 
       {/* Blog Content */}
       <div className="prose-container">
-        <BlogPreview content={body}></BlogPreview>
+        <EditorPreview content={body}></EditorPreview>
 
         {/* Author Information */}
         <footer className="mt-16 pt-8 border-t border-gray-800/50">

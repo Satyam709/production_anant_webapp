@@ -22,6 +22,7 @@ import {
   Subscript,
   Table,
   Image,
+  Link,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/Toggle";
 import { Button } from "@/components/ui/Button";
@@ -78,6 +79,24 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         >
           <Underline className="h-4 w-4" />
         </Toggle>
+
+        <Toggle
+          size={"sm"}
+          variant="outline"
+          pressed={editor.isActive("highlight")}
+          onPressedChange={() =>
+            editor
+              .chain()
+              .focus()
+              .setLink({ href: "https://google.com", target: "_blank" })
+              .run()
+          }
+          aria-label="Toggle highlight"
+          className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
+        >
+          <Link className="h-4 w-4"></Link>
+        </Toggle>
+
         <Toggle
           size="sm"
           variant="outline"
