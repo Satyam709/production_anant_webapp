@@ -33,6 +33,7 @@ const EventForm = () => {
     venue: "",
     prize: "",
     description: "",
+    external_registration_link: "",
   });
   const [loading, setLoading] = useState(false);
   const [loadingEvents, setLoadingEvents] = useState(false);
@@ -138,6 +139,7 @@ const EventForm = () => {
         venue: "",
         prize: "",
         description: "",
+        external_registration_link: "",
       });
 
       setFile(null);
@@ -362,6 +364,23 @@ const EventForm = () => {
                 required
               />
             </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-300">
+                External Registration Link
+              </label>
+              <input
+                type="text"
+                name="external_registration_link"
+                value={formData.external_registration_link || ""}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+                         focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+                         text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
+                placeholder="Enter external registration link if valid"
+              />
+            </div>
+
           </div>
 
           <div className="space-y-2">

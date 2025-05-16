@@ -36,7 +36,7 @@ interface DeveloperCardProps {
   rank: number;
 }
 
-const months = ["Dec", "Jan", "Feb", "Mar", "Apr"];
+const months = ["Dec", "Jan", "Feb", "Mar", "Apr","May"];
 
 const DeveloperCard = ({ dev, loading, index, rank }: DeveloperCardProps) => {
   // Convert the commit history array to the format required by the chart

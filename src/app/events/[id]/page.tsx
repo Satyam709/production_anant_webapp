@@ -80,7 +80,7 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
                 </div>
               </div>
 
-              <div className="bg-gray-700 rounded-lg p-6">
+              {event.first_prize_name && <div className="bg-gray-700 rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
                   <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
                   Prize Distribution
@@ -109,11 +109,7 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4">About the Event</h3>
-              <EditorPreview content={event.description}></EditorPreview>
+              }
             </div>
 
             {event.prize && (
@@ -123,10 +119,16 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
               </div>
             )}
 
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold mb-4">About the Event</h3>
+              <EditorPreview content={event.description}></EditorPreview>
+            </div>
+
             <Register_Button
               event_id={id}
               isRegistrationOpen={isRegistrationOpen}
               isLoggedin={isLoggedin}
+              external_registration_link={event.external_registration_link||""}
             />
           </div>
         </div>

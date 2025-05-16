@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function Register_Button({event_id, isRegistrationOpen, isLoggedin}:{event_id: string, isRegistrationOpen: boolean, isLoggedin: boolean}){
+export default function Register_Button({event_id, isRegistrationOpen, isLoggedin, external_registration_link}:{event_id: string, isRegistrationOpen: boolean, isLoggedin: boolean, external_registration_link: string}) {
 
     const [isRegistered, setIsRegistered] = useState(false);
     const router = useRouter();
@@ -38,7 +38,23 @@ export default function Register_Button({event_id, isRegistrationOpen, isLoggedi
         registerForEvent(event_id);
     }
 
-    if(isLoggedin){
+
+    if(external_registration_link!= ""){
+        return(
+        <button 
+            onClick={() => window.open(external_registration_link, '_blank')}
+            disabled={!isRegistrationOpen}
+            className={`w-full md:w-auto px-8 py-3 rounded-lg font-semibold transition-all duration-200 ${
+            isRegistrationOpen
+            ? 'bg-cyan-500 hover:bg-cyan-600 text-white'
+            : 'bg-gray-600 cursor-not-allowed text-gray-300'
+        }`}
+            >
+            {isRegistrationOpen ? 'Register Now' : 'Registration Closed'}
+        </button>
+        )
+    }
+    else if(isLoggedin){
         return(
             <button
                 onClick={handleRegister}
