@@ -173,6 +173,9 @@ model Events{
   first_prize User? @relation(name: "first_prize", fields: [first_prize_id], references: [id])
   second_prize User? @relation(name: "second_prize", fields: [second_prize_id], references: [id])
   third_prize User? @relation(name: "third_prize", fields: [third_prize_id], references: [id])
+
+  // alternate registration strategy
+  external_registration_link String?
 }
 
 // latest news

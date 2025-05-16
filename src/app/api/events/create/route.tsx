@@ -13,6 +13,7 @@ const eventSchema = z.object({
     imageURL: z.string().optional(),
     venue: z.string(),
     prize: z.string().optional(),
+    external_registration_link: z.string().optional(),
 });
 
 export async function POST(req:NextRequest){
@@ -29,7 +30,7 @@ export async function POST(req:NextRequest){
             return NextResponse.json({status: 400, message: "Bad Request"});
         }
 
-        const {eventName, description, conductedBy, conductedOn, registration_deadline, imageURL, venue, prize} = scehma.data;
+        const {eventName, description, conductedBy, conductedOn, registration_deadline, imageURL, venue, prize, external_registration_link} = scehma.data;
 
         if(isNaN(Date.parse(conductedOn))|| isNaN(Date.parse(registration_deadline))){
             return NextResponse.json({status: 400, message: "Invalid date format"});
@@ -48,6 +49,7 @@ export async function POST(req:NextRequest){
                 imageURL,
                 venue,
                 prize,
+                external_registration_link: external_registration_link,
                 createdBy: {
                     connect: {id: session.user.id}
                 }

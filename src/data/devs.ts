@@ -25,7 +25,7 @@ export const developers: Developer[] = [
       "Deployment",
     ],
     // from dec 2204 to april 2025
-    commitHistory: [32, 29, 22, 28, 32],
+    commitHistory: [32, 29, 22, 28, 32, 21],
   },
   {
     id: 2,
@@ -41,7 +41,7 @@ export const developers: Developer[] = [
       "Project Management",
     ],
     // from dec 2204 to april 2025
-    commitHistory: [12, 18, 18, 11, 29],
+    commitHistory: [12, 18, 18, 11, 29, 15],
   },
   {
     id: 3,
@@ -52,6 +52,6 @@ export const developers: Developer[] = [
     linkedin: "https://www.linkedin.com/in/keshav0479/",
     contributions: ["UI/UX Design"],
     // from dec 2204 to april 2025
-    commitHistory: [5, 0, 5, 0, 0],
+    commitHistory: [5, 0, 5, 0, 0, 0],
   },
 ];

@@ -12,6 +12,7 @@ const eventSchema = z.object({
   description: z.string(),
   prize: z.string(),
   imageURL: z.string(),
+  external_registration_link: z.string().optional(),
 });
 
 export async function PUT(
@@ -42,6 +43,7 @@ export async function PUT(
       description,
       prize,
       imageURL,
+      external_registration_link,
     } = schema.data;
 
     if (
@@ -74,6 +76,7 @@ export async function PUT(
         description,
         prize,
         imageURL,
+        external_registration_link
       },
     });
 
