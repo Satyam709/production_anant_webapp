@@ -2,6 +2,7 @@
 
 import OfficeBearers from '@/components/team/OfficeBearers'
 import Members from '@/components/team/Members'
+import TeamArchive from '@/components/team/TeamArchive'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
@@ -16,9 +17,26 @@ export default function TeamPage() {
       <Navbar />
       
       <main className="relative z-10 container mx-auto px-4 py-20">
-        <OfficeBearers />
-        <Members />
+        {/* Current Year Team (2025-26) */}
+        <div className="mb-8">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl font-extrabold mb-4 text-white">
+              Team Anant
+            </h1>
+            <p className="text-xl text-gray-300 mb-2">
+              Academic Year 2025-26
+            </p>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary-blue to-primary-cyan mx-auto rounded-full"></div>
+          </div>
+          
+          <OfficeBearers />
+          <Members />
+        </div>
+        
+        {/* Archive Section */}
+        <TeamArchive />
       </main>     
+      
       <div className="relative z-10">
         <Footer />
       </div>
