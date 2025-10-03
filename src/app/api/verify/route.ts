@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse} from "next/server";
 import sendEmail from "@/helpers/mailer";
-import { isValid } from "@/helpers/rollnumber_validity";
 import bcryptjs from "bcryptjs";
 import redis from "@/helpers/redis";
 import { PrismaClient } from "@prisma/client";
 import { mailOptions } from "@/helpers/mailer";
+import { isRollNumberValid } from "@/helpers/extras";
 
 type redis_value = {
   hashedOTP: string;
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (!isValid(roll_number)) {
+    if (!isRollNumberValid(roll_number)) {
       return NextResponse.json(
         { message: "Roll number invalid!" },
         { status: 400 }

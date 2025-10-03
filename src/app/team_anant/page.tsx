@@ -1,5 +1,3 @@
-'use client'
-
 import OfficeBearers from '@/components/team/OfficeBearers'
 import Members from '@/components/team/Members'
 import TeamArchive from '@/components/team/TeamArchive'
