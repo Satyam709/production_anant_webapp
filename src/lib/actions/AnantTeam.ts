@@ -1,15 +1,10 @@
 "use server";
 
 import prisma from "@/lib/PrismaClient/db";
-import { AnantTeamMember, User } from "@prisma/client";
+import { AnantTeamMember } from "@prisma/client";
 
-// Type for AnantTeamMember with included User relation (from database)
-export type AnantTeamMemberWithUser = AnantTeamMember & {
-  user: User;
-};
-
-// Type for flattened member data (used in components)
-export type TeamMember = AnantTeamMember & User;
+// Type for team member data (now directly from AnantTeamMember)
+export type TeamMember = AnantTeamMember;
 
 export async function getAnantTeamMembers(
   year?: string
@@ -33,22 +28,11 @@ export async function getAnantTeamMembers(
   }
 
   try {
-    const teamMembersData = (await prisma.anantTeamMember.findMany({
+    const teamMembers = await prisma.anantTeamMember.findMany({
       where: {
         year: year,
       },
-      include: {
-        user: true,
-      },
-    })) as AnantTeamMemberWithUser[];
-
-    // Transform data to flattened structure expected by components
-    const teamMembers: TeamMember[] = teamMembersData.map((member) => ({
-      ...member,
-      ...member.user,
-      // Ensure the id comes from the user, not the AnantTeamMember
-      id: member.user.id,
-    }));
+    });
 
     return teamMembers;
   } catch (error) {

@@ -35,9 +35,9 @@ const ArchiveOfficeBearerCard: React.FC<{ member: TeamMember }> = ({ member }) =
         {member.name}
       </h4>
       <p className="text-sm text-gray-300 mt-1">{member.position}</p>
-      {member.roll_number && (
+      {member.email && (
         <p className="text-xs text-gray-400 hover:text-gray-300 transition-colors duration-200">
-          {getMail(member.roll_number + "")}
+          {member.email}
         </p>
       )}
       {member.phone && (
@@ -117,9 +117,9 @@ const ArchiveExecutiveMemberCard: React.FC<{ member: TeamMember }> = ({ member }
       <p className="text-sm text-gray-300 mt-1">
         {member.club_dept && member.club_dept.length > 0 ? teamText[member.club_dept[0]] : "General Team"}
       </p>
-      {member.roll_number && (
+      {member.email && (
         <p className="text-xs text-gray-400">
-          {getMail(member.roll_number + "")}
+          {member.email}
         </p>
       )}
 

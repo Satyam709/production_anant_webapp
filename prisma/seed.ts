@@ -1118,325 +1118,298 @@ await prisma.departmentAchievements.createMany({
   });
 
 
-  // Create AnantTeamMember entries for testing team functions
-  
-  // Current year team (2025-26)
-  await prisma.anantTeamMember.createMany({
+  // Create Anant Team Members
+  const anantTeamMembers = await prisma.anantTeamMember.createMany({
     data: [
-      // Office Bearers for 2025-26
+      // Office Bearers - Current Year (2024-25)
       {
-        year: "2025-26",
-        club_dept: ["General"],
-        role: "Leading the organization",
-        description: "President of Anant Society for 2025-26",
-        userID: user1.id, // John Doe - President
+        name: "Arjun Sharma",
+        email: "arjun.sharma@college.edu",
+        roll_number: 2101,
+        year: "2024-25",
+        club_dept: ["General", "Tech"],
+        role: "Leading the organization with vision and strategy",
+        position: "President",
+        description: "Final year Mathematics student passionate about technology and leadership. Leading various tech initiatives and community building programs.",
+        imageURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/arjun-sharma",
+        github: "https://github.com/arjunsharma",
+        instagram: "https://instagram.com/arjun_sharma",
+        phone: "+91-9876543210",
+        website: "https://arjunsharma.dev",
+        branch: "MSC",
+        batch: "2022"
       },
       {
-        year: "2025-26", 
-        club_dept: ["General"],
-        role: "Supporting the president",
-        description: "Coordinator for administrative tasks",
-        userID: user2.id, // Jane Smith - Coordinator
+        name: "Priya Patel",
+        email: "priya.patel@college.edu",
+        roll_number: 2102,
+        year: "2024-25",
+        club_dept: ["General", "Management"],
+        role: "Supporting the President in organizational activities",
+        position: "VicePresident",
+        description: "Third year student with excellent organizational skills and a passion for mathematics education outreach.",
+        imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b10213?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/priya-patel",
+        github: "https://github.com/priyapatel",
+        instagram: "https://instagram.com/priya_patel",
+        phone: "+91-9876543211",
+        branch: "MNC",
+        batch: "2023"
       },
       {
-        year: "2025-26",
-        club_dept: ["Management"],
-        role: "Managing documentation",
-        description: "Secretary for official communications",
-        userID: user4.id, // Bob White - Secretary
-      },
-    ]
-  });
-
-  // Create additional users for more comprehensive testing
-  const user5 = await prisma.user.create({
-    data: {
-      roll_number: 105,
-      name: "Sarah Wilson",
-      password: "password123",
-      branch: "ECE",
-      batch: "2024",
-      position: "VicePresident",
-      club_dept: ["Tech"],
-      imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b10213?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      linkedIn: "https://linkedin.com/in/sarahwilson",
-      github: "https://github.com/sarahwilson",
-      phone: "+919876543215",
-    },
-  });
-
-  const user6 = await prisma.user.create({
-    data: {
-      roll_number: 106,
-      name: "Mike Johnson",
-      password: "password123",
-      branch: "ME",
-      batch: "2023",
-      position: "General_Secretary",
-      club_dept: ["PR"],
-      imageURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      instagram: "https://instagram.com/mikejohnson",
-      website: "https://mikejohnson.dev",
-      phone: "+919876543216",
-    },
-  });
-
-  const user7 = await prisma.user.create({
-    data: {
-      roll_number: 107,
-      name: "Emily Davis",
-      password: "password123",
-      branch: "CE",
-      batch: "2025",
-      position: "Joint_Secretary",
-      club_dept: ["Content"],
-      imageURL: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-      linkedIn: "https://linkedin.com/in/emilydavis",
-      instagram: "https://instagram.com/emilydavis",
-    },
-  });
-
-  const user8 = await prisma.user.create({
-    data: {
-      roll_number: 108,
-      name: "David Brown",
-      password: "password123",
-      branch: "EE",
-      batch: "2024",
-      position: "Executive_Head",
-      club_dept: ["Sponsorship"],
-      imageURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      github: "https://github.com/davidbrown",
-      website: "https://davidbrown.portfolio.com",
-    },
-  });
-
-  const user9 = await prisma.user.create({
-    data: {
-      roll_number: 109,
-      name: "Lisa Chen",
-      password: "password123", 
-      branch: "IIOT",
-      batch: "2023",
-      position: "Executive_Head",
-      club_dept: ["Education_Outreach"],
-      imageURL: "https://images.unsplash.com/photo-1534528741702-c0f7db169ba5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      linkedIn: "https://linkedin.com/in/lisachen",
-      phone: "+919876543217",
-    },
-  });
-
-  const user10 = await prisma.user.create({
-    data: {
-      roll_number: 110,
-      name: "Ryan Martinez",
-      password: "password123",
-      branch: "PIE",
-      batch: "2025",
-      position: "Executive_Head",
-      club_dept: ["Tech"],
-      imageURL: "https://images.unsplash.com/photo-1500648767791-00d562229aa3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      github: "https://github.com/ryanmartinez",
-      instagram: "https://instagram.com/ryanmartinez",
-    },
-  });
-
-  // Add more AnantTeamMember entries for current year (2025-26)
-  await prisma.anantTeamMember.createMany({
-    data: [
-      // Office Bearers
-      {
-        year: "2025-26",
-        club_dept: ["General"],
-        role: "Vice President responsibilities",
-        description: "Vice President of Anant Society",
-        userID: user5.id, // Sarah Wilson - VicePresident
+        name: "Rahul Kumar",
+        email: "rahul.kumar@college.edu",
+        roll_number: 2103,
+        year: "2024-25",
+        club_dept: ["General", "Content"],
+        role: "Managing documentation and communications",
+        position: "Secretary",
+        description: "Second year student excelling in mathematical research and academic writing. Maintains all official records and correspondence.",
+        imageURL: "https://images.unsplash.com/photo-1500648767791-00d562229aa3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/rahul-kumar",
+        github: "https://github.com/rahulkumar",
+        instagram: "https://instagram.com/rahul_kumar",
+        phone: "+91-9876543212",
+        branch: "MSC",
+        batch: "2024"
       },
       {
-        year: "2025-26",
-        club_dept: ["Management"],
-        role: "General Secretary duties",
-        description: "Managing general administrative tasks",
-        userID: user6.id, // Mike Johnson - General_Secretary
+        name: "Sneha Verma",
+        email: "sneha.verma@college.edu",
+        roll_number: 2104,
+        year: "2024-25",
+        club_dept: ["General", "Education_Outreach"],
+        role: "Coordinating educational initiatives and workshops",
+        position: "General_Secretary",
+        description: "Passionate about making mathematics accessible to everyone. Organizes workshops and educational events for the community.",
+        imageURL: "https://images.unsplash.com/photo-1534528741702-c0f7db169ba5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/sneha-verma",
+        github: "https://github.com/snehaverma",
+        instagram: "https://instagram.com/sneha_verma",
+        phone: "+91-9876543213",
+        branch: "MNC",
+        batch: "2023"
       },
       {
-        year: "2025-26",
-        club_dept: ["Content"],
-        role: "Joint Secretary duties",
-        description: "Assistant to secretary",
-        userID: user7.id, // Emily Davis - Joint_Secretary
+        name: "Vikram Singh",
+        email: "vikram.singh@college.edu",
+        roll_number: 2105,
+        year: "2024-25",
+        club_dept: ["General", "Management"],
+        role: "Assisting in administrative tasks and event management",
+        position: "Joint_Secretary",
+        description: "First year student with strong analytical skills and enthusiasm for mathematical modeling and statistics.",
+        imageURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/vikram-singh",
+        github: "https://github.com/vikramsingh",
+        instagram: "https://instagram.com/vikram_singh",
+        phone: "+91-9876543214",
+        branch: "MSC",
+        batch: "2025"
       },
-      // Executive Heads
       {
-        year: "2025-26",
-        club_dept: ["Sponsorship"],
-        role: "Sponsorship Team Lead",
-        description: "Leading sponsorship initiatives",
-        userID: user8.id, // David Brown - Executive_Head
+        name: "Anita Sharma",
+        email: "anita.sharma@college.edu",
+        roll_number: 2106,
+        year: "2024-25",
+        club_dept: ["Tech", "Content"],
+        role: "Coordinating technical events and competitions",
+        position: "Coordinator",
+        description: "Expert in computational mathematics and programming. Coordinates all technical activities and coding competitions.",
+        imageURL: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/anita-sharma",
+        github: "https://github.com/anitasharma",
+        instagram: "https://instagram.com/anita_sharma",
+        phone: "+91-9876543215",
+        branch: "MNC",
+        batch: "2022"
+      },
+      
+      // Executive Heads - Current Year (2024-25)
+      {
+        name: "Rohan Gupta",
+        email: "rohan.gupta@college.edu",
+        roll_number: 2107,
+        year: "2024-25",
+        club_dept: ["Tech", "Content"],
+        role: "Leading technical development and innovation",
+        position: "Executive_Head",
+        description: "Mathematics enthusiast with expertise in data science and machine learning applications in mathematical research.",
+        imageURL: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/rohan-gupta",
+        github: "https://github.com/rohangupta",
+        instagram: "https://instagram.com/rohan_gupta",
+        phone: "+91-9876543216",
+        branch: "MSC",
+        batch: "2023"
       },
       {
-        year: "2025-26",
+        name: "Kavya Reddy",
+        email: "kavya.reddy@college.edu",
+        roll_number: 2108,
+        year: "2024-25",
+        club_dept: ["PR", "Content"],
+        role: "Managing public relations and social media",
+        position: "Executive_Head",
+        description: "Creative writer and social media strategist. Manages all PR activities and creates engaging content for mathematical concepts.",
+        imageURL: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/kavya-reddy",
+        instagram: "https://instagram.com/kavya_reddy",
+        phone: "+91-9876543217",
+        branch: "MNC",
+        batch: "2024"
+      },
+      {
+        name: "Amit Joshi",
+        email: "amit.joshi@college.edu",
+        roll_number: 2109,
+        year: "2024-25",
+        club_dept: ["Tech"],
+        role: "Website development and maintenance",
+        position: "Website_Developer",
+        description: "Full-stack developer with a passion for mathematics. Develops and maintains the department website and digital platforms.",
+        imageURL: "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/amit-joshi",
+        github: "https://github.com/amitjoshi",
+        instagram: "https://instagram.com/amit_joshi",
+        phone: "+91-9876543218",
+        website: "https://amitjoshi.dev",
+        branch: "MNC",
+        batch: "2023"
+      },
+      {
+        name: "Ritu Agarwal",
+        email: "ritu.agarwal@college.edu",
+        roll_number: 2110,
+        year: "2024-25",
+        club_dept: ["Sponsorship", "Management"],
+        role: "Securing sponsorships and partnerships",
+        position: "Executive_Head",
+        description: "Business-oriented student with excellent networking skills. Manages sponsorships and corporate partnerships for events.",
+        imageURL: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/ritu-agarwal",
+        instagram: "https://instagram.com/ritu_agarwal",
+        phone: "+91-9876543219",
+        branch: "MSC",
+        batch: "2022"
+      },
+      
+      // Regular Members - Current Year (2024-25)
+      {
+        name: "Karan Malhotra",
+        email: "karan.malhotra@college.edu",
+        roll_number: 2111,
+        year: "2024-25",
+        club_dept: ["Tech"],
+        role: "Supporting technical initiatives and research",
+        position: "Member",
+        description: "Interested in mathematical modeling and computational mathematics. Actively participates in research projects.",
+        imageURL: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/karan-malhotra",
+        github: "https://github.com/karanmalhotra",
+        phone: "+91-9876543220",
+        branch: "MNC",
+        batch: "2024"
+      },
+      {
+        name: "Pooja Singh",
+        email: "pooja.singh@college.edu",
+        roll_number: 2112,
+        year: "2024-25",
         club_dept: ["Education_Outreach"],
-        role: "Education Team Lead",
-        description: "Managing educational programs",
-        userID: user9.id, // Lisa Chen - Executive_Head
+        role: "Supporting educational outreach programs",
+        position: "Member",
+        description: "Passionate about mathematics education and community service. Volunteers in teaching programs for underprivileged students.",
+        imageURL: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/pooja-singh",
+        instagram: "https://instagram.com/pooja_singh",
+        phone: "+91-9876543221",
+        branch: "MSC",
+        batch: "2025"
       },
+
+      // Previous Year Team (2023-24) - Archive Data
       {
-        year: "2025-26",
-        club_dept: ["Tech"],
-        role: "Tech Team Lead",
-        description: "Leading technical initiatives",
-        userID: user10.id, // Ryan Martinez - Executive_Head
-      },
-      {
-        year: "2025-26",
-        club_dept: ["PR"],
-        role: "PR Team Member",
-        description: "Managing social media and PR",
-        userID: user3.id, // Alice Brown - Member (PR)
-      },
-    ]
-  });
-
-  // Create archive data for 2024-25
-  const archiveUser1 = await prisma.user.create({
-    data: {
-      roll_number: 201,
-      name: "Former President Alex",
-      password: "password123",
-      branch: "CSE",
-      batch: "2022",
-      position: "President",
-      club_dept: ["General"],
-      imageURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      linkedIn: "https://linkedin.com/in/alexformer",
-    },
-  });
-
-  const archiveUser2 = await prisma.user.create({
-    data: {
-      roll_number: 202,
-      name: "Former VP Maya",
-      password: "password123",
-      branch: "IT",
-      batch: "2022",
-      position: "VicePresident",
-      club_dept: ["Tech"],
-      imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b10213?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      github: "https://github.com/mayaformer",
-    },
-  });
-
-  const archiveUser3 = await prisma.user.create({
-    data: {
-      roll_number: 203,
-      name: "Former Secretary Sam",
-      password: "password123",
-      branch: "ECE",
-      batch: "2023",
-      position: "Secretary",
-      club_dept: ["Management"],
-      imageURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-      instagram: "https://instagram.com/samformer",
-    },
-  });
-
-  const archiveUser4 = await prisma.user.create({
-    data: {
-      roll_number: 204,
-      name: "Former Head Nina",
-      password: "password123",
-      branch: "ME",
-      batch: "2023",
-      position: "Executive_Head",
-      club_dept: ["Content"],
-      imageURL: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-      website: "https://ninaformer.dev",
-    },
-  });
-
-  // Archive team data for 2024-25
-  await prisma.anantTeamMember.createMany({
-    data: [
-      {
-        year: "2024-25",
-        club_dept: ["General"],
-        role: "President 2024-25",
-        description: "Former President of Anant Society",
-        userID: archiveUser1.id,
-      },
-      {
-        year: "2024-25",
-        club_dept: ["Tech"],
-        role: "Vice President 2024-25",
-        description: "Former Vice President",
-        userID: archiveUser2.id,
-      },
-      {
-        year: "2024-25",
-        club_dept: ["Management"],
-        role: "Secretary 2024-25",
-        description: "Former Secretary",
-        userID: archiveUser3.id,
-      },
-      {
-        year: "2024-25",
-        club_dept: ["Content"],
-        role: "Content Team Lead 2024-25",
-        description: "Former Content Team Head",
-        userID: archiveUser4.id,
-      },
-    ]
-  });
-
-  // Create archive data for 2023-24
-  const archive2023User1 = await prisma.user.create({
-    data: {
-      roll_number: 301,
-      name: "Legacy President John",
-      password: "password123",
-      branch: "AIML",
-      batch: "2021",
-      position: "President", 
-      club_dept: ["General"],
-      imageURL: "https://images.unsplash.com/photo-1500648767791-00d562229aa3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    },
-  });
-
-  const archive2023User2 = await prisma.user.create({
-    data: {
-      roll_number: 302,
-      name: "Legacy VP Emma",
-      password: "password123",
-      branch: "CSE",
-      batch: "2021",
-      position: "Coordinator",
-      club_dept: ["PR"],
-      imageURL: "https://images.unsplash.com/photo-1534528741702-c0f7db169ba5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-    },
-  });
-
-  // Archive team data for 2023-24
-  await prisma.anantTeamMember.createMany({
-    data: [
-      {
+        name: "Aditya Sharma",
+        email: "aditya.sharma@college.edu",
+        roll_number: 2001,
         year: "2023-24",
-        club_dept: ["General"],
-        role: "President 2023-24",
-        description: "Legacy President",
-        userID: archive2023User1.id,
+        club_dept: ["General", "Tech"],
+        role: "Former President - Led the organization through successful initiatives",
+        position: "President",
+        description: "Mathematics graduate who led multiple successful initiatives including the annual math symposium and research publication drives.",
+        imageURL: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/aditya-sharma",
+        github: "https://github.com/adityasharma",
+        branch: "MSC",
+        batch: "2021"
       },
       {
+        name: "Meera Jain",
+        email: "meera.jain@college.edu",
+        roll_number: 2002,
         year: "2023-24",
-        club_dept: ["PR"],
-        role: "Coordinator 2023-24", 
-        description: "Legacy Coordinator",
-        userID: archive2023User2.id,
+        club_dept: ["General", "Management"],
+        role: "Former Vice President - Organized major events and workshops",
+        position: "VicePresident",
+        description: "Organized the largest mathematics conference in college history with over 500 participants from various institutions.",
+        imageURL: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/meera-jain",
+        branch: "MNC",
+        batch: "2022"
       },
+      {
+        name: "Rajesh Kumar",
+        email: "rajesh.kumar@college.edu",
+        roll_number: 2003,
+        year: "2023-24",
+        club_dept: ["General", "Content"],
+        role: "Former Secretary - Maintained excellent records and documentation",
+        position: "Secretary",
+        description: "Known for meticulous record-keeping and excellent written communication skills. Published several articles on applied mathematics.",
+        imageURL: "https://images.unsplash.com/photo-1474176857210-7287d38d27c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/rajesh-kumar",
+        github: "https://github.com/rajeshkumar",
+        branch: "MSC",
+        batch: "2022"
+      },
+
+      // 2022-23 Archive Data
+      {
+        name: "Deepika Yadav",
+        email: "deepika.yadav@college.edu",
+        roll_number: 1901,
+        year: "2022-23",
+        club_dept: ["General"],
+        role: "Former President - Pioneered several academic initiatives",
+        position: "President",
+        description: "Established the mathematics tutoring program and initiated collaborations with industry for applied mathematics projects.",
+        imageURL: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/deepika-yadav",
+        branch: "MSC",
+        batch: "2020"
+      },
+      {
+        name: "Suresh Gupta",
+        email: "suresh.gupta@college.edu",
+        roll_number: 1902,
+        year: "2022-23",
+        club_dept: ["Tech"],
+        role: "Former Tech Head - Developed digital learning platforms",
+        position: "Executive_Head",
+        description: "Created interactive mathematical visualization tools and online learning platforms that are still used by students today.",
+        imageURL: "https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        linkedIn: "https://linkedin.com/in/suresh-gupta",
+        github: "https://github.com/sureshgupta",
+        branch: "MNC",
+        batch: "2021"
+      }
     ]
   });
 
-  console.log("Seed data with AnantTeamMember entries inserted successfully!");
+  console.log("Seed data inserted successfully!");
+  console.log(`Created ${anantTeamMembers.count} Anant Team Members`);
 }
 
 main()

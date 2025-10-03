@@ -15,12 +15,23 @@ datasource db {
 
 model AnantTeamMember {
   id String @unique @id @default(uuid())
+  name String
+  email String?
+  roll_number Int?
   year String?
   club_dept club_dept_options[]
   role String?
+  position position_options?
   description String?
-  userID String @unique
-  user User @relation(name: "anant-team-user", fields: [userID], references: [id])
+  imageURL String?
+  linkedIn String?
+  github String?
+  instagram String?
+  phone String?
+  website String?
+  branch branch_options?
+  batch String?
+  joined DateTime @default(now())
 }
 
 model User{
@@ -38,9 +49,6 @@ model User{
   linkedIn String?
   github String?
   instagram String?
-  membership AnantTeamMember? @relation(name: "anant-team-user")
-  phone String?
-  website String?
 
   // notice
   notices Notice[]    @relation(name:"notice-posted")

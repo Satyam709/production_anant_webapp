@@ -14,6 +14,3 @@
 
 ALTER TYPE "position_options" ADD VALUE 'General_Secretary';
 ALTER TYPE "position_options" ADD VALUE 'Joint_Secretary';
-
--- AlterTable
-ALTER TABLE "AnantTeamMember" DROP COLUMN "position";
