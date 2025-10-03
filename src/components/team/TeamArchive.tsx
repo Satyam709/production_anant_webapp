@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Globe } from "lucide-react";
 import { TeamMember } from "@/lib/actions/AnantTeam";
 import { position_options, club_dept_options } from "@prisma/client";
-import { getMail } from "@/helpers/extras";
+import { positionTextMap } from "./OfficeBearers";
 
 interface TeamArchiveProps {
   allTeamData: Record<string, TeamMember[]>;
@@ -34,7 +34,7 @@ const ArchiveOfficeBearerCard: React.FC<{ member: TeamMember }> = ({ member }) =
       <h4 className="text-xl font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">
         {member.name}
       </h4>
-      <p className="text-sm text-gray-300 mt-1">{member.position}</p>
+      <p className="text-sm text-gray-300 mt-1">{positionTextMap[member.position as position_options]}</p>
       {member.email && (
         <p className="text-xs text-gray-400 hover:text-gray-300 transition-colors duration-200">
           {member.email}
@@ -87,6 +87,7 @@ const ArchiveOfficeBearerCard: React.FC<{ member: TeamMember }> = ({ member }) =
 
 // Archive Executive Member Card Component
 const ArchiveExecutiveMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => {
+
   const teamText: Record<club_dept_options, string> = {
     [club_dept_options.Tech]: "Tech Team",
     [club_dept_options.Content]: "Content/Newsletter Team",

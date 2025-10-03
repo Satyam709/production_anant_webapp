@@ -5,6 +5,19 @@ import Image from "next/image";
 import { Globe } from "lucide-react";
 import { getMail } from "@/helpers/extras";
 import { TeamMember } from "@/lib/actions/AnantTeam";
+import { position_options } from "@prisma/client";
+
+export const positionTextMap: Record<position_options, string> = {
+  [position_options.President]: "President",
+  [position_options.VicePresident]: "Vice President",
+  [position_options.Secretary]: "Secretary",
+  [position_options.General_Secretary]: "General Secretary",
+  [position_options.Joint_Secretary]: "Joint Secretary",
+  [position_options.Coordinator]: "Coordinator",
+  [position_options.Member]: "Member",
+  [position_options.Executive_Head]: "Executive Head",
+  [position_options.Website_Developer]: "Website Developer",
+};
 
 // MemberCard Component (Now OfficeBearerCard)
 const OfficeBearerCard: React.FC<{ member: TeamMember }> = ({ member }) => {
@@ -25,7 +38,9 @@ const OfficeBearerCard: React.FC<{ member: TeamMember }> = ({ member }) => {
       <h4 className="text-xl font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">
         {member.name}
       </h4>
-      <p className="text-sm text-gray-300 mt-1">{member.position}</p>
+      <p className="text-sm text-gray-300 mt-1">
+        {positionTextMap[member.position as position_options]}
+      </p>
       {member.email && (
         <p className="text-xs text-gray-400 hover:text-gray-300 transition-colors duration-200">
           {member.email}
