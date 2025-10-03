@@ -2,14 +2,13 @@ import React from "react";
 import { Linkedin, GitHub, Instagram } from "react-feather";
 import Link from "next/link";
 import Image from "next/image";
-import { AnantTeamMember, club_dept_options, User } from "@prisma/client";
+import { club_dept_options } from "@prisma/client";
 import { getMail } from "@/helpers/extras";
-
-interface Member extends AnantTeamMember, User {}
+import { TeamMember } from "@/lib/actions/AnantTeam";
 
 // MemberCard Component
 const MemberCard: React.FC<{
-  member: Member;
+  member: TeamMember;
 }> = ({ member }) => {
   return (
     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 shadow-xl rounded-2xl p-6 border border-gray-600 flex flex-col items-center text-center h-full transition-all transform hover:scale-105 hover:shadow-2xl duration-300">
@@ -27,7 +26,7 @@ const MemberCard: React.FC<{
       {/* Member Info */}
       <h4 className="text-xl font-semibold text-white">{member.name}</h4>
       <p className="text-sm text-gray-300 mt-1">
-        {teamText[member.club_dept[0]]}
+        {member.club_dept && member.club_dept.length > 0 ? teamText[member.club_dept[0]] : "General Team"}
       </p>
       {member.roll_number && (
         <p className="text-xs text-gray-400">
@@ -85,27 +84,27 @@ const teamText: Record<club_dept_options, string> = {
 };
 
 // Members Component
-const Members = ({ members }: { members: Member[] }) => {
+const Members = ({ members }: { members: TeamMember[] }) => {
   return (
     <section className="mb-20 px-6" id="executive-head">
       <h2 className="text-4xl font-extrabold mb-12 text-center text-gray-200">
         Executive Heads
       </h2>
 
-      {Object.keys(teamText).map((teamName) => {
+      {Object.keys(teamText).map((teamKey) => {
         // filter members by team
         const teamMembers = members.filter(
-          (member) => teamText[member.club_dept[0]] === teamName
+          (member) => member.club_dept && member.club_dept.length > 0 && 
+          member.club_dept.includes(teamKey as club_dept_options)
         );
 
         if (!teamMembers || teamMembers.length === 0) {
-          console.log(`No members found for ${teamName}`);
           return null; // Skip rendering if no members found
         }
 
-        const teamDisplayName = teamText[teamName as club_dept_options];
+        const teamDisplayName = teamText[teamKey as club_dept_options];
         return (
-          <div key={teamName} className="mb-16">
+          <div key={teamKey} className="mb-16">
             <h3 className="text-2xl font-bold mb-6 text-gray-100 text-center">
               {teamDisplayName}
             </h3>

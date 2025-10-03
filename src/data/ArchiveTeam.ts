@@ -45,7 +45,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         id: 1,
         name: "Mamta Saini",
         role: "President",
-        image: "/team/office/mamta.png",
+        image:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRblCXSMx9e62PTW9EqRUvXhlSQIaCr7ezONbJs",
         email: "723410004@nitkkr.ac.in",
         phone: "+917827902202",
         website: "https://myselfdk03.wixsite.com/mamtasaini",
@@ -56,7 +57,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         id: 2,
         name: "Rajveer Pathak",
         role: "Vice President",
-        image: "/team/office/rajveer.png",
+        image:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbj9noqIr2zm8ylK6cPZINaCgLvMYpQBEsFSnu",
         email: "123110041@nitkkr.ac.in",
         phone: "+918854958743",
         website: undefined,
@@ -68,7 +70,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         id: 3,
         name: "Manoj Solanki",
         role: "Secretary (PG)",
-        image: "/team/office/manoj.png",
+        image:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbyDiwCrqAzuSGgbstNqVIOoBRD8TJYhCK4QEv",
         email: "723410009@nitkkr.ac.in",
         phone: "+919351266108",
         website: "https://manojmsmaths.wixsite.com/manoj-solanki",
@@ -79,7 +82,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         id: 4,
         name: "Anushika Jindal",
         role: "Secretary (UG)",
-        image: "/team/office/anushika.png",
+        image:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbhQAqL02FQYSkxdwbuOnL73ZXCVN2h4WpGKgc",
         email: "123110027@nitkkr.ac.in",
         phone: "+919023230312",
         website: undefined,
@@ -90,7 +94,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         id: 5,
         name: "Saurav Jain",
         role: "Coordinator (PG)",
-        image: "/team/office/saurav.png",
+        image:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbUGw1YKlPz2lj4fGpi9YWqZruks5VTcngyDvS",
         email: "723410001@nitkkr.ac.in",
         phone: "+917896515900",
         website: undefined,
@@ -107,7 +112,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         Owner: "ee96e39b-72c4-4953-8423-d1ec0e4ce3d0",
         phone: "",
         "insta link": "",
-        photo: "/team/05305983-9f9d-4542-abb4-b3ee6b7c8606.jpg",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbcHqN8buF0VmeQ16np2CMUxjdPlvE4SsXZhYc",
         mail: "123110022@nitkkr.ac.in",
         Team: "Content/Newsletter Team",
         Linkedin: "",
@@ -121,7 +127,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         Owner: "18dafa60-90f2-4d58-a04b-b380f6fa81e9",
         phone: "",
         "insta link": "",
-        photo: "/team/16b9b342-6095-49bf-b481-2ab40e080d01.jpg",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbNBUokqcGDzBqtiXAUN5pSHyVL4Y0ZEewhsld",
         mail: "723410010@nitkkr.ac.in",
         Team: "Education Outreach Team",
         Linkedin: "linkedin.com/in/rishabh-gupta- b86b092b6",
@@ -135,7 +142,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         Owner: "a880ec41-991a-4f61-90b7-888d448f963e",
         phone: "",
         "insta link": "aman_lohan96",
-        photo: "/team/240479f8-213d-4e69-b268-bb39b79f19b6.jpg",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRb3sL4z44nz0WoxTH2lfbJrSwPU9QtEgny7XC8",
         mail: "lohanaman34@gmail.com",
         Team: "PR /Social Media Team",
         Linkedin: "",
@@ -149,7 +157,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         Owner: "509e9556-ebad-45e7-97a3-eae62ca404b8",
         phone: "",
         "insta link": "",
-        photo: "/team/37393c5e-c93a-4c6e-bf49-0fe8d842a1cb.jpg",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRblCX2Scqe62PTW9EqRUvXhlSQIaCr7ezONbJs",
         mail: "123110051@nitkkr.ac.in",
         Team: "Managment Team",
         Linkedin: "",
@@ -162,11 +171,14 @@ export const archiveTeamData: YearlyTeamData[] = [
         "Updated Date": "2024-08-04T19:34:25Z",
         Owner: "78295562-cc85-453b-80b1-7ed73d738e62",
         phone: "",
-        "insta link": "https://www.instagram.com/rohan04.404?igsh=ZTV1ZmJyYmQwZHlr",
-        photo: "/team/375eac68-a6e9-4b07-af8d-225374a4befa.jpg",
+        "insta link":
+          "https://www.instagram.com/rohan04.404?igsh=ZTV1ZmJyYmQwZHlr",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRb9rjUPwPfXlmIFWdDKr9nZf8R0Nb2BukYO1w6",
         mail: "123110036@nitkkr.ac.in",
         Team: "Education Outreach Team",
-        Linkedin: "https://www.linkedin.com/in/rohan-surwase-625120281?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        Linkedin:
+          "https://www.linkedin.com/in/rohan-surwase-625120281?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
         "Git Hub": "",
       },
       {
@@ -177,7 +189,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         Owner: "ee413a4b-5245-4700-9555-04ce28991cb0",
         phone: "",
         "insta link": "https://www.instagram.com/devansh151005",
-        photo: "/team/44da6ee8-c462-4cdc-9ed9-b53983540367.png",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbkQgqFE7oKemFYZJrTVsAdyc1bOX9HCzDWqLU",
         mail: "123110034@nitkkr.ac.in",
         Team: "Tech Team",
         Linkedin: "http://www.linkedin.com/in/devansh151005",
@@ -190,11 +203,14 @@ export const archiveTeamData: YearlyTeamData[] = [
         "Updated Date": "2024-08-04T19:35:17Z",
         Owner: "18a79040-9a7f-4173-aee5-04a4f2fa34b7",
         phone: "",
-        "insta link": "https://www.instagram.com/fludious_lj?igsh=bTV4aW82Mnl0dmN3",
-        photo: "/team/6e5e6d66-f9d4-444f-a02e-fb2f6ae99529.jpg",
+        "insta link":
+          "https://www.instagram.com/fludious_lj?igsh=bTV4aW82Mnl0dmN3",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbj2nUl0r2zm8ylK6cPZINaCgLvMYpQBEsFSnu",
         mail: "123110004@nitkkr.com",
         Team: "Managment Team",
-        Linkedin: "https://www.linkedin.com/in/lakshay-jain-4a475b203?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        Linkedin:
+          "https://www.linkedin.com/in/lakshay-jain-4a475b203?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
         "Git Hub": "https://github.com/AnonyLJ",
       },
       {
@@ -204,11 +220,14 @@ export const archiveTeamData: YearlyTeamData[] = [
         "Updated Date": "2024-08-04T19:35:04Z",
         Owner: "c9b7fae8-8630-49af-9ecc-b9c5054bed64",
         phone: "",
-        "insta link": "https://www.instagram.com/___n_a_m_a_n_____?igsh=MWd3dHJkNG83aGE0ZQ==",
-        photo: "/team/b077a242-f85e-422b-bf75-3ea7017f9aae.jpg",
+        "insta link":
+          "https://www.instagram.com/___n_a_m_a_n_____?igsh=MWd3dHJkNG83aGE0ZQ==",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbF4eWW1vTxNbrv7ZMYk1HL3AG9gDSeOXziBco",
         mail: "005naman1807@gmail.com",
         Team: "Content/Newsletter Team",
-        Linkedin: "https://www.linkedin.com/in/naman-kumar-gupta-318352296?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        Linkedin:
+          "https://www.linkedin.com/in/naman-kumar-gupta-318352296?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
         "Git Hub": "",
       },
       {
@@ -222,7 +241,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         photo: "/team/b4ee802b-cd25-4700-8104-e60b2ad0c84e.jpg",
         mail: "123110019@nitkkr.ac.in",
         Team: "Tech Team",
-        Linkedin: "https://www.linkedin.com/in/akansha-patel-5a1101305?trk=contact-info",
+        Linkedin:
+          "https://www.linkedin.com/in/akansha-patel-5a1101305?trk=contact-info",
         "Git Hub": "",
       },
       {
@@ -232,8 +252,10 @@ export const archiveTeamData: YearlyTeamData[] = [
         "Updated Date": "2024-08-04T19:34:43Z",
         Owner: "308fbbe8-702c-400f-9e17-43acc5bfab1d",
         phone: "",
-        "insta link": "https://www.instagram.com/mr_gen06?igsh=dXA2OHMwZ2cxOXo2",
-        photo: "/team/c12cb02b-6873-42de-9c44-adb91b9ebb8e.png",
+        "insta link":
+          "https://www.instagram.com/mr_gen06?igsh=dXA2OHMwZ2cxOXo2",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRb3ZwVDinz0WoxTH2lfbJrSwPU9QtEgny7XC8Z",
         mail: "goutam.ind.2005@gmail.com",
         Team: "PR /Social Media Team",
         Linkedin: "http://linkedin.com/in/goutam-khandelwal-778862289",
@@ -247,7 +269,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         Owner: "bb9acfd7-35af-4926-9f69-ffa5a5c7df64",
         phone: "",
         "insta link": "https://www.instagram.com/keshav.0479/",
-        photo: "/team/c595d2b3-8eff-45db-a815-5c8bc86d3bc4.jpg",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRb4pUDR8MYWwxQSLIo278nczgN9sJiRXVrFHOp",
         mail: "keshav.rsk07@gmail.com",
         Team: "PR /Social Media Team",
         Linkedin: "https://in.linkedin.com/in/keshav0479",
@@ -260,11 +283,14 @@ export const archiveTeamData: YearlyTeamData[] = [
         "Updated Date": "2024-08-04T19:34:13Z",
         Owner: "369df4eb-001d-4b02-bfe8-ce3d207578b2",
         phone: "",
-        "insta link": "https://www.instagram.com/itsme.anshu27?igsh=cWN3cmZodzUwMjFn",
-        photo: "/team/db608fe3-bad8-4d46-af14-0342f2a676db.jpg",
+        "insta link":
+          "https://www.instagram.com/itsme.anshu27?igsh=cWN3cmZodzUwMjFn",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbQyMauZrVjg0GLDOuZ5dkU8fsWb6EI39Vl1at",
         mail: "anshujangra801@gmail.com",
         Team: "Education Outreach Team",
-        Linkedin: "https://www.linkedin.com/in/anshu-7b395b291?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        Linkedin:
+          "https://www.linkedin.com/in/anshu-7b395b291?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
         "Git Hub": "",
       },
       {
@@ -275,7 +301,8 @@ export const archiveTeamData: YearlyTeamData[] = [
         Owner: "174dfee1-46d0-43dc-90fc-0ad0becf6783",
         phone: "",
         "insta link": "",
-        photo: "/team/ea52ee08-a5d9-4be2-aabe-240c684d4a93.jpg",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbyvWeUeqAzuSGgbstNqVIOoBRD8TJYhCK4QEv",
         mail: "gk799310@gmail.com",
         Team: "PR /Social Media Team",
         Linkedin: "https://www.linkedin.com/in/gaurav-kumar-gautam-8080a6294",
@@ -288,16 +315,18 @@ export const archiveTeamData: YearlyTeamData[] = [
         "Updated Date": "2024-10-17T17:25:58Z",
         Owner: "f94d2810-5ef8-42d0-a72c-5ed877e65393",
         phone: "",
-        "insta link": "https://www.instagram.com/ajay_jangal_?igsh=b2I5M2V0cTVnZG53",
-        photo: "/team/f2c0a88a-0e0f-406a-b79d-2c7ade09266b.jpg",
+        "insta link":
+          "https://www.instagram.com/ajay_jangal_?igsh=b2I5M2V0cTVnZG53",
+        photo:
+          "https://2kzw8x329u.ufs.sh/f/zUEotgbNcFRbFrO7AdvTxNbrv7ZMYk1HL3AG9gDSeOXziBco",
         mail: "ajay201028@gmail.com",
         Team: "Tech Team",
-        Linkedin: "https://www.linkedin.com/in/asjangal?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        Linkedin:
+          "https://www.linkedin.com/in/asjangal?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
         "Git Hub": "",
       },
     ],
   },
-  // Add more years as needed
 ];
 
 // Helper functions

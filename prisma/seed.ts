@@ -1118,7 +1118,325 @@ await prisma.departmentAchievements.createMany({
   });
 
 
-  console.log("Seed data inserted successfully!");
+  // Create AnantTeamMember entries for testing team functions
+  
+  // Current year team (2025-26)
+  await prisma.anantTeamMember.createMany({
+    data: [
+      // Office Bearers for 2025-26
+      {
+        year: "2025-26",
+        club_dept: ["General"],
+        role: "Leading the organization",
+        description: "President of Anant Society for 2025-26",
+        userID: user1.id, // John Doe - President
+      },
+      {
+        year: "2025-26", 
+        club_dept: ["General"],
+        role: "Supporting the president",
+        description: "Coordinator for administrative tasks",
+        userID: user2.id, // Jane Smith - Coordinator
+      },
+      {
+        year: "2025-26",
+        club_dept: ["Management"],
+        role: "Managing documentation",
+        description: "Secretary for official communications",
+        userID: user4.id, // Bob White - Secretary
+      },
+    ]
+  });
+
+  // Create additional users for more comprehensive testing
+  const user5 = await prisma.user.create({
+    data: {
+      roll_number: 105,
+      name: "Sarah Wilson",
+      password: "password123",
+      branch: "ECE",
+      batch: "2024",
+      position: "VicePresident",
+      club_dept: ["Tech"],
+      imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b10213?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      linkedIn: "https://linkedin.com/in/sarahwilson",
+      github: "https://github.com/sarahwilson",
+      phone: "+919876543215",
+    },
+  });
+
+  const user6 = await prisma.user.create({
+    data: {
+      roll_number: 106,
+      name: "Mike Johnson",
+      password: "password123",
+      branch: "ME",
+      batch: "2023",
+      position: "General_Secretary",
+      club_dept: ["PR"],
+      imageURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      instagram: "https://instagram.com/mikejohnson",
+      website: "https://mikejohnson.dev",
+      phone: "+919876543216",
+    },
+  });
+
+  const user7 = await prisma.user.create({
+    data: {
+      roll_number: 107,
+      name: "Emily Davis",
+      password: "password123",
+      branch: "CE",
+      batch: "2025",
+      position: "Joint_Secretary",
+      club_dept: ["Content"],
+      imageURL: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      linkedIn: "https://linkedin.com/in/emilydavis",
+      instagram: "https://instagram.com/emilydavis",
+    },
+  });
+
+  const user8 = await prisma.user.create({
+    data: {
+      roll_number: 108,
+      name: "David Brown",
+      password: "password123",
+      branch: "EE",
+      batch: "2024",
+      position: "Executive_Head",
+      club_dept: ["Sponsorship"],
+      imageURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      github: "https://github.com/davidbrown",
+      website: "https://davidbrown.portfolio.com",
+    },
+  });
+
+  const user9 = await prisma.user.create({
+    data: {
+      roll_number: 109,
+      name: "Lisa Chen",
+      password: "password123", 
+      branch: "IIOT",
+      batch: "2023",
+      position: "Executive_Head",
+      club_dept: ["Education_Outreach"],
+      imageURL: "https://images.unsplash.com/photo-1534528741702-c0f7db169ba5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      linkedIn: "https://linkedin.com/in/lisachen",
+      phone: "+919876543217",
+    },
+  });
+
+  const user10 = await prisma.user.create({
+    data: {
+      roll_number: 110,
+      name: "Ryan Martinez",
+      password: "password123",
+      branch: "PIE",
+      batch: "2025",
+      position: "Executive_Head",
+      club_dept: ["Tech"],
+      imageURL: "https://images.unsplash.com/photo-1500648767791-00d562229aa3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      github: "https://github.com/ryanmartinez",
+      instagram: "https://instagram.com/ryanmartinez",
+    },
+  });
+
+  // Add more AnantTeamMember entries for current year (2025-26)
+  await prisma.anantTeamMember.createMany({
+    data: [
+      // Office Bearers
+      {
+        year: "2025-26",
+        club_dept: ["General"],
+        role: "Vice President responsibilities",
+        description: "Vice President of Anant Society",
+        userID: user5.id, // Sarah Wilson - VicePresident
+      },
+      {
+        year: "2025-26",
+        club_dept: ["Management"],
+        role: "General Secretary duties",
+        description: "Managing general administrative tasks",
+        userID: user6.id, // Mike Johnson - General_Secretary
+      },
+      {
+        year: "2025-26",
+        club_dept: ["Content"],
+        role: "Joint Secretary duties",
+        description: "Assistant to secretary",
+        userID: user7.id, // Emily Davis - Joint_Secretary
+      },
+      // Executive Heads
+      {
+        year: "2025-26",
+        club_dept: ["Sponsorship"],
+        role: "Sponsorship Team Lead",
+        description: "Leading sponsorship initiatives",
+        userID: user8.id, // David Brown - Executive_Head
+      },
+      {
+        year: "2025-26",
+        club_dept: ["Education_Outreach"],
+        role: "Education Team Lead",
+        description: "Managing educational programs",
+        userID: user9.id, // Lisa Chen - Executive_Head
+      },
+      {
+        year: "2025-26",
+        club_dept: ["Tech"],
+        role: "Tech Team Lead",
+        description: "Leading technical initiatives",
+        userID: user10.id, // Ryan Martinez - Executive_Head
+      },
+      {
+        year: "2025-26",
+        club_dept: ["PR"],
+        role: "PR Team Member",
+        description: "Managing social media and PR",
+        userID: user3.id, // Alice Brown - Member (PR)
+      },
+    ]
+  });
+
+  // Create archive data for 2024-25
+  const archiveUser1 = await prisma.user.create({
+    data: {
+      roll_number: 201,
+      name: "Former President Alex",
+      password: "password123",
+      branch: "CSE",
+      batch: "2022",
+      position: "President",
+      club_dept: ["General"],
+      imageURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      linkedIn: "https://linkedin.com/in/alexformer",
+    },
+  });
+
+  const archiveUser2 = await prisma.user.create({
+    data: {
+      roll_number: 202,
+      name: "Former VP Maya",
+      password: "password123",
+      branch: "IT",
+      batch: "2022",
+      position: "VicePresident",
+      club_dept: ["Tech"],
+      imageURL: "https://images.unsplash.com/photo-1494790108377-be9c29b10213?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      github: "https://github.com/mayaformer",
+    },
+  });
+
+  const archiveUser3 = await prisma.user.create({
+    data: {
+      roll_number: 203,
+      name: "Former Secretary Sam",
+      password: "password123",
+      branch: "ECE",
+      batch: "2023",
+      position: "Secretary",
+      club_dept: ["Management"],
+      imageURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      instagram: "https://instagram.com/samformer",
+    },
+  });
+
+  const archiveUser4 = await prisma.user.create({
+    data: {
+      roll_number: 204,
+      name: "Former Head Nina",
+      password: "password123",
+      branch: "ME",
+      batch: "2023",
+      position: "Executive_Head",
+      club_dept: ["Content"],
+      imageURL: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+      website: "https://ninaformer.dev",
+    },
+  });
+
+  // Archive team data for 2024-25
+  await prisma.anantTeamMember.createMany({
+    data: [
+      {
+        year: "2024-25",
+        club_dept: ["General"],
+        role: "President 2024-25",
+        description: "Former President of Anant Society",
+        userID: archiveUser1.id,
+      },
+      {
+        year: "2024-25",
+        club_dept: ["Tech"],
+        role: "Vice President 2024-25",
+        description: "Former Vice President",
+        userID: archiveUser2.id,
+      },
+      {
+        year: "2024-25",
+        club_dept: ["Management"],
+        role: "Secretary 2024-25",
+        description: "Former Secretary",
+        userID: archiveUser3.id,
+      },
+      {
+        year: "2024-25",
+        club_dept: ["Content"],
+        role: "Content Team Lead 2024-25",
+        description: "Former Content Team Head",
+        userID: archiveUser4.id,
+      },
+    ]
+  });
+
+  // Create archive data for 2023-24
+  const archive2023User1 = await prisma.user.create({
+    data: {
+      roll_number: 301,
+      name: "Legacy President John",
+      password: "password123",
+      branch: "AIML",
+      batch: "2021",
+      position: "President", 
+      club_dept: ["General"],
+      imageURL: "https://images.unsplash.com/photo-1500648767791-00d562229aa3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+    },
+  });
+
+  const archive2023User2 = await prisma.user.create({
+    data: {
+      roll_number: 302,
+      name: "Legacy VP Emma",
+      password: "password123",
+      branch: "CSE",
+      batch: "2021",
+      position: "Coordinator",
+      club_dept: ["PR"],
+      imageURL: "https://images.unsplash.com/photo-1534528741702-c0f7db169ba5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+    },
+  });
+
+  // Archive team data for 2023-24
+  await prisma.anantTeamMember.createMany({
+    data: [
+      {
+        year: "2023-24",
+        club_dept: ["General"],
+        role: "President 2023-24",
+        description: "Legacy President",
+        userID: archive2023User1.id,
+      },
+      {
+        year: "2023-24",
+        club_dept: ["PR"],
+        role: "Coordinator 2023-24", 
+        description: "Legacy Coordinator",
+        userID: archive2023User2.id,
+      },
+    ]
+  });
+
+  console.log("Seed data with AnantTeamMember entries inserted successfully!");
 }
 
 main()

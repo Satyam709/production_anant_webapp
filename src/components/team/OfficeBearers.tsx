@@ -2,15 +2,12 @@ import React from "react";
 import { Linkedin, GitHub, Instagram } from "react-feather";
 import Link from "next/link";
 import Image from "next/image";
-import { officeBearersData } from "@/data/AnantTeam";
 import { Globe } from "lucide-react";
-import { AnantTeamMember, User } from "@prisma/client";
 import { getMail } from "@/helpers/extras";
-
-interface Member extends AnantTeamMember, User {}
+import { TeamMember } from "@/lib/actions/AnantTeam";
 
 // MemberCard Component (Now OfficeBearerCard)
-const OfficeBearerCard: React.FC<{ member: Member }> = ({ member }) => {
+const OfficeBearerCard: React.FC<{ member: TeamMember }> = ({ member }) => {
   return (
     <div className="group bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 shadow-xl rounded-2xl p-6 border border-gray-600 flex flex-col items-center text-center h-full min-h-[300px] transition-all transform hover:scale-105 hover:shadow-2xl duration-300">
       {/* Profile Image */}
@@ -28,7 +25,7 @@ const OfficeBearerCard: React.FC<{ member: Member }> = ({ member }) => {
       <h4 className="text-xl font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">
         {member.name}
       </h4>
-      <p className="text-sm text-gray-300 mt-1">{member.role}</p>
+      <p className="text-sm text-gray-300 mt-1">{member.position}</p>
       {member.roll_number && (
         <p className="text-xs text-gray-400 hover:text-gray-300 transition-colors duration-200">
           {getMail(member.roll_number + "")}
@@ -80,7 +77,7 @@ const OfficeBearerCard: React.FC<{ member: Member }> = ({ member }) => {
 };
 
 // OfficeBearers Component (Now using OfficeBearerCard)
-const OfficeBearers: React.FC<{ members: Member[] }> = ({ members }) => {
+const OfficeBearers: React.FC<{ members: TeamMember[] }> = ({ members }) => {
   return (
     <section className="mb-20 px-6" id="office-bearers">
       <h2 className="text-4xl font-extrabold mb-12 text-center text-gray-200">
