@@ -113,8 +113,8 @@ const Members = ({ members }: { members: TeamMember[] }) => {
 
         const teamDisplayName = teamText[teamKey as club_dept_options];
         return (
-          <div key={teamKey} className="mb-16">
-            <h3 className="text-2xl font-bold mb-6 text-gray-100 text-center">
+          <div key={teamKey} className="mb-16 ">
+            <h3 className="text-2xl font-semibold mb-6 text-center text-gray-300 border-b border-gray-700 pb-2">
               {teamDisplayName}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
