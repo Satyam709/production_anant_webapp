@@ -7,7 +7,7 @@ import { getAnantTeamMembers, getAllTeamDataByYears, getAvailableTeamYears } fro
 import { position_options } from '@prisma/client'
 
 // SSG - Revalidate every 30 days
-export const revalidate = 60 * 60 * 24 * 30;
+export const revalidate = 2592000;
 
 // Office bearer positions
 const OFFICE_BEARER_POSITIONS: position_options[] = [
