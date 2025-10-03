@@ -5,13 +5,13 @@ import { Menu, X, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import NavDropdown from "./navigation/NavDropdown";
+import NavDropdown from "@/components/navigation/NavDropdown";
 import { navItems } from "@/constants/navigation";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleSection = (sectionLabel) => {
+  const toggleSection = (sectionLabel: string | null) => {
     setActiveSection(activeSection === sectionLabel ? null : sectionLabel);
   };
 
@@ -81,7 +81,6 @@ const Navbar = () => {
                 );
               })}
             </div>
-
 
             {/* Auth & Mobile Menu Button */}
             <div className="flex items-center gap-3">
@@ -203,7 +202,6 @@ const Navbar = () => {
                 );
               })}
             </div>
-
           </div>
         </div>
       </div>

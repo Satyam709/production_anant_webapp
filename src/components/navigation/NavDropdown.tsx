@@ -17,7 +17,7 @@ interface NavDropdownProps {
 const NavDropdown: React.FC<NavDropdownProps> = ({ label, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {

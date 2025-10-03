@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
         hostname: "**",
       },
     ],
+    unoptimized: true,
   },
   experimental: {
     serverActions: {

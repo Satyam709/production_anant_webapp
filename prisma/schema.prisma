@@ -13,6 +13,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AnantTeamMember {
+  id String @unique @id @default(uuid())
+  name String
+  email String?
+  roll_number Int?
+  year String?
+  club_dept club_dept_options[]
+  role String?
+  position position_options?
+  description String?
+  imageURL String?
+  linkedIn String?
+  github String?
+  instagram String?
+  phone String?
+  website String?
+  branch branch_options?
+  batch String?
+  joined DateTime @default(now())
+}
+
 model User{
   // basic user details
   id String @unique @id @default(uuid())
@@ -28,7 +49,7 @@ model User{
   linkedIn String?
   github String?
   instagram String?
-  
+
   // notice
   notices Notice[]    @relation(name:"notice-posted")
   
@@ -248,6 +269,8 @@ enum position_options {
   President
   VicePresident
   Secretary
+  General_Secretary
+  Joint_Secretary
   Coordinator
   Executive_Head
   Website_Developer
@@ -260,6 +283,7 @@ enum club_dept_options {
   Management
   Content
   Education_Outreach
+  Sponsorship
 }
 
 enum notice_cat {

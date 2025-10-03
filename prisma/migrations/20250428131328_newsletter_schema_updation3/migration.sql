@@ -7,6 +7,6 @@
 -- AlterTable
 ALTER TABLE "NewsLetter" DROP COLUMN "category",
 ADD COLUMN     "category" TEXT;
-
+ALTER TABLE "Notice" ADD COLUMN     "link" TEXT;
 -- DropEnum
 DROP TYPE "newsletter_cat";

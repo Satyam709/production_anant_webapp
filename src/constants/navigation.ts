@@ -11,7 +11,7 @@ export const navItems = {
     ],
   },
   Maths_Dept:{
-    label: "Math Deptartment",
+    label: "Math Department",
     items: [
       { label: "Math Dept.", href: "/department" }
     ],
