@@ -4,6 +4,7 @@ import { InternshipWithUser } from "@/types/internship";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Linkedin, Link2 } from "lucide-react";
+import { useState } from "react";
 
 interface InternshipCardProps {
   internship: InternshipWithUser;
@@ -11,6 +12,7 @@ interface InternshipCardProps {
 
 const InternshipCard = ({ internship }: InternshipCardProps) => {
   const router = useRouter();
+  const [imgSrc, setImgSrc] = useState(internship.user.imageURL || "/placeholder-avatar.png");
 
   return (
     <div
@@ -22,10 +24,11 @@ const InternshipCard = ({ internship }: InternshipCardProps) => {
         <div className="relative w-16 h-16">
           <Image
             className="rounded-full bg-blue-900/20 object-cover"
-            src={internship.user.imageURL || "/placeholder-avatar.png"}
+            src={imgSrc}
             alt={internship.user.name}
             fill
             sizes="(max-width: 64px) 100vw"
+            onError={() => setImgSrc("/placeholder-avatar.png")}
             priority
           />
         </div>
