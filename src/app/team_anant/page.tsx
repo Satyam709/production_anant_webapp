@@ -5,10 +5,9 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { getAnantTeamMembers, getAllTeamDataByYears, getAvailableTeamYears } from '@/lib/actions/AnantTeam'
 import { position_options } from '@prisma/client'
-import { TeamMember } from "@/lib/actions/AnantTeam";
 
-// SSG - Revalidate every 24 hours
-export const revalidate = 86400;
+// SSG - Revalidate every 30 days
+export const revalidate = 60 * 60 * 24 * 30;
 
 // Office bearer positions
 const OFFICE_BEARER_POSITIONS: position_options[] = [

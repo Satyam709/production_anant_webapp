@@ -24,7 +24,7 @@ export async function getAnantTeamMembers(
 
   // validate year format is either YYYY or YYYY-YY
   if (!/^\d{4}(-\d{2})?$/.test(year)) {
-    throw new Error("Invalid year format. Expected YYYY or YYYY-YY format");
+    return [];
   }
 
   try {
