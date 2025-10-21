@@ -30,7 +30,7 @@ export default async function isAdmin() {
   return true;
 }
 
-export async function isSuperAdmin(userId: string) {
+export async function isSuperAdmin() {
   const session = await getSession();
 
   // Check if user is authenticated
