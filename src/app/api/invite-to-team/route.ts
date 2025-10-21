@@ -1,5 +1,3 @@
-import { error } from 'console';
-import { select } from 'framer-motion/client';
 import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 

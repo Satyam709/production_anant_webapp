@@ -1,4 +1,4 @@
-import { Award,Star, Target } from 'lucide-react';
+import { Award, Target } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 

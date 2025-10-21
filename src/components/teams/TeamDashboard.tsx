@@ -1,6 +1,5 @@
 import {
   Loader,
-  Pencil,
   Plus,
   Send,
   Trash2,

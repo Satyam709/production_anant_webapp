@@ -1,6 +1,5 @@
 import { category } from '@prisma/client';
-import { li } from 'framer-motion/client';
-import { Bell, Loader, Pencil, Plus,Trash2, Upload } from 'lucide-react';
+import { Bell, Loader, Plus,Trash2 } from 'lucide-react';
 import React, { useEffect,useState } from 'react';
 
 import { DeleteNotice } from '@/lib/actions/DeleteNotice';

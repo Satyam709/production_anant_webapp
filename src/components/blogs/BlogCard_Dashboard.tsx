@@ -1,5 +1,5 @@
 import { Blog } from '@prisma/client';
-import { Check,Edit, Trash2 } from 'lucide-react';
+import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
 
 import { formatDate } from '@/helpers/formatDate';

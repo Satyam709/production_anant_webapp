@@ -16,7 +16,6 @@ import React, {
   type RefObject,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';

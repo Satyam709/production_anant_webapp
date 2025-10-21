@@ -1,9 +1,8 @@
 import { Meeting } from '@prisma/client';
-import { Calendar, Clock, MapPin, QrCode,Video } from 'lucide-react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 
-import GradientButton from '@/components/ui/GradientButton';
 import { placeholder } from '@/lib/images/placeholder';
 
 const MeetCard: React.FC<Meeting> = (meet) => {

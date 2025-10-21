@@ -1,4 +1,4 @@
-import { Bell,Trophy, Users } from 'lucide-react';
+import {Trophy, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 

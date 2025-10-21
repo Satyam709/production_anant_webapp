@@ -2,8 +2,8 @@
 import { branch_options, club_dept_options } from '@prisma/client';
 import { Book, Building, Calendar, Mail, Save,User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { getSession, useSession } from 'next-auth/react';
-import React, { useState , useTransition } from 'react';
+import { useSession } from 'next-auth/react';
+import React, { useState  } from 'react';
 
 import FormDropdown from '@/components/ui/FormDropdown';
 import { UpdateProfile } from '@/lib/actions/Profile';

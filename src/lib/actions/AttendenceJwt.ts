@@ -1,7 +1,6 @@
 'use server';
 import jwt from 'jsonwebtoken';
 
-import { attendanceData } from '@/types/meet_data';
 
 export async function decodeAttendanceJwt(token: string) {
   const secret = process.env.AttendenceSecret || 'itsasecret';

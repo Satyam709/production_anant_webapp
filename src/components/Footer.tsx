@@ -1,7 +1,7 @@
 import {
-  Mail,
   Instagram,
   Linkedin,
+  Mail,
   MapPin,
   Twitter,
   Youtube,

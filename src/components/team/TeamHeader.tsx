@@ -1,6 +1,5 @@
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import Link from 'next/link';
 import React from 'react';
 
 gsap.registerPlugin(ScrollToPlugin);

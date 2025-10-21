@@ -2,7 +2,6 @@ import {
   branch_options,
   club_dept_options,
   position_options,
-  Prisma,
 } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
 import fs from 'fs';
