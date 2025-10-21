@@ -1,5 +1,6 @@
-import React from 'react';
 import { AlertCircle, CheckCircle2, HelpCircle, XCircle } from 'lucide-react';
+import React from 'react';
+
 import GradientButton from './GradientButton';
 
 type StatusType = 'success' | 'error' | 'confirm';
@@ -13,7 +14,14 @@ interface Props {
   onConfirm?: () => void;
 }
 
-const StatusModal = ({ isOpen, onClose, title, message, type, onConfirm }: Props) => {
+const StatusModal = ({
+  isOpen,
+  onClose,
+  title,
+  message,
+  type,
+  onConfirm,
+}: Props) => {
   if (!isOpen) return null;
 
   const getIcon = () => {

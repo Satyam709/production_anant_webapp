@@ -1,9 +1,11 @@
-"use client";
-import React from "react";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { Events } from "@prisma/client";
-import EventCard from "@/components/events/EventCard";
+'use client';
+import { Events } from '@prisma/client';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
+
+import EventCard from '@/components/events/EventCard';
+
 interface HomeEventsSectionProps {
   events: Events[];
 }

@@ -1,9 +1,10 @@
-"use server";
-import qr from "qrcode";
-import { encodeMeetingattendance } from "@/lib/actions/AttendenceJwt";
+'use server';
+import qr from 'qrcode';
 
-import { attendanceData } from "@/types/meet_data";
-import prisma from "../PrismaClient/db";
+import { encodeMeetingattendance } from '@/lib/actions/AttendenceJwt';
+import { attendanceData } from '@/types/meet_data';
+
+import prisma from '../PrismaClient/db';
 
 export default async function generateQr(meetingId: string, duration: number) {
   const data: attendanceData = {
@@ -19,16 +20,16 @@ export default async function generateQr(meetingId: string, duration: number) {
       },
     });
     if (!isExist) {
-      throw new Error("meeting not exist");
+      throw new Error('meeting not exist');
     }
 
     token = await encodeMeetingattendance(data);
 
     // console.log("token for qr -> ",token);
-    const siteurl = process.env.SiteURL || "http://localhost:3000";
-    const apiUrl = siteurl + "/api/meetings/attend?token=" + token;
+    const siteurl = process.env.SiteURL || 'http://localhost:3000';
+    const apiUrl = siteurl + '/api/meetings/attend?token=' + token;
     return qr.toDataURL(apiUrl);
   } catch (err) {
-    console.log("error while token generation !", err);
+    console.log('error while token generation !', err);
   }
 }

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
-import { Merchandise } from "@/types/shop";
-import ProductForm from "@/components/merch/admin/ProductForm";
-import Image from "next/image";
-import { useMerchandise } from "@/components/merch/hooks/useMerchandise";
-import { placeholder } from "@/lib/images/placeholder";
+import { Pencil, Plus, Search,Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import React, { useState } from 'react';
+
+import ProductForm from '@/components/merch/admin/ProductForm';
+import { useMerchandise } from '@/components/merch/hooks/useMerchandise';
+import { placeholder } from '@/lib/images/placeholder';
+import { Merchandise } from '@/types/shop';
 
 const ProductsPage: React.FC = () => {
   const { products, loading, error, refetch } = useMerchandise();
@@ -12,7 +13,7 @@ const ProductsPage: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState<Merchandise | null>(
     null
   );
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleEdit = (product: Merchandise) => {
     setEditingProduct(product);
@@ -20,13 +21,13 @@ const ProductsPage: React.FC = () => {
   };
 
   const handleDelete = async (productId: number) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    if (!confirm('Are you sure you want to delete this product?')) return;
     // for now just set the product quantity to 0
     const prod = products.find((p) => p.item_id === productId);
-    const res = await fetch("/api/merch/admin/edit", {
-      method: "PUT",
+    const res = await fetch('/api/merch/admin/edit', {
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ ...prod, stock_quantity: 0 }), // set stock quantity to 0
     });
@@ -34,10 +35,10 @@ const ProductsPage: React.FC = () => {
     console.log(JSON.stringify(await res.json()));
 
     if (res.ok) {
-      console.log("Product updated successfully");
+      console.log('Product updated successfully');
       refetch();
     } else {
-      console.log("Product update failed");
+      console.log('Product update failed');
     }
   };
 
@@ -46,10 +47,10 @@ const ProductsPage: React.FC = () => {
       // Update existing product
 
       // call api to update product
-      const res = await fetch("/api/merch/admin/edit", {
-        method: "PUT",
+      const res = await fetch('/api/merch/admin/edit', {
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
@@ -57,17 +58,17 @@ const ProductsPage: React.FC = () => {
       console.log(JSON.stringify(await res.json()));
 
       if (res.ok) {
-        console.log("Product updated successfully");
+        console.log('Product updated successfully');
         refetch();
       } else {
-        console.log("Product update failed");
+        console.log('Product update failed');
       }
     } else {
       // call api to add product
-      const res = await fetch("/api/merch/admin/add", {
-        method: "POST",
+      const res = await fetch('/api/merch/admin/add', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
@@ -75,10 +76,10 @@ const ProductsPage: React.FC = () => {
       console.log(JSON.stringify(await res.json()));
 
       if (res.ok) {
-        console.log("Product added successfully");
+        console.log('Product added successfully');
         refetch();
       } else {
-        console.log("Product add failed");
+        console.log('Product add failed');
       }
     }
     setShowForm(false);
@@ -179,10 +180,10 @@ const ProductsPage: React.FC = () => {
                   <span
                     className={`${
                       product.stock_quantity > 10
-                        ? "text-green-500"
+                        ? 'text-green-500'
                         : product.stock_quantity > 0
-                        ? "text-yellow-500"
-                        : "text-red-500"
+                          ? 'text-yellow-500'
+                          : 'text-red-500'
                     }`}
                   >
                     {product.stock_quantity}

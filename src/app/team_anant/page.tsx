@@ -1,10 +1,15 @@
-import OfficeBearers from '@/components/team/OfficeBearers'
-import Members from '@/components/team/Members'
-import TeamArchive from '@/components/team/TeamArchive'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import { getAnantTeamMembers, getAllTeamDataByYears, getAvailableTeamYears } from '@/lib/actions/AnantTeam'
-import { position_options } from '@prisma/client'
+import { position_options } from '@prisma/client';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import Members from '@/components/team/Members';
+import OfficeBearers from '@/components/team/OfficeBearers';
+import TeamArchive from '@/components/team/TeamArchive';
+import {
+  getAllTeamDataByYears,
+  getAnantTeamMembers,
+  getAvailableTeamYears,
+} from '@/lib/actions/AnantTeam';
 
 // SSG - Revalidate every 30 days
 export const revalidate = 2592000;
@@ -17,7 +22,7 @@ const OFFICE_BEARER_POSITIONS: position_options[] = [
   position_options.General_Secretary,
   position_options.Joint_Secretary,
   position_options.Coordinator,
-]
+];
 
 export default async function TeamPage() {
   try {
@@ -25,28 +30,30 @@ export default async function TeamPage() {
     const [teamMembers, allTeamData, availableYears] = await Promise.all([
       getAnantTeamMembers(),
       getAllTeamDataByYears(),
-      getAvailableTeamYears()
+      getAvailableTeamYears(),
     ]);
-    
+
     // Filter office bearers based on position
-    const officeBearers = teamMembers.filter(member => 
-      member.position && OFFICE_BEARER_POSITIONS.includes(member.position)
-    )
-    
+    const officeBearers = teamMembers.filter(
+      (member) =>
+        member.position && OFFICE_BEARER_POSITIONS.includes(member.position)
+    );
+
     // Filter executive heads (non-office bearers)
-    const executiveHeads = teamMembers.filter(member => 
-      !member.position || !OFFICE_BEARER_POSITIONS.includes(member.position)
-    )
-    
+    const executiveHeads = teamMembers.filter(
+      (member) =>
+        !member.position || !OFFICE_BEARER_POSITIONS.includes(member.position)
+    );
+
     return (
       <div className="min-h-screen bg-[#0A0A0A] text-white">
         <div className="fixed inset-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-blue/10 rounded-full blur-[100px]" />
           <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
         </div>
-        
+
         <Navbar />
-        
+
         <main className="relative z-10 container mx-auto px-4 py-20">
           {/* Current Year Team */}
           <div className="mb-8">
@@ -59,26 +66,26 @@ export default async function TeamPage() {
               </p>
               <div className="w-24 h-1 bg-gradient-to-r from-primary-blue to-primary-cyan mx-auto rounded-full"></div>
             </div>
-            
+
             <OfficeBearers members={officeBearers} />
             <Members members={executiveHeads} />
           </div>
-          
+
           {/* Archive Section */}
-          <TeamArchive 
-            allTeamData={allTeamData} 
+          <TeamArchive
+            allTeamData={allTeamData}
             availableYears={availableYears}
             officeBearerPositions={OFFICE_BEARER_POSITIONS}
           />
-        </main>     
-        
+        </main>
+
         <div className="relative z-10">
           <Footer />
         </div>
       </div>
-    )
+    );
   } catch (error) {
-    console.error("Error loading team page:", error)
+    console.error('Error loading team page:', error);
     return (
       <div className="min-h-screen bg-[#0A0A0A] text-white">
         <Navbar />
@@ -94,6 +101,6 @@ export default async function TeamPage() {
         </main>
         <Footer />
       </div>
-    )
+    );
   }
 }

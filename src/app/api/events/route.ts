@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/PrismaClient/db";
+import { NextRequest, NextResponse } from 'next/server';
+
+import prisma from '@/lib/PrismaClient/db';
 
 export async function GET(req: NextRequest) {
   try {
@@ -9,19 +10,19 @@ export async function GET(req: NextRequest) {
 
     const url = new URL(req.url);
     const searchParams = url.searchParams;
-    const pageNumber = parseInt(searchParams.get("page") || "1", 10);
-    const time = searchParams.get("time");
+    const pageNumber = parseInt(searchParams.get('page') || '1', 10);
+    const time = searchParams.get('time');
 
     if (pageNumber < 1) {
       return NextResponse.json(
-        { message: "Invalid page number" },
+        { message: 'Invalid page number' },
         { status: 400 }
       );
     }
 
     let upcomingEvents, pastEvents;
 
-    if (!time || time === "upcoming") {
+    if (!time || time === 'upcoming') {
       upcomingEvents = await prisma.events.findMany({
         where: {
           conductedOn: {
@@ -31,12 +32,12 @@ export async function GET(req: NextRequest) {
         take: size,
         skip: (pageNumber - 1) * size,
         orderBy: {
-          registration_deadline: "desc",
+          registration_deadline: 'desc',
         },
       });
     }
 
-    if (!time || time === "past") {
+    if (!time || time === 'past') {
       pastEvents = await prisma.events.findMany({
         where: {
           conductedOn: {
@@ -46,13 +47,13 @@ export async function GET(req: NextRequest) {
         take: size,
         skip: (pageNumber - 1) * size,
         orderBy: {
-          registration_deadline: "desc",
+          registration_deadline: 'desc',
         },
       });
     }
 
     if (!upcomingEvents && !pastEvents) {
-      return NextResponse.json({ message: "No events found" }, { status: 404 });
+      return NextResponse.json({ message: 'No events found' }, { status: 404 });
     }
 
     if (!upcomingEvents) {
@@ -70,7 +71,7 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.log(err);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }

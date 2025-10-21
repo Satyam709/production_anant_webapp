@@ -1,9 +1,10 @@
-import React from "react";
-import { Linkedin, GitHub, Instagram } from "react-feather";
-import Link from "next/link";
-import Image from "next/image";
-import { club_dept_options } from "@prisma/client";
-import { TeamMember } from "@/lib/actions/AnantTeam";
+import { club_dept_options } from '@prisma/client';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import { GitHub, Instagram,Linkedin } from 'react-feather';
+
+import { TeamMember } from '@/lib/actions/AnantTeam';
 
 // MemberCard Component
 
@@ -26,7 +27,7 @@ const MemberCard: React.FC<{
       {/* Profile Image */}
       <div className="relative w-28 h-28 mb-4 rounded-full overflow-hidden shadow-md">
         <Image
-          src={member.imageURL || "/default_profile.png"}
+          src={member.imageURL || '/default_profile.png'}
           alt={member.name}
           width={112}
           height={112}
@@ -37,7 +38,7 @@ const MemberCard: React.FC<{
       {/* Member Info */}
       <h4 className="text-xl font-semibold text-white">{member.name}</h4>
       <p className="text-sm text-gray-300 mt-1">
-        {member.club_dept ? member.club_dept : "General Team"}
+        {member.club_dept ? member.club_dept : 'General Team'}
       </p>
       {member.email && <p className="text-xs text-gray-400">{member.email}</p>}
 
@@ -81,13 +82,13 @@ const MemberCard: React.FC<{
 };
 
 const teamText: Record<club_dept_options, string> = {
-  [club_dept_options.Tech]: "Tech Team",
-  [club_dept_options.Content]: "Content/Newsletter Team",
-  [club_dept_options.PR]: "PR/Social Media Team",
-  [club_dept_options.Sponsorship]: "Sponsorship Team",
-  [club_dept_options.Management]: "Management Team",
-  [club_dept_options.Education_Outreach]: "Education & Outreach Team",
-  [club_dept_options.General]: "General Team",
+  [club_dept_options.Tech]: 'Tech Team',
+  [club_dept_options.Content]: 'Content/Newsletter Team',
+  [club_dept_options.PR]: 'PR/Social Media Team',
+  [club_dept_options.Sponsorship]: 'Sponsorship Team',
+  [club_dept_options.Management]: 'Management Team',
+  [club_dept_options.Education_Outreach]: 'Education & Outreach Team',
+  [club_dept_options.General]: 'General Team',
 };
 
 // Members Component

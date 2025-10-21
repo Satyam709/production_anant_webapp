@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import katex from "katex";
+import katex from 'katex';
+import { useEffect } from 'react';
 
 interface BlogPreviewProps {
   content: string;
@@ -14,21 +14,21 @@ export function EditorPreview({ content }: BlogPreviewProps) {
     // Find all math elements and render them with KaTeX
     const mathElements = document.querySelectorAll('[data-math="true"]');
     mathElements.forEach((element) => {
-      const content = element.getAttribute("data-content");
+      const content = element.getAttribute('data-content');
       if (content) {
-        const displayMode = element.getAttribute("data-type") === "math-block";
+        const displayMode = element.getAttribute('data-type') === 'math-block';
         try {
           const rendered = katex.renderToString(content, {
             displayMode,
             throwOnError: false,
           });
-          const renderDiv = element.querySelector(".math-render");
+          const renderDiv = element.querySelector('.math-render');
           if (renderDiv) {
             // renderDiv.innerHTML = rendered;
             renderDiv.innerHTML = `<div style="overflow-x: auto; max-width: 100%;"><span>${rendered}</span></div>`;
           }
         } catch (error) {
-          console.error("KaTeX rendering error:", error);
+          console.error('KaTeX rendering error:', error);
         }
       }
     });

@@ -9,17 +9,20 @@ interface ImageGridProps {
   onImageClick?: (index: number) => void;
 }
 
-export const ImageGrid: React.FC<ImageGridProps> = ({ images, onImageClick }) => {
+export const ImageGrid: React.FC<ImageGridProps> = ({
+  images,
+  onImageClick,
+}) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {images.map((image, index) => (
-        <div 
+        <div
           key={image.id}
           className="group relative aspect-square overflow-hidden rounded-lg bg-gray-900/50 backdrop-blur-sm border border-gradient-middle/20 hover:border-gradient-middle/50 transition-all duration-300 cursor-pointer"
           onClick={() => onImageClick?.(index)}
         >
-          <Image 
-            src={image.url} 
+          <Image
+            src={image.url}
             alt=""
             width={300}
             height={300}

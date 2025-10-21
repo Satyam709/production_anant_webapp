@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: anant
       POSTGRES_PASSWORD: anant
     ports:
-      - "5400:5432"
+      - '5400:5432'
     networks:
       - mynetwork
 
@@ -14,7 +14,7 @@ services:
     image: redis:latest
     container_name: redis_container
     ports:
-      - "6379:6379"
+      - '6379:6379'
     networks:
       - mynetwork
 

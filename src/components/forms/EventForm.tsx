@@ -1,44 +1,56 @@
+import { Events,Prisma } from '@prisma/client';
+import axios from 'axios';
+import {
+  Calendar,
+  CalendarClock,
+  Clock,
+  Loader,
+  Pencil,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import React, {
-  useState,
-  useRef,
   type RefObject,
   useCallback,
   useEffect,
-} from "react";
-import TiptapEditor from "@/components/blogs/editor/tiptap-editor";
-import { Calendar, Loader, Plus, CalendarClock, Clock, Pencil, Trash2 } from "lucide-react";
-import GradientButton from "../ui/GradientButton";
-import Modal from "@/components/ui/Modal";
-import axios from "axios";
-import { uploadServerSideFile } from "@/lib/actions/uploadthing";
-import { Prisma, Events } from "@prisma/client";
-import { deleteEvent } from "@/lib/actions/Events";
-import EventCard from "@/components/events/EventCard";
-import { toLocalDatetimeString } from "@/helpers/toLocalDTString";
+  useRef,
+  useState,
+} from 'react';
 
-type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
+import TiptapEditor from '@/components/blogs/editor/tiptap-editor';
+import EventCard from '@/components/events/EventCard';
+import Modal from '@/components/ui/Modal';
+import { toLocalDatetimeString } from '@/helpers/toLocalDTString';
+import { deleteEvent } from '@/lib/actions/Events';
+import { uploadServerSideFile } from '@/lib/actions/uploadthing';
+
+import GradientButton from '../ui/GradientButton';
+
+type EventFormInput = Omit<Prisma.EventsCreateInput, 'createdBy'>;
 
 const EventForm = () => {
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
+    null
+  );
   const [upcomingEvents, setUpcomingEvents] = useState<Events[]>([]);
   const [pastEvents, setPastEvents] = useState<Events[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Events | null>(null);
   const [formData, setFormData] = useState<EventFormInput>({
-    eventName: "",
-    conductedBy: "",
+    eventName: '',
+    conductedBy: '',
     conductedOn: new Date(),
     registration_deadline: new Date(),
-    venue: "",
-    prize: "",
-    description: "",
-    external_registration_link: "",
+    venue: '',
+    prize: '',
+    description: '',
+    external_registration_link: '',
   });
   const [loading, setLoading] = useState(false);
   const [loadingEvents, setLoadingEvents] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
   const conductedOnRef = useRef<HTMLInputElement | null>(null);
@@ -46,7 +58,7 @@ const EventForm = () => {
 
   const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
-      if (typeof ref.current.showPicker === "function") {
+      if (typeof ref.current.showPicker === 'function') {
         ref.current.showPicker();
       } else {
         ref.current.focus();
@@ -58,24 +70,24 @@ const EventForm = () => {
     setLoadingEvents(true);
     try {
       // Fetch events logic (replace with your actual API call)
-      const res = await axios.get("/api/events");
+      const res = await axios.get('/api/events');
       console.log(res.data);
       if (!res.data || !res.data.upcomingEvents) {
         setUpcomingEvents([]);
-        setError("Failed to fetch events");
-        throw new Error("Failed to fetch events");
+        setError('Failed to fetch events');
+        throw new Error('Failed to fetch events');
       }
       if (!res.data || !res.data.pastEvents) {
         setPastEvents([]);
-        setError("Failed to fetch events");
-        throw new Error("Failed to fetch events");
+        setError('Failed to fetch events');
+        throw new Error('Failed to fetch events');
       }
 
       setUpcomingEvents(res.data.upcomingEvents);
       setPastEvents(res.data.pastEvents);
       // setSuccess("Events fetched successfully!");
     } catch (err: Error | unknown) {
-      setError(err instanceof Error ? err.message : "Failed to fetch events");
+      setError(err instanceof Error ? err.message : 'Failed to fetch events');
     } finally {
       setLoadingEvents(false);
     }
@@ -88,12 +100,12 @@ const EventForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       if (!file && !editingEvent?.imageURL) {
-        setError("Please upload an image");
+        setError('Please upload an image');
         return;
       }
 
@@ -102,7 +114,7 @@ const EventForm = () => {
       if (file) {
         const res = await uploadServerSideFile(file);
         if (!res) {
-          setError("Failed to upload image");
+          setError('Failed to upload image');
           return;
         }
         imageURL = res.ufsUrl;
@@ -110,7 +122,7 @@ const EventForm = () => {
         imageURL = editingEvent.imageURL;
       }
 
-      console.log("imageurl uplaoding ", imageURL);
+      console.log('imageurl uplaoding ', imageURL);
 
       const payload = {
         ...formData,
@@ -124,22 +136,22 @@ const EventForm = () => {
       if (editingEvent) {
         // Update event logic (replace with your actual API call)
         await axios.put(`/api/events/${editingEvent.event_id}/edit`, payload);
-        setSuccess("Event updated successfully!");
+        setSuccess('Event updated successfully!');
       } else {
         // Create event logic (replace with your actual API call)
-        await axios.post("/api/events/create", payload);
-        setSuccess("Event created successfully!");
+        await axios.post('/api/events/create', payload);
+        setSuccess('Event created successfully!');
       }
 
       setFormData({
-        eventName: "",
-        conductedBy: "",
+        eventName: '',
+        conductedBy: '',
         conductedOn: new Date(),
         registration_deadline: new Date(),
-        venue: "",
-        prize: "",
-        description: "",
-        external_registration_link: "",
+        venue: '',
+        prize: '',
+        description: '',
+        external_registration_link: '',
       });
 
       setFile(null);
@@ -149,20 +161,20 @@ const EventForm = () => {
     } catch (err: Error | unknown) {
       if (
         err &&
-        typeof err === "object" &&
-        "response" in err &&
+        typeof err === 'object' &&
+        'response' in err &&
         err.response &&
-        typeof err.response === "object" &&
-        "data" in err.response
+        typeof err.response === 'object' &&
+        'data' in err.response
       ) {
         const axiosError = err.response as { data?: { message?: string } };
         setError(
           axiosError.data?.message ||
-            (editingEvent ? "Failed to update event" : "Failed to create event")
+            (editingEvent ? 'Failed to update event' : 'Failed to create event')
         );
       } else {
         setError(
-          editingEvent ? "Failed to update event" : "Failed to create event"
+          editingEvent ? 'Failed to update event' : 'Failed to create event'
         );
       }
       console.error(err);
@@ -175,7 +187,7 @@ const EventForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "conductedOn" || name === "registration_deadline") {
+    if (name === 'conductedOn' || name === 'registration_deadline') {
       setFormData((prev) => ({ ...prev, [name]: new Date(value) }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -185,13 +197,13 @@ const EventForm = () => {
   const openCreateModal = () => {
     setEditingEvent(null);
     setFormData({
-      eventName: "",
-      conductedBy: "",
+      eventName: '',
+      conductedBy: '',
       conductedOn: new Date(),
       registration_deadline: new Date(),
-      venue: "",
-      prize: "",
-      description: "",
+      venue: '',
+      prize: '',
+      description: '',
     });
     setIsModalOpen(true);
   };
@@ -250,7 +262,7 @@ const EventForm = () => {
                             conductedOn: event.conductedOn,
                             registration_deadline: event.registration_deadline,
                             venue: event.venue,
-                            prize: event.prize || "",
+                            prize: event.prize || '',
                             description: event.description,
                           });
                           setEditingEvent(event);
@@ -294,7 +306,7 @@ const EventForm = () => {
                             conductedOn: event.conductedOn,
                             registration_deadline: event.registration_deadline,
                             venue: event.venue,
-                            prize: event.prize || "",
+                            prize: event.prize || '',
                             description: event.description,
                           });
                           setEditingEvent(event);
@@ -327,7 +339,7 @@ const EventForm = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingEvent ? "Edit Event" : "Create Event"}
+        title={editingEvent ? 'Edit Event' : 'Create Event'}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -372,7 +384,7 @@ const EventForm = () => {
               <input
                 type="text"
                 name="external_registration_link"
-                value={formData.external_registration_link || ""}
+                value={formData.external_registration_link || ''}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -380,7 +392,6 @@ const EventForm = () => {
                 placeholder="Enter external registration link if valid"
               />
             </div>
-
           </div>
 
           <div className="space-y-2">
@@ -445,7 +456,9 @@ const EventForm = () => {
                   type="datetime-local"
                   ref={deadlineRef}
                   name="registration_deadline"
-                  value={toLocalDatetimeString(new Date(formData.registration_deadline))}
+                  value={toLocalDatetimeString(
+                    new Date(formData.registration_deadline)
+                  )}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -486,7 +499,7 @@ const EventForm = () => {
               <input
                 type="text"
                 name="prize"
-                value={formData.prize || ""}
+                value={formData.prize || ''}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -503,9 +516,9 @@ const EventForm = () => {
             <TiptapEditor
               content={formData.description}
               onChange={(html) => {
-                setFormData(prev => ({
+                setFormData((prev) => ({
                   ...prev,
-                  description: html
+                  description: html,
                 }));
               }}
               placeholder="Enter event description"
@@ -531,11 +544,11 @@ const EventForm = () => {
                 <span>
                   {loading
                     ? editingEvent
-                      ? "Updating..."
-                      : "Creating..."
+                      ? 'Updating...'
+                      : 'Creating...'
                     : editingEvent
-                    ? "Update Event"
-                    : "Create Event"}
+                      ? 'Update Event'
+                      : 'Create Event'}
                 </span>
               </div>
             </GradientButton>
@@ -550,7 +563,8 @@ const EventForm = () => {
           <div className="relative bg-gray-900 p-6 rounded-lg max-w-md w-full mx-4">
             <h3 className="text-xl font-semibold mb-4">Delete Event</h3>
             <p className="text-gray-300 mb-6">
-              Are you sure you want to delete this event? This action cannot be undone.
+              Are you sure you want to delete this event? This action cannot be
+              undone.
             </p>
             <div className="flex justify-end gap-4">
               <button
@@ -566,7 +580,7 @@ const EventForm = () => {
                     if (res.error) {
                       setError(res.error);
                     } else {
-                      setSuccess("Event deleted successfully!");
+                      setSuccess('Event deleted successfully!');
                       refetchEvents();
                     }
                     setShowDeleteConfirm(null);

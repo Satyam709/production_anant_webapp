@@ -1,9 +1,10 @@
-import { AlbumCard } from "./AlbumCardLinkVersion";
-import { GDriveGallery } from "@prisma/client";
+import { GDriveGallery } from '@prisma/client';
+
+import { AlbumCard } from './AlbumCardLinkVersion';
 
 type AlbumGalleryProps = {
-  albums: GDriveGallery[]
-}
+  albums: GDriveGallery[];
+};
 
 export const AlbumGallery: React.FC<AlbumGalleryProps> = ({ albums }) => {
   return (
@@ -14,7 +15,7 @@ export const AlbumGallery: React.FC<AlbumGalleryProps> = ({ albums }) => {
             <AlbumCard
               key={album.id}
               name={album.title}
-              coverImage={album.coverImage || "/anant_logo.png"}
+              coverImage={album.coverImage || '/anant_logo.png'}
               link={album.link}
               description={album.description}
             />

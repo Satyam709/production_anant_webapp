@@ -1,7 +1,7 @@
-"use client";
-import React from "react";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+'use client';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 interface Project {
   id: number;
@@ -46,7 +46,7 @@ const HomeProjectsSection = ({ projects }: HomeProjectsSectionProps) => {
                   {project.title}
                 </h3>
                 <div className="text-blue-200/80 mb-4">
-                  <span className="font-medium text-blue-100">Department:</span>{" "}
+                  <span className="font-medium text-blue-100">Department:</span>{' '}
                   {project.department}
                 </div>
                 <Link

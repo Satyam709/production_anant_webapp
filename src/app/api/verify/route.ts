@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse} from "next/server";
-import sendEmail from "@/helpers/mailer";
-import bcryptjs from "bcryptjs";
-import redis from "@/helpers/redis";
-import { PrismaClient } from "@prisma/client";
-import { mailOptions } from "@/helpers/mailer";
-import { isRollNumberValid } from "@/helpers/extras";
+import { PrismaClient } from '@prisma/client';
+import bcryptjs from 'bcryptjs';
+import { NextRequest, NextResponse } from 'next/server';
+
+import { isRollNumberValid } from '@/helpers/extras';
+import sendEmail, { mailOptions } from '@/helpers/mailer';
+import redis from '@/helpers/redis';
 
 type redis_value = {
   hashedOTP: string;
@@ -19,19 +19,19 @@ export async function POST(req: NextRequest) {
     const { roll_number } = body;
     if (!roll_number) {
       return NextResponse.json(
-        { message: "Roll number missing!" },
+        { message: 'Roll number missing!' },
         { status: 400 }
       );
     }
-    if (typeof roll_number != "string") {
+    if (typeof roll_number != 'string') {
       return NextResponse.json(
-        { message: "Invalid data type!" },
+        { message: 'Invalid data type!' },
         { status: 400 }
       );
     }
     if (!isRollNumberValid(roll_number)) {
       return NextResponse.json(
-        { message: "Roll number invalid!" },
+        { message: 'Roll number invalid!' },
         { status: 400 }
       );
     }
@@ -42,19 +42,19 @@ export async function POST(req: NextRequest) {
     });
     if (user) {
       return NextResponse.json(
-        { message: "User already registered!" },
+        { message: 'User already registered!' },
         { status: 400 }
       );
     }
 
     // college mail_id
-    const to = roll_number + "@nitkkr.ac.in";
+    const to = roll_number + '@nitkkr.ac.in';
 
     // OTP generation
     const max = 1000000;
     const OTP: string = String(Math.floor(Math.random() * max)).padStart(
       6,
-      "0"
+      '0'
     );
 
     // hashing OTP
@@ -66,17 +66,17 @@ export async function POST(req: NextRequest) {
       hashedOTP: hashedOTP,
       time: Date.now(),
     };
-    console.log("OTP: ", OTP);
+    console.log('OTP: ', OTP);
     await redis.set(roll_number, JSON.stringify(value));
 
     if (!process.env.MAIL_ID) {
-      return NextResponse.json({ message: ".env missing" }, { status: 500 });
+      return NextResponse.json({ message: '.env missing' }, { status: 500 });
     }
 
     const maildata: mailOptions = {
       from: process.env.MAIL_ID,
       to: to,
-      subject: "OTP Verification For Registration in Anant",
+      subject: 'OTP Verification For Registration in Anant',
       text: `Please don't share the OTP with anyone.\n Your OTP for registering into Anant's website is ${OTP}. \n Validity ends in 10 minutes \n Thank You`,
     };
 
@@ -84,13 +84,19 @@ export async function POST(req: NextRequest) {
       await sendEmail(maildata);
       console.log(OTP);
     } catch (err) {
-      console.log("error occured\n", err);
-      return NextResponse.json({ message: "Internal Server Error: Sending email-failed"}, { status: 500 });
+      console.log('error occured\n', err);
+      return NextResponse.json(
+        { message: 'Internal Server Error: Sending email-failed' },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ message: "Email sent successfully" });
+    return NextResponse.json({ message: 'Email sent successfully' });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }

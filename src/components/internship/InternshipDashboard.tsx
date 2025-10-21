@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { InternshipWithUser } from "@/types/internship";
-import { Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect,useState } from 'react';
+
+import { InternshipWithUser } from '@/types/internship';
 
 const InternshipDashboard = () => {
   const router = useRouter();
   const [internships, setInternships] = useState<InternshipWithUser[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchInternships();
@@ -17,14 +18,14 @@ const InternshipDashboard = () => {
 
   const fetchInternships = async () => {
     try {
-      const response = await fetch("/api/internships/my");
+      const response = await fetch('/api/internships/my');
       if (!response.ok) {
-        throw new Error("Failed to fetch internships");
+        throw new Error('Failed to fetch internships');
       }
       const data = await response.json();
       setInternships(data);
     } catch (err) {
-      setError("Failed to load internships");
+      setError('Failed to load internships');
       console.error(err);
     } finally {
       setLoading(false);
@@ -34,18 +35,18 @@ const InternshipDashboard = () => {
   const handleDelete = async (id: number) => {
     try {
       const response = await fetch(`/api/internships?id=${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete internship");
+        throw new Error('Failed to delete internship');
       }
 
       // Refresh the internships list
       fetchInternships();
     } catch (err) {
-      console.error("Error deleting internship:", err);
-      setError("Failed to delete internship");
+      console.error('Error deleting internship:', err);
+      setError('Failed to delete internship');
     }
   };
 

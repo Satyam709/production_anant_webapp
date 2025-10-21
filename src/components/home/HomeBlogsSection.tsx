@@ -1,7 +1,7 @@
-"use client";
-import React from "react";
-import { ArrowRight, User } from "lucide-react";
-import Link from "next/link";
+'use client';
+import { ArrowRight, User } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 interface Blog {
   id: number;

@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/PrismaClient/db";
-import { getSession } from "@/lib/actions/Sessions";
-import isAdmin from "@/lib/actions/Admin";
-import z from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import z from 'zod';
+
+import isAdmin from '@/lib/actions/Admin';
+import { getSession } from '@/lib/actions/Sessions';
+import prisma from '@/lib/PrismaClient/db';
 
 // Album Validation Schema
 const albumSchema = z.object({
-  name: z.string().min(1, "Album name is required"),
+  name: z.string().min(1, 'Album name is required'),
 });
 
 export async function POST(req: NextRequest) {
@@ -16,25 +17,25 @@ export async function POST(req: NextRequest) {
     const session = await getSession();
 
     if (!session?.user || !(await isAdmin())) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
     if (!validation.success) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
 
     const { name } = validation.data;
 
     // Check if album with the same name exists
     const existingAlbum = await prisma.album.findUnique({
-        where:{
-            name
-        }
+      where: {
+        name,
+      },
     });
 
     if (existingAlbum) {
       return NextResponse.json(
-        { error: "Album already exists" },
+        { error: 'Album already exists' },
         { status: 400 }
       );
     }
@@ -45,13 +46,13 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "Album created successfully", album },
+      { message: 'Album created successfully', album },
       { status: 201 }
     );
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const albums = await prisma.album.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
       include: {
         images: {
           select: {
@@ -72,14 +73,14 @@ export async function GET(req: NextRequest) {
     });
 
     if (!albums.length) {
-      return NextResponse.json({ error: "No albums found" }, { status: 404 });
+      return NextResponse.json({ error: 'No albums found' }, { status: 404 });
     }
 
     return NextResponse.json({ albums }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

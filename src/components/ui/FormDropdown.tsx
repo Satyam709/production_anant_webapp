@@ -1,29 +1,37 @@
 // FormDropdown.tsx
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from 'lucide-react';
+import React, { useEffect,useRef, useState } from 'react';
 
 interface FormDropdownProps {
   label: string;
   options: string[];
-  value: string|null|undefined;
+  value: string | null | undefined;
   onSelect: (option: string) => void;
 }
 
-const FormDropdown: React.FC<FormDropdownProps> = ({ label, options, value, onSelect }) => {
+const FormDropdown: React.FC<FormDropdownProps> = ({
+  label,
+  options,
+  value,
+  onSelect,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close when click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -47,9 +55,7 @@ const FormDropdown: React.FC<FormDropdownProps> = ({ label, options, value, onSe
         />
       </button>
       {isOpen && (
-        <div
-          className="absolute mt-1 w-full bg-black/90 backdrop-blur-sm border border-gray-800 rounded-xl shadow-lg z-10 transform transition-all duration-300 ease-out origin-top"
-        >
+        <div className="absolute mt-1 w-full bg-black/90 backdrop-blur-sm border border-gray-800 rounded-xl shadow-lg z-10 transform transition-all duration-300 ease-out origin-top">
           {options.map((option, index) => (
             <div
               key={index}

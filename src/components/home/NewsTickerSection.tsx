@@ -1,8 +1,8 @@
-"use client";
-import React, { useState, useRef } from "react";
-import { ChevronDown } from "lucide-react";
-import Link from "next/link";
-import { motion, useAnimationFrame } from "framer-motion";
+'use client';
+import { motion, useAnimationFrame } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import React, { useRef,useState } from 'react';
 
 export interface NewsItem {
   id: string | number;
@@ -72,7 +72,7 @@ const NewsTickerSection = ({ news }: NewsTickerSectionProps) => {
           >
             <ChevronDown
               className={`w-6 h-6 transform transition-transform ${
-                isExpanded ? "rotate-180" : ""
+                isExpanded ? 'rotate-180' : ''
               }`}
             />
           </button>
@@ -93,10 +93,10 @@ const NewsTickerSection = ({ news }: NewsTickerSectionProps) => {
                   {item.title}
                 </Link>
                 <span className="text-xs text-blue-400 whitespace-nowrap">
-                  {new Date(item.created_at).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
+                  {new Date(item.created_at).toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
                   })}
                 </span>
               </div>

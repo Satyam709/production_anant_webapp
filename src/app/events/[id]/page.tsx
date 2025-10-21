@@ -1,14 +1,15 @@
-"use server";
-import React from "react";
-import { Calendar, Clock, MapPin, Trophy, User, Users } from "lucide-react";
-import Register_Button from "@/components/events/Register_Button";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { getSession } from "@/lib/actions/Sessions";
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { EditorPreview } from "@/components/blogs/BlogPreview";
-import { Events } from "@prisma/client";
+'use server';
+import { Events } from '@prisma/client';
+import { Calendar, Clock, MapPin, Trophy, User, Users } from 'lucide-react';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import React from 'react';
+
+import { EditorPreview } from '@/components/blogs/BlogPreview';
+import Register_Button from '@/components/events/Register_Button';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import { getSession } from '@/lib/actions/Sessions';
 
 async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -24,13 +25,13 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
   const isLoggedin = session?.user ? true : false;
 
   const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     }).format(new Date(date));
   };
 
@@ -41,7 +42,7 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
         <div className="max-w-7xl mx-auto my-32">
           <div className="relative  w-full">
             <Image
-              src={!event.imageURL ? "/fallback-image.png" : event.imageURL}
+              src={!event.imageURL ? '/fallback-image.png' : event.imageURL}
               alt={event.eventName}
               width={800}
               height={500}
@@ -65,13 +66,18 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
                 </div>
                 <div className="flex items-center space-x-3">
                   <Calendar className="w-6 h-6 text-cyan-400" />
-                  <span>Date: {formatDate(new Date(event.conductedOn).toISOString())}</span>
+                  <span>
+                    Date:{' '}
+                    {formatDate(new Date(event.conductedOn).toISOString())}
+                  </span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Clock className="w-6 h-6 text-cyan-400" />
                   <span>
-                    Registration Deadline:{" "}
-                    {formatDate(new Date(event.registration_deadline).toISOString())}
+                    Registration Deadline:{' '}
+                    {formatDate(
+                      new Date(event.registration_deadline).toISOString()
+                    )}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -80,36 +86,37 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
                 </div>
               </div>
 
-              {event.first_prize_name && <div className="bg-gray-700 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-4 flex items-center">
-                  <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
-                  Prize Distribution
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-yellow-400">1st Prize:</div>
-                    <div className="flex items-center">
-                      <User className="w-4 h-4 mr-2" />
-                      {event.first_prize_name || "TBD"}
+              {event.first_prize_name && (
+                <div className="bg-gray-700 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <Trophy className="w-6 h-6 text-yellow-400 mr-2" />
+                    Prize Distribution
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="text-yellow-400">1st Prize:</div>
+                      <div className="flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        {event.first_prize_name || 'TBD'}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="text-gray-400">2nd Prize:</div>
-                    <div className="flex items-center">
-                      <User className="w-4 h-4 mr-2" />
-                      {event.second_prize_name || "TBD"}
+                    <div className="flex items-center space-x-3">
+                      <div className="text-gray-400">2nd Prize:</div>
+                      <div className="flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        {event.second_prize_name || 'TBD'}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="text-bronze-400">3rd Prize:</div>
-                    <div className="flex items-center">
-                      <User className="w-4 h-4 mr-2" />
-                      {event.third_prize_name || "TBD"}
+                    <div className="flex items-center space-x-3">
+                      <div className="text-bronze-400">3rd Prize:</div>
+                      <div className="flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        {event.third_prize_name || 'TBD'}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              }
+              )}
             </div>
 
             {event.prize && (
@@ -128,7 +135,9 @@ async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
               event_id={id}
               isRegistrationOpen={isRegistrationOpen}
               isLoggedin={isLoggedin}
-              external_registration_link={event.external_registration_link||""}
+              external_registration_link={
+                event.external_registration_link || ''
+              }
             />
           </div>
         </div>
@@ -149,7 +158,7 @@ async function getEvents(id: string) {
     const data = await res.json();
     return data as { data: Events };
   } catch (err) {
-    console.error("Failed to fetch event:", err);
+    console.error('Failed to fetch event:', err);
     return { data: null };
   }
 }

@@ -1,37 +1,38 @@
-import Image from "next/image";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Image from 'next/image';
+import Link from 'next/link';
 import {
+  ExternalLink,
+  Instagram,
   Linkedin,
+  Mail,
   Twitter,
   Youtube,
-  Instagram,
-  ExternalLink,
-  Mail,
-} from "react-feather";
-import Link from "next/link";
+} from 'react-feather';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 export default function ContactPage() {
   const socialLinks = [
     {
       icon: <Instagram className="h-6 w-6" />,
-      href: "https://www.instagram.com/anant_nitkkr/",
-      label: "Instagram",
+      href: 'https://www.instagram.com/anant_nitkkr/',
+      label: 'Instagram',
     },
     {
       icon: <Youtube className="h-6 w-6" />,
-      href: "https://www.youtube.com/channel/UC",
-      label: "YouTube",
+      href: 'https://www.youtube.com/channel/UC',
+      label: 'YouTube',
     },
     {
       icon: <Twitter className="h-6 w-6" />,
-      href: "https://x.com/MathDept_nitkkr",
-      label: "Twitter",
+      href: 'https://x.com/MathDept_nitkkr',
+      label: 'Twitter',
     },
     {
       icon: <Linkedin />,
-      href: "https://www.linkedin.com/company/anant-the-mathematical-society",
-      label: "LinkedIn",
+      href: 'https://www.linkedin.com/company/anant-the-mathematical-society',
+      label: 'LinkedIn',
     },
   ];
 

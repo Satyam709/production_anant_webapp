@@ -1,38 +1,39 @@
+import { branch_options, Meeting,Prisma  } from '@prisma/client';
+import axios from 'axios';
+import {
+  CalendarClock,
+  Download,
+  Eye,
+  Loader,
+  Pencil,
+  Plus,
+  QrCode,
+  Trash2,
+  Users,
+} from 'lucide-react';
+import Image from 'next/image';
 import React, {
-  useState,
-  useRef,
   type RefObject,
   useCallback,
   useEffect,
   useMemo,
-} from "react";
-import { Suspense } from "react";
-import {
-  Users,
-  Loader,
-  Plus,
-  Pencil,
-  Trash2,
-  CalendarClock,
-  QrCode,
-  Eye,
-  Download,
-} from "lucide-react";
-import GradientButton from "../ui/GradientButton";
-import { ConfirmModal } from "./ConfirmModal";
-import Modal from "../ui/Modal";
-import { branch_options, Prisma } from "@prisma/client";
-import { Meeting } from "@prisma/client";
-import axios from "axios";
-import { deleteMeeting, getAttendies } from "@/lib/actions/MeetAction";
-import Image from "next/image";
-import generateQr from "@/lib/actions/GenerateQr";
-import { convertToCSV } from "@/helpers/convertToCsv";
-import { toLocalDatetimeString } from "@/helpers/toLocalDTString";
+  useRef,
+  useState,
+} from 'react';
+import { Suspense } from 'react';
+
+import { convertToCSV } from '@/helpers/convertToCsv';
+import { toLocalDatetimeString } from '@/helpers/toLocalDTString';
+import generateQr from '@/lib/actions/GenerateQr';
+import { deleteMeeting, getAttendies } from '@/lib/actions/MeetAction';
+
+import GradientButton from '../ui/GradientButton';
+import Modal from '../ui/Modal';
+import { ConfirmModal } from './ConfirmModal';
 
 type MeetFormInput = Omit<
   Prisma.MeetingCreateInput,
-  "hostID" | "conductor" | "attendees"
+  'hostID' | 'conductor' | 'attendees'
 >;
 
 // Meeting Card Component
@@ -144,7 +145,7 @@ const MeetingCard = React.memo(
                   {meeting.topic_of_discussion}
                 </p>
                 <p className="text-sm text-gray-400 mt-1">
-                  {new Date(meeting.starts).toLocaleDateString()} at{" "}
+                  {new Date(meeting.starts).toLocaleDateString()} at{' '}
                   {formatTime(new Date(meeting.starts))}
                 </p>
               </div>
@@ -162,12 +163,12 @@ const MeetingCard = React.memo(
   }
 );
 
-MeetingCard.displayName = "MeetingCard";
+MeetingCard.displayName = 'MeetingCard';
 
 const RenderQrCode = React.memo(({ id }: { id: string }) => {
-  const [qrCode, setQrCode] = useState("");
+  const [qrCode, setQrCode] = useState('');
   const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -180,8 +181,8 @@ const RenderQrCode = React.memo(({ id }: { id: string }) => {
         const qr = await generateQr(id, 10);
         if (mounted && qr) setQrCode(qr);
       } catch (error) {
-        if (mounted) setError("Failed to generate QR code");
-        console.error("Error generating QR code:", error);
+        if (mounted) setError('Failed to generate QR code');
+        console.error('Error generating QR code:', error);
       } finally {
         if (mounted) setIsFetching(false);
       }
@@ -213,7 +214,7 @@ const RenderQrCode = React.memo(({ id }: { id: string }) => {
       ) : (
         <div className="w-48 h-48 flex items-center justify-center">
           <p className="text-gray-400">
-            {error || "Failed to generate QR code."}
+            {error || 'Failed to generate QR code.'}
           </p>
         </div>
       )}
@@ -221,7 +222,7 @@ const RenderQrCode = React.memo(({ id }: { id: string }) => {
   );
 });
 
-RenderQrCode.displayName = "RenderQrCode";
+RenderQrCode.displayName = 'RenderQrCode';
 
 const RenderAttendees = React.memo(({ id }: { id: string }) => {
   interface Attendee {
@@ -246,7 +247,7 @@ const RenderAttendees = React.memo(({ id }: { id: string }) => {
         const data = await getAttendies(id);
         if (mounted) setAttendees(data);
       } catch (error) {
-        console.error("Error fetching attendees:", error);
+        console.error('Error fetching attendees:', error);
       } finally {
         if (mounted) setIsFetching(false);
       }
@@ -278,9 +279,9 @@ const RenderAttendees = React.memo(({ id }: { id: string }) => {
             >
               <div className="min-w-[2.5rem] h-10 rounded-full bg-gradient-to-r from-primary-blue to-primary-cyan flex items-center justify-center text-white font-medium">
                 {attendee.name
-                  .split(" ")
+                  .split(' ')
                   .map((n) => n[0])
-                  .join("")}
+                  .join('')}
               </div>
               <div className="min-w-0 flex-1">
                 <h4 className="text-white font-medium truncate">
@@ -303,7 +304,7 @@ const RenderAttendees = React.memo(({ id }: { id: string }) => {
   );
 });
 
-RenderAttendees.displayName = "RenderAttendees";
+RenderAttendees.displayName = 'RenderAttendees';
 
 const MeetForm = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -313,22 +314,22 @@ const MeetForm = () => {
   const [editingMeeting, setEditingMeeting] = useState<Meeting | null>(null);
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [formData, setFormData] = useState<MeetFormInput>({
-    venue: "",
+    venue: '',
     starts: new Date(),
     duration: 60,
-    topic_of_discussion: "",
+    topic_of_discussion: '',
   });
   const [loading, setLoading] = useState(false);
   const [loadingMeetings, setLoadingMeetings] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const startsDateRef = useRef<HTMLInputElement | null>(null);
 
   const handleDateClick = useCallback(
     (ref: RefObject<HTMLInputElement | null>) => {
       if (ref.current) {
-        if (typeof ref.current.showPicker === "function") {
+        if (typeof ref.current.showPicker === 'function') {
           ref.current.showPicker();
         } else {
           ref.current.focus();
@@ -339,9 +340,9 @@ const MeetForm = () => {
   );
 
   const formatTime = useCallback((date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
+    return new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
       hour12: true,
     }).format(date);
   }, []);
@@ -349,9 +350,9 @@ const MeetForm = () => {
   const handleDelete = useCallback(async (id: string) => {
     const res = await deleteMeeting(id);
     if (res) {
-      setSuccess("Meeting deleted successfully!");
+      setSuccess('Meeting deleted successfully!');
     } else {
-      setError("Failed to delete meeting");
+      setError('Failed to delete meeting');
     }
     refetchMeetings();
   }, []);
@@ -359,14 +360,14 @@ const MeetForm = () => {
   const refetchMeetings = useCallback(async () => {
     setLoadingMeetings(true);
     try {
-      const res = await axios.get("/api/meetings");
+      const res = await axios.get('/api/meetings');
       if (!res.data || !res.data.meetings) {
         setMeetings([]);
-        throw new Error("Failed to fetch meetings");
+        throw new Error('Failed to fetch meetings');
       }
       setMeetings(res.data.meetings.upcoming);
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to fetch meetings");
+      setError(err.response?.data?.error || 'Failed to fetch meetings');
     } finally {
       setLoadingMeetings(false);
     }
@@ -379,8 +380,8 @@ const MeetForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       const payload = {
@@ -394,17 +395,17 @@ const MeetForm = () => {
           `/api/meetings/${editingMeeting.meeting_id}/edit`,
           payload
         );
-        setSuccess("Meeting updated successfully!");
+        setSuccess('Meeting updated successfully!');
       } else {
-        await axios.post("/api/meetings/create", payload);
-        setSuccess("Meeting scheduled successfully!");
+        await axios.post('/api/meetings/create', payload);
+        setSuccess('Meeting scheduled successfully!');
       }
 
       setFormData({
-        venue: "",
+        venue: '',
         starts: new Date(),
         duration: 60,
-        topic_of_discussion: "",
+        topic_of_discussion: '',
       });
       setIsModalOpen(false);
       setEditingMeeting(null);
@@ -413,8 +414,8 @@ const MeetForm = () => {
       setError(
         err.response?.data?.error ||
           (editingMeeting
-            ? "Failed to update meeting"
-            : "Failed to schedule meeting")
+            ? 'Failed to update meeting'
+            : 'Failed to schedule meeting')
       );
     } finally {
       setLoading(false);
@@ -436,9 +437,9 @@ const MeetForm = () => {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
       setFormData((prev) => {
-        if (name === "starts") {
+        if (name === 'starts') {
           return { ...prev, starts: new Date(value) };
-        } else if (name === "duration") {
+        } else if (name === 'duration') {
           return { ...prev, duration: parseInt(value) };
         } else {
           return { ...prev, [name]: value };
@@ -451,10 +452,10 @@ const MeetForm = () => {
   const openCreateModal = useCallback(() => {
     setEditingMeeting(null);
     setFormData({
-      venue: "",
+      venue: '',
       starts: new Date(),
       duration: 60,
-      topic_of_discussion: "",
+      topic_of_discussion: '',
     });
     setIsModalOpen(true);
   }, []);
@@ -478,19 +479,19 @@ const MeetForm = () => {
       const csv = convertToCSV(attendies);
 
       // Trigger the download of the CSV file
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
       if (link.download !== undefined) {
         const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", `attendies_${meeting.meeting_id}.csv`);
-        link.style.visibility = "hidden";
+        link.setAttribute('href', url);
+        link.setAttribute('download', `attendies_${meeting.meeting_id}.csv`);
+        link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       }
     } catch (error) {
-      console.error("Error downloading attendees:", error);
+      console.error('Error downloading attendees:', error);
     }
   }, []);
 
@@ -552,7 +553,7 @@ const MeetForm = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingMeeting ? "Edit Meeting" : "Schedule Meeting"}
+        title={editingMeeting ? 'Edit Meeting' : 'Schedule Meeting'}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
@@ -605,7 +606,7 @@ const MeetForm = () => {
               <input
                 type="number"
                 name="duration"
-                value={formData.duration || ""}
+                value={formData.duration || ''}
                 onChange={handleInputChange}
                 min="15"
                 step="15"
@@ -623,7 +624,7 @@ const MeetForm = () => {
             </label>
             <textarea
               name="topic_of_discussion"
-              value={formData.topic_of_discussion || ""}
+              value={formData.topic_of_discussion || ''}
               onChange={handleInputChange}
               rows={3}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
@@ -652,11 +653,11 @@ const MeetForm = () => {
                 <span>
                   {loading
                     ? editingMeeting
-                      ? "Updating..."
-                      : "Scheduling..."
+                      ? 'Updating...'
+                      : 'Scheduling...'
                     : editingMeeting
-                    ? "Update Meeting"
-                    : "Schedule Meeting"}
+                      ? 'Update Meeting'
+                      : 'Schedule Meeting'}
                 </span>
               </div>
             </GradientButton>
@@ -677,7 +678,7 @@ const MeetForm = () => {
             </div>
           }
         >
-          <RenderAttendees id={selectedMeeting?.meeting_id || ""} />
+          <RenderAttendees id={selectedMeeting?.meeting_id || ''} />
         </Suspense>
       </Modal>
 
@@ -695,7 +696,7 @@ const MeetForm = () => {
               </div>
             }
           >
-            <RenderQrCode id={selectedMeeting?.meeting_id || ""} />
+            <RenderQrCode id={selectedMeeting?.meeting_id || ''} />
           </Suspense>
           <div className="space-y-2">
             <h3 className="text-lg font-medium text-white">

@@ -1,7 +1,7 @@
-import React from "react";
-import { Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 interface AlbumCardProps {
   name: string;
@@ -42,7 +42,9 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({
       <div className="absolute bottom-0 left-0 right-0 p-4">
         <h3 className="text-white font-medium truncate">{name}</h3>
         {description && (
-          <p className="text-gray-300 text-sm mt-1 line-clamp-2">{description}</p>
+          <p className="text-gray-300 text-sm mt-1 line-clamp-2">
+            {description}
+          </p>
         )}
       </div>
     </Link>

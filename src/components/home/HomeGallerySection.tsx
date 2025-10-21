@@ -1,7 +1,7 @@
-"use client";
-import React from "react";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+'use client';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 interface HomeGallerySectionProps {
   photos: string[];

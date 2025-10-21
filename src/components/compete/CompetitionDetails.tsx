@@ -1,19 +1,22 @@
-import React from 'react'
-import { Competitions } from '@prisma/client'
-import { Calendar, Trophy, Users } from 'lucide-react'
+import { Competitions } from '@prisma/client';
+import { Calendar, Trophy, Users } from 'lucide-react';
+import React from 'react';
 
 interface CompetitionDetailsProps {
-  competition: Competitions
-  onJoin: () => void
+  competition: Competitions;
+  onJoin: () => void;
 }
 
-const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition, onJoin }) => {
+const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
+  competition,
+  onJoin,
+}) => {
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-4xl font-bold mb-4 mt-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-500">
         {competition.competitionName}
       </h1>
-      
+
       <div className="flex items-center gap-4 text-gray-400 mb-8">
         <div className="flex items-center gap-2">
           <Calendar size={18} />
@@ -50,7 +53,11 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition, on
             <div className="flex items-center gap-4">
               <div className="flex-1">
                 <h3 className="font-medium">Registration Deadline</h3>
-                <p className="text-gray-400">{new Date(competition.registration_deadline).toLocaleDateString()}</p>
+                <p className="text-gray-400">
+                  {new Date(
+                    competition.registration_deadline
+                  ).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
@@ -66,7 +73,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition, on
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CompetitionDetails
+export default CompetitionDetails;

@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
 import {
   Image as ImageIcon,
-  Plus,
+  Loader,
   Pencil,
+  Plus,
   Trash2,
   Upload,
-  Loader,
   X,
-} from "lucide-react";
-import GradientButton from "@/components/ui/GradientButton";
-import Modal from "@/components/ui/Modal";
-import StatusModal from "@/components/ui/StatusModal";
-import { AlbumType } from "@/types/common";
-import { placeholder } from "@/lib/images/placeholder";
-import Image from "next/image";
-import { uploadServerSideFiles } from "@/lib/actions/uploadthing";
+} from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
+import Modal from '@/components/ui/Modal';
+import StatusModal from '@/components/ui/StatusModal';
+import { uploadServerSideFiles } from '@/lib/actions/uploadthing';
+import { placeholder } from '@/lib/images/placeholder';
+import { AlbumType } from '@/types/common';
 
 const PhotoGallery = () => {
   const [albums, setAlbums] = useState<AlbumType[]>([]);
@@ -25,7 +26,7 @@ const PhotoGallery = () => {
   const [isFetching, setIsFetching] = useState(false);
 
   const [statusModal, setStatusModal] = useState<{
-    type: "success" | "error" | "confirm";
+    type: 'success' | 'error' | 'confirm';
     title: string;
     message: string;
   } | null>(null);
@@ -33,7 +34,7 @@ const PhotoGallery = () => {
   const [imageToDelete, setImageToDelete] = useState<string | null>(null);
 
   const [albumForm, setAlbumForm] = useState({
-    name: "",
+    name: '',
   });
 
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -48,7 +49,7 @@ const PhotoGallery = () => {
     try {
       const res = await fetch(`/api/albums`);
 
-      if (!res.ok) throw new Error("Failed to fetch albums");
+      if (!res.ok) throw new Error('Failed to fetch albums');
       const data = (await res.json()) as { albums: AlbumType[] };
       albums = data.albums;
     } catch (error) {
@@ -65,30 +66,30 @@ const PhotoGallery = () => {
     try {
       // Simulate API call
       const res = await fetch(`/api/albums`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: albumForm.name,
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to create album");
+      if (!res.ok) throw new Error(data.error || 'Failed to create album');
       setIsAlbumModalOpen(false);
-      setAlbumForm({ name: "" });
+      setAlbumForm({ name: '' });
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Album created successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Album created successfully',
       });
       // Fetch albums again to update the list
       await fetchAlbums();
     } catch (error: any) {
       setStatusModal({
-        type: "error",
-        title: "Error",
-        message: error.message || "Failed to create album",
+        type: 'error',
+        title: 'Error',
+        message: error.message || 'Failed to create album',
       });
     } finally {
       setLoading(false);
@@ -102,9 +103,9 @@ const PhotoGallery = () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/albums/${selectedAlbum.id}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           newName: albumForm.name,
@@ -113,7 +114,7 @@ const PhotoGallery = () => {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Failed to update album");
+      if (!res.ok) throw new Error(data.error || 'Failed to update album');
 
       setAlbums(
         albums.map((album) =>
@@ -125,16 +126,16 @@ const PhotoGallery = () => {
 
       setIsAlbumModalOpen(false);
       setSelectedAlbum(null);
-      setAlbumForm({ name: "" });
+      setAlbumForm({ name: '' });
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Album updated successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Album updated successfully',
       });
     } catch (error: any) {
       setStatusModal({
-        type: "error",
-        title: "Error",
+        type: 'error',
+        title: 'Error',
         message: error.message,
       });
     } finally {
@@ -147,24 +148,24 @@ const PhotoGallery = () => {
 
     try {
       const res = await fetch(`/api/albums/${albumToDelete}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Failed to update album");
+      if (!res.ok) throw new Error(data.error || 'Failed to update album');
 
       setAlbums(albums.filter((album) => album.id !== albumToDelete));
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Album deleted successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Album deleted successfully',
       });
     } catch (error: any) {
       setStatusModal({
-        type: "error",
-        title: "Error",
-        message: error.message || "Failed to delete album",
+        type: 'error',
+        title: 'Error',
+        message: error.message || 'Failed to delete album',
       });
     } finally {
       setAlbumToDelete(null);
@@ -175,29 +176,29 @@ const PhotoGallery = () => {
     if (!selectedAlbum) return;
     if (imageFiles.length === 0) {
       setStatusModal({
-        type: "error",
-        title: "Error",
-        message: "Please select an image to upload",
+        type: 'error',
+        title: 'Error',
+        message: 'Please select an image to upload',
       });
       return;
     }
-    const newImages: AlbumType["images"] = [];
+    const newImages: AlbumType['images'] = [];
     const successSet = new Set();
     setLoading(true);
     try {
       const res = await uploadServerSideFiles(imageFiles);
       if (!res) {
-        throw new Error("Failed to add image");
+        throw new Error('Failed to add image');
       }
       const formDataUrl: { urls: string[] } = {
         urls: [],
       };
       res.forEach((response, idx) => {
         try {
-          if (response.error) throw new Error("Failed to add image");
+          if (response.error) throw new Error('Failed to add image');
 
           const newImg = {
-            id: "",
+            id: '',
             url: response.data?.ufsUrl,
           };
 
@@ -209,7 +210,7 @@ const PhotoGallery = () => {
         }
       });
 
-      if (successSet.size === 0) throw new Error("Failed to add image");
+      if (successSet.size === 0) throw new Error('Failed to add image');
 
       // preserve the failed files
       const failedImageFiles = imageFiles.filter(
@@ -219,9 +220,9 @@ const PhotoGallery = () => {
 
       // update database
       const updateDB = await fetch(`/api/albums/${selectedAlbum.id}/images`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formDataUrl),
       });
@@ -229,7 +230,7 @@ const PhotoGallery = () => {
       const resdata = await updateDB.json();
 
       if (!updateDB.ok) {
-        throw new Error(resdata.error || "Failed to add image to database");
+        throw new Error(resdata.error || 'Failed to add image to database');
       }
 
       const updatedAlbum = await fetch(`/api/albums/${selectedAlbum.id}`);
@@ -246,20 +247,20 @@ const PhotoGallery = () => {
       }
 
       if (successSet.size != imageFiles.length)
-        throw new Error("few images failed to add");
+        throw new Error('few images failed to add');
 
       setIsImageModalOpen(false);
 
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Image added successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Image added successfully',
       });
     } catch (error: any) {
       setStatusModal({
-        type: "error",
-        title: "Error",
-        message: error.message || "Failed to add image",
+        type: 'error',
+        title: 'Error',
+        message: error.message || 'Failed to add image',
       });
     } finally {
       setLoading(false);
@@ -273,13 +274,13 @@ const PhotoGallery = () => {
       const res = await fetch(
         `/api/albums/${selectedAlbum.id}/images/${imageToDelete}`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         }
       );
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Failed to delete image");
+      if (!res.ok) throw new Error(data.error || 'Failed to delete image');
 
       setAlbums(
         albums.map((album) =>
@@ -298,15 +299,15 @@ const PhotoGallery = () => {
       });
 
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Image deleted successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Image deleted successfully',
       });
     } catch (error: any) {
       setStatusModal({
-        type: "error",
-        title: "Error",
-        message: error.message || "Failed to delete image",
+        type: 'error',
+        title: 'Error',
+        message: error.message || 'Failed to delete image',
       });
     } finally {
       setImageToDelete(null);
@@ -328,7 +329,7 @@ const PhotoGallery = () => {
         <div className="flex items-center gap-3">
           <ImageIcon className="h-6 w-6 text-primary-cyan" />
           <h2 className="text-xl font-semibold text-white">
-            {selectedAlbum ? selectedAlbum.name : "Photo Gallery"}
+            {selectedAlbum ? selectedAlbum.name : 'Photo Gallery'}
           </h2>
         </div>
         <GradientButton
@@ -342,7 +343,7 @@ const PhotoGallery = () => {
         >
           <div className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
-            <span>{selectedAlbum ? "Add Image" : "Create Album"}</span>
+            <span>{selectedAlbum ? 'Add Image' : 'Create Album'}</span>
           </div>
         </GradientButton>
       </div>
@@ -386,8 +387,8 @@ const PhotoGallery = () => {
                   </h3>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-400">
-                      {album.images.length}{" "}
-                      {album.images.length === 1 ? "image" : "images"}
+                      {album.images.length}{' '}
+                      {album.images.length === 1 ? 'image' : 'images'}
                     </span>
                     <div className="flex items-center gap-2">
                       <button
@@ -404,10 +405,10 @@ const PhotoGallery = () => {
                         onClick={() => {
                           setAlbumToDelete(album.id);
                           setStatusModal({
-                            type: "confirm",
-                            title: "Delete Album",
+                            type: 'confirm',
+                            title: 'Delete Album',
                             message:
-                              "Are you sure you want to delete this album? This action cannot be undone.",
+                              'Are you sure you want to delete this album? This action cannot be undone.',
                           });
                         }}
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors"
@@ -447,10 +448,10 @@ const PhotoGallery = () => {
                   onClick={() => {
                     setImageToDelete(image.id);
                     setStatusModal({
-                      type: "confirm",
-                      title: "Delete Image",
+                      type: 'confirm',
+                      title: 'Delete Image',
                       message:
-                        "Are you sure you want to delete this image? This action cannot be undone.",
+                        'Are you sure you want to delete this image? This action cannot be undone.',
                     });
                   }}
                   className="p-2 text-white hover:text-red-500 transition-colors"
@@ -469,9 +470,9 @@ const PhotoGallery = () => {
         onClose={() => {
           setIsAlbumModalOpen(false);
           setSelectedAlbum(null);
-          setAlbumForm({ name: "" });
+          setAlbumForm({ name: '' });
         }}
-        title={selectedAlbum ? "Edit Album" : "Create Album"}
+        title={selectedAlbum ? 'Edit Album' : 'Create Album'}
       >
         <form
           onSubmit={selectedAlbum ? handleEditAlbum : handleCreateAlbum}
@@ -498,7 +499,7 @@ const PhotoGallery = () => {
               onClick={() => {
                 setIsAlbumModalOpen(false);
                 setSelectedAlbum(null);
-                setAlbumForm({ name: "" });
+                setAlbumForm({ name: '' });
               }}
               className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
             >
@@ -514,11 +515,11 @@ const PhotoGallery = () => {
                 <span>
                   {loading
                     ? selectedAlbum
-                      ? "Updating..."
-                      : "Creating..."
+                      ? 'Updating...'
+                      : 'Creating...'
                     : selectedAlbum
-                    ? "Update Album"
-                    : "Create Album"}
+                      ? 'Update Album'
+                      : 'Create Album'}
                 </span>
               </div>
             </GradientButton>
@@ -597,7 +598,7 @@ const PhotoGallery = () => {
                 ) : (
                   <Upload className="h-5 w-5" />
                 )}
-                <span>{loading ? "Adding..." : "Add Images"}</span>
+                <span>{loading ? 'Adding...' : 'Add Images'}</span>
               </div>
             </GradientButton>
           </div>
@@ -608,16 +609,16 @@ const PhotoGallery = () => {
       <StatusModal
         isOpen={statusModal !== null}
         onClose={() => setStatusModal(null)}
-        title={statusModal?.title || ""}
-        message={statusModal?.message || ""}
-        type={statusModal?.type || "success"}
+        title={statusModal?.title || ''}
+        message={statusModal?.message || ''}
+        type={statusModal?.type || 'success'}
         onConfirm={
-          statusModal?.type === "confirm"
+          statusModal?.type === 'confirm'
             ? albumToDelete
               ? handleDeleteAlbum
               : imageToDelete
-              ? handleDeleteImage
-              : undefined
+                ? handleDeleteImage
+                : undefined
             : undefined
         }
       />

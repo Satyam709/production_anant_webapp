@@ -1,22 +1,23 @@
-import React from "react";
-import { Linkedin, GitHub, Instagram } from "react-feather";
-import Link from "next/link";
-import Image from "next/image";
-import { Globe } from "lucide-react";
-import { getMail } from "@/helpers/extras";
-import { TeamMember } from "@/lib/actions/AnantTeam";
-import { position_options } from "@prisma/client";
+import { position_options } from '@prisma/client';
+import { Globe } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import { GitHub, Instagram,Linkedin } from 'react-feather';
+
+import { getMail } from '@/helpers/extras';
+import { TeamMember } from '@/lib/actions/AnantTeam';
 
 export const positionTextMap: Record<position_options, string> = {
-  [position_options.President]: "President",
-  [position_options.VicePresident]: "Vice President",
-  [position_options.Secretary]: "Secretary",
-  [position_options.General_Secretary]: "General Secretary",
-  [position_options.Joint_Secretary]: "Joint Secretary",
-  [position_options.Coordinator]: "Coordinator",
-  [position_options.Member]: "Member",
-  [position_options.Executive_Head]: "Executive Head",
-  [position_options.Website_Developer]: "Website Developer",
+  [position_options.President]: 'President',
+  [position_options.VicePresident]: 'Vice President',
+  [position_options.Secretary]: 'Secretary',
+  [position_options.General_Secretary]: 'General Secretary',
+  [position_options.Joint_Secretary]: 'Joint Secretary',
+  [position_options.Coordinator]: 'Coordinator',
+  [position_options.Member]: 'Member',
+  [position_options.Executive_Head]: 'Executive Head',
+  [position_options.Website_Developer]: 'Website Developer',
 };
 
 // MemberCard Component (Now OfficeBearerCard)
@@ -26,7 +27,7 @@ const OfficeBearerCard: React.FC<{ member: TeamMember }> = ({ member }) => {
       {/* Profile Image */}
       <div className="relative w-28 h-28 mb-4 rounded-full overflow-hidden shadow-md ring-2 ring-gray-500 group-hover:ring-blue-500 transition-shadow duration-300">
         <Image
-          src={member.imageURL || "/default_profile.png"}
+          src={member.imageURL || '/default_profile.png'}
           alt={member.name}
           width={112}
           height={112}

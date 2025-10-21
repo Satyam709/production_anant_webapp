@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
+
 import Modal from '@/components/ui/Modal';
 
 interface AddNewsletterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (title: string, file: File | null, category: string, volume: string) => void;
+  onAdd: (
+    title: string,
+    file: File | null,
+    category: string,
+    volume: string
+  ) => void;
 }
 
-const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onAdd }) => {
+const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({
+  isOpen,
+  onClose,
+  onAdd,
+}) => {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [category, setCategory] = useState('Indian Mathematicians');
@@ -27,7 +37,10 @@ const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onA
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Newsletter">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-2">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
             Newsletter Title
           </label>
           <input
@@ -41,7 +54,10 @@ const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onA
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-2">
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
             Category
           </label>
           <select
@@ -52,13 +68,18 @@ const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onA
             required
           >
             <option value="Indian Mathematicians">Indian Mathematicians</option>
-            <option value="Foreign Mathematicians">Foreign Mathematicians</option>
+            <option value="Foreign Mathematicians">
+              Foreign Mathematicians
+            </option>
             <option value="Anant Report">Anant Report</option>
           </select>
         </div>
 
         <div>
-          <label htmlFor="volume" className="block text-sm font-medium text-gray-300 mb-2">
+          <label
+            htmlFor="volume"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
             Volume
           </label>
           <input
@@ -72,7 +93,10 @@ const AddNewsLetter: React.FC<AddNewsletterModalProps> = ({ isOpen, onClose, onA
         </div>
 
         <div>
-          <label htmlFor="file" className="block text-sm font-medium text-gray-300 mb-2">
+          <label
+            htmlFor="file"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
             PDF File
           </label>
           <input

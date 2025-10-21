@@ -1,11 +1,13 @@
-import prisma from "@/lib/PrismaClient/db";
-import { getSession } from "@/lib/actions/Sessions";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+
+import { getSession } from '@/lib/actions/Sessions';
+import prisma from '@/lib/PrismaClient/db';
+
 export async function GET(req: NextRequest) {
   const session = await getSession();
   if (!session?.user) {
     return NextResponse.json(
-      { message: "You are not authenticated" },
+      { message: 'You are not authenticated' },
       { status: 400 }
     );
   }
@@ -21,9 +23,9 @@ export async function GET(req: NextRequest) {
     });
     return NextResponse.json(orders);
   } catch (error) {
-    console.log("Error fetching orders: ", error);
+    console.log('Error fetching orders: ', error);
     return NextResponse.json(
-      { message: "Error fetching orders" },
+      { message: 'Error fetching orders' },
       { status: 500 }
     );
   }

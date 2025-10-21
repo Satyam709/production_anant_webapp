@@ -1,9 +1,9 @@
-"use server";
-
-import prisma from "../PrismaClient/db";
-import { revalidatePath } from "next/cache";
+'use server';
 
 import { JSONContent } from '@tiptap/react';
+import { revalidatePath } from 'next/cache';
+
+import prisma from '../PrismaClient/db';
 
 interface BlogFormData {
   title: string;
@@ -21,10 +21,10 @@ export async function createBlog(data: BlogFormData) {
       },
     });
 
-    revalidatePath("/blogs");
+    revalidatePath('/blogs');
     return blog;
   } catch (error) {
-    console.error("Error creating blog:", error);
-    throw new Error("Failed to create blog");
+    console.error('Error creating blog:', error);
+    throw new Error('Failed to create blog');
   }
 }

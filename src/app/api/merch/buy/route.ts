@@ -1,7 +1,8 @@
-import { getSession } from "@/lib/actions/Sessions";
-import prisma from "@/lib/PrismaClient/db";
-import { OrderSchema } from "@/types/shop";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+
+import { getSession } from '@/lib/actions/Sessions';
+import prisma from '@/lib/PrismaClient/db';
+import { OrderSchema } from '@/types/shop';
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
@@ -9,7 +10,7 @@ export async function POST(req: NextRequest) {
 
   const result = OrderSchema.safeParse(data);
   if (!result.success) {
-    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
   }
 
   // if (!(await isAuthenticated())) {
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     // Get the user ID from the session
     const userId = (await getSession())?.user.id;
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const order = await prisma.order.create({
@@ -37,11 +38,11 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { data: order, message: "Order created successfully" },
+      { data: order, message: 'Order created successfully' },
       { status: 201 }
     );
   } catch (error) {
-    console.log("Error creating order:", error);
-    return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+    console.log('Error creating order:', error);
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
 }

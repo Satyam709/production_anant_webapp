@@ -1,20 +1,20 @@
-"use client"
-import React, { useEffect, useState } from "react";
-import MeetCard from "./MeetCard";
-import { Meeting } from "@prisma/client";
+'use client';
+import { Meeting } from '@prisma/client';
+import React, { useEffect, useState } from 'react';
+
+import MeetCard from './MeetCard';
 
 const MeetList = () => {
-
   const [meets, setMeets] = useState<Meeting[]>([]);
 
   useEffect(() => {
     // Fetch meetings from API
     const fetchMeets = async () => {
       try {
-        const res = await fetch("/api/meetings");
+        const res = await fetch('/api/meetings');
         if (!res.ok) {
-          console.error("Failed to fetch meetings");
-          throw new Error("Failed to fetch meetings");
+          console.error('Failed to fetch meetings');
+          throw new Error('Failed to fetch meetings');
           return;
         }
         const data = await res.json();

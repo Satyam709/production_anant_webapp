@@ -7,9 +7,9 @@
  */
 export function getMail(roll_number: string): string {
   if (!isRollNumberValid(roll_number)) {
-    return "";
+    return '';
   }
-  const domain = "nitkkr.ac.in";
+  const domain = 'nitkkr.ac.in';
   return `${roll_number}@${domain}`;
 }
 
@@ -21,7 +21,7 @@ export function getMail(roll_number: string): string {
  * @returns True if the roll number is valid, otherwise false.
  */
 export function isRollNumberValid(roll_number: string): boolean {
-    // 9 digit roll number
-    const regex = /^\d{9}$/;
-    return regex.test(roll_number);
+  // 9 digit roll number
+  const regex = /^\d{9}$/;
+  return regex.test(roll_number);
 }

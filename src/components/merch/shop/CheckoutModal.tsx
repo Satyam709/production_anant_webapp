@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { X, Copy, Check, ArrowLeft } from 'lucide-react';
-import { Merchandise ,Order,OrderItem } from '@/types/shop';
+import { ArrowLeft,Check, Copy, X } from 'lucide-react';
 import Image from 'next/image';
+import React, { useState } from 'react';
+
 import { placeholder } from '@/lib/images/placeholder';
+import { Merchandise, Order, OrderItem } from '@/types/shop';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -17,18 +18,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onClose,
   selectedItems,
   products,
-  total
+  total,
 }) => {
   const [transactionId, setTransactionId] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
-  const [step, setStep] = useState<'details' | 'payment' | 'confirmation'>('details');
+  const [step, setStep] = useState<'details' | 'payment' | 'confirmation'>(
+    'details'
+  );
 
   const upiId = 'example@upi';
   const accountDetails = {
     name: 'Anant Mathematical Society',
     bank: 'Example Bank',
     account: 'XXXX XXXX XXXX 1234',
-    ifsc: 'EXBK0000123'
+    ifsc: 'EXBK0000123',
   };
 
   const handleCopy = (text: string, key: string) => {
@@ -43,33 +46,33 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
       setStep('confirmation');
     }
     // Send order details to server
-    const selectedItemsArray : OrderItem[] = Object.entries(selectedItems).map(([productId, quantity]) => {
-      const product = products.find(
-        (p) => p.item_id === Number(productId)
-      );
-      if (!product) return null;
-      return {
-        item_id: Number(productId),
-        quantity: quantity,
-        price_per_item: product.price,
-      }
-    }).filter(a => a !== null);
+    const selectedItemsArray: OrderItem[] = Object.entries(selectedItems)
+      .map(([productId, quantity]) => {
+        const product = products.find((p) => p.item_id === Number(productId));
+        if (!product) return null;
+        return {
+          item_id: Number(productId),
+          quantity: quantity,
+          price_per_item: product.price,
+        };
+      })
+      .filter((a) => a !== null);
 
-    const orderDetails : Order = {
+    const orderDetails: Order = {
       total_price: total,
       status: 'PENDING',
       payment_method: 'UPI',
       transaction_id: transactionId,
-      orderItems: selectedItemsArray
-    }
+      orderItems: selectedItemsArray,
+    };
 
     const res = await fetch('/api/merch/buy', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(orderDetails)
-    })
+      body: JSON.stringify(orderDetails),
+    });
 
     if (res.ok) {
       setStep('confirmation');
@@ -87,16 +90,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
         <div className="flex items-center gap-3">
           {step !== 'details' && (
             <button
-              onClick={() => setStep(step === 'confirmation' ? 'payment' : 'details')}
+              onClick={() =>
+                setStep(step === 'confirmation' ? 'payment' : 'details')
+              }
               className="p-2 hover:bg-gray-800/50 rounded-full transition-colors"
             >
               <ArrowLeft className="h-5 w-5 text-gray-400" />
             </button>
           )}
           <h2 className="text-xl font-bold text-white">
-            {step === 'details' ? 'Order Summary' : 
-             step === 'payment' ? 'Payment Details' : 
-             'Order Confirmation'}
+            {step === 'details'
+              ? 'Order Summary'
+              : step === 'payment'
+                ? 'Payment Details'
+                : 'Order Confirmation'}
           </h2>
         </div>
         <button
@@ -119,7 +126,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
         {renderHeader()}
 
         <div className="overflow-y-auto h-[calc(100%-4rem)]">
-          {step === "details" && (
+          {step === 'details' && (
             <div className="p-4 sm:p-6">
               <div className="space-y-4">
                 {Object.entries(selectedItems).map(([productId, quantity]) => {
@@ -175,7 +182,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </div>
 
               <button
-                onClick={() => setStep("payment")}
+                onClick={() => setStep('payment')}
                 className="w-full mt-6 py-4 bg-gradient-to-r from-primary-cyan to-primary-purple rounded-xl font-semibold text-white hover:opacity-90 transition-opacity"
               >
                 Proceed to Payment
@@ -183,7 +190,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
           )}
 
-          {step === "payment" && (
+          {step === 'payment' && (
             <div className="p-4 sm:p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* UPI Section */}
@@ -206,10 +213,10 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
                     <span className="text-gray-300">{upiId}</span>
                     <button
-                      onClick={() => handleCopy(upiId, "upi")}
+                      onClick={() => handleCopy(upiId, 'upi')}
                       className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                     >
-                      {copied === "upi" ? (
+                      {copied === 'upi' ? (
                         <Check className="w-4 h-4 text-green-500" />
                       ) : (
                         <Copy className="w-4 h-4 text-gray-400" />
@@ -279,7 +286,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
           )}
 
-          {step === "confirmation" && (
+          {step === 'confirmation' && (
             <div className="p-4 sm:p-6 text-center">
               <div className="mb-6">
                 <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">

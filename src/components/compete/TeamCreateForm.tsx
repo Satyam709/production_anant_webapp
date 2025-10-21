@@ -1,30 +1,35 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { X } from 'lucide-react'
-import GradientButton from '@/components/ui/GradientButton'
+import { X } from 'lucide-react';
+import { useState } from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
 
 interface TeamCreateFormProps {
-  onSubmit: (formData: { team_name: string }) => Promise<void>
-  loading: boolean
-  onCancel: () => void
+  onSubmit: (formData: { team_name: string }) => Promise<void>;
+  loading: boolean;
+  onCancel: () => void;
 }
 
-const TeamCreateForm: React.FC<TeamCreateFormProps> = ({ onSubmit, loading, onCancel }) => {
-  const [teamName, setTeamName] = useState('')
-  const [error, setError] = useState('')
+const TeamCreateForm: React.FC<TeamCreateFormProps> = ({
+  onSubmit,
+  loading,
+  onCancel,
+}) => {
+  const [teamName, setTeamName] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!teamName.trim()) return
-    
-    setError('')
+    e.preventDefault();
+    if (!teamName.trim()) return;
+
+    setError('');
     try {
-      await onSubmit({ team_name: teamName.trim() })
+      await onSubmit({ team_name: teamName.trim() });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create team')
+      setError(err instanceof Error ? err.message : 'Failed to create team');
     }
-  }
+  };
 
   return (
     <div className="bg-black/30 backdrop-blur-sm rounded-xl p-8 border border-gray-800">
@@ -58,9 +63,7 @@ const TeamCreateForm: React.FC<TeamCreateFormProps> = ({ onSubmit, loading, onCa
 
         <div className="flex gap-4">
           <button type="submit">
-            <GradientButton
-              disabled={loading || !teamName.trim()}
-            >
+            <GradientButton disabled={loading || !teamName.trim()}>
               {loading ? 'Creating...' : 'Create Team'}
             </GradientButton>
           </button>
@@ -74,7 +77,7 @@ const TeamCreateForm: React.FC<TeamCreateFormProps> = ({ onSubmit, loading, onCa
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default TeamCreateForm
+export default TeamCreateForm;

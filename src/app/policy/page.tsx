@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useSession } from "next-auth/react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { anantPolicy } from "@/data/policy";
-import { FaChevronDown } from "react-icons/fa";
+import { useSession } from 'next-auth/react';
+import React, { useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import { anantPolicy } from '@/data/policy';
 
 export default function PolicyPage() {
   const [anantOpen, setAnantOpen] = useState(false);
@@ -28,7 +29,6 @@ export default function PolicyPage() {
           </h1>
         </div>
 
-
         {/* ANANT POLICY DROPDOWN */}
         <div className="mb-8 border border-white/20 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm">
           <button
@@ -38,13 +38,13 @@ export default function PolicyPage() {
             <span>Anant Policy</span>
             <FaChevronDown
               className={`transition-transform duration-300 ${
-                anantOpen ? "rotate-180" : ""
+                anantOpen ? 'rotate-180' : ''
               }`}
             />
           </button>
           <div
             className={`transition-all duration-300 px-6 overflow-hidden ${
-              anantOpen ? "max-h-[1000px] py-6" : "max-h-0"
+              anantOpen ? 'max-h-[1000px] py-6' : 'max-h-0'
             }`}
           >
             <div

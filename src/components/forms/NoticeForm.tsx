@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Bell, Loader, Upload, Pencil, Trash2, Plus } from 'lucide-react';
+import { category } from '@prisma/client';
+import { li } from 'framer-motion/client';
+import { Bell, Loader, Pencil, Plus,Trash2, Upload } from 'lucide-react';
+import React, { useEffect,useState } from 'react';
+
+import { DeleteNotice } from '@/lib/actions/DeleteNotice';
+
 import GradientButton from '../ui/GradientButton';
 import Modal from '../ui/Modal';
 import StatusModal from '../ui/StatusModal';
-import { category } from '@prisma/client';
-import { DeleteNotice } from '@/lib/actions/DeleteNotice';
-import { li } from 'framer-motion/client';
 
 type Notice = {
   id: string;
   headline: string;
   body: string;
-  category: category
+  category: category;
   postedOn: Date;
   link: string;
 };
@@ -23,12 +25,14 @@ interface StatusMessage {
 }
 
 // Mock data
-const imageLinks= {
-  Technical: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=1000', 
-  General: 'https://tls.or.tz/wp-content/uploads/2023/02/imprtant-notice-icon.png',
-  Sponsorship: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=1000'
-}
-
+const imageLinks = {
+  Technical:
+    'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=1000',
+  General:
+    'https://tls.or.tz/wp-content/uploads/2023/02/imprtant-notice-icon.png',
+  Sponsorship:
+    'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=1000',
+};
 
 const NoticeForm = () => {
   const [notices, setNotices] = useState<Notice[]>([]);
@@ -38,13 +42,13 @@ const NoticeForm = () => {
     headline: '',
     body: '',
     category: 'General',
-    link: ''
+    link: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [statusModal, setStatusModal] = useState<StatusMessage | null>(null);
-  const [deleteNoticeId, setDeleteNoticeId] = useState("");
+  const [deleteNoticeId, setDeleteNoticeId] = useState('');
 
   useEffect(() => {
     async function load_data() {
@@ -59,8 +63,8 @@ const NoticeForm = () => {
           body: notice.body,
           category: notice.category,
           postedOn: new Date(notice.postedOn),
-          link: notice.link
-        }
+          link: notice.link,
+        };
       });
 
       setNotices(modified_notices);
@@ -74,14 +78,14 @@ const NoticeForm = () => {
     setError('');
     setSuccess('');
 
-    try {      
-      const createNotice = await fetch('/api/notices/create',{
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify(formData) 
+    try {
+      const createNotice = await fetch('/api/notices/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
 
-      if(!createNotice.ok){
+      if (!createNotice.ok) {
         const ErrorMsg = await createNotice.json();
         throw new Error(ErrorMsg);
       }
@@ -93,11 +97,11 @@ const NoticeForm = () => {
         headline: '',
         body: '',
         category: 'General',
-        link: ''
+        link: '',
       });
       setIsModalOpen(false);
     } catch (err: any) {
-      setError(err||'Failed to create notice');
+      setError(err || 'Failed to create notice');
     } finally {
       setLoading(false);
     }
@@ -106,10 +110,10 @@ const NoticeForm = () => {
   const handleDelete = async () => {
     try {
       const del_notice = await DeleteNotice(deleteNoticeId);
-      if(!del_notice.success){
-        throw new Error("Failed to delete notice");
+      if (!del_notice.success) {
+        throw new Error('Failed to delete notice');
       }
-      setNotices(notices.filter(notice => notice.id !== deleteNoticeId));
+      setNotices(notices.filter((notice) => notice.id !== deleteNoticeId));
       setStatusModal({
         type: 'success',
         title: 'Notice Deleted',
@@ -121,20 +125,23 @@ const NoticeForm = () => {
     }
   };
 
-  const confirmDelete = (notice_id: string)=>{
+  const confirmDelete = (notice_id: string) => {
     setDeleteNoticeId(notice_id);
     setStatusModal({
       type: 'confirm',
       title: 'Delete Notice',
-      message: 'Are you sure you want to delete this notice? This action cannot be undone.',
+      message:
+        'Are you sure you want to delete this notice? This action cannot be undone.',
     });
-  }
+  };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const openCreateModal = () => {
@@ -142,7 +149,7 @@ const NoticeForm = () => {
       headline: '',
       body: '',
       category: 'General',
-      link: ''
+      link: '',
     });
     setIsModalOpen(true);
   };
@@ -188,43 +195,55 @@ const NoticeForm = () => {
 
       {/* Notices Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {notices && notices.map(notice => (
-          <div
-            key={notice.id} className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
-          >
-            {imageLinks[notice.category] && (
-              <div className="relative h-48">
-                <img
-                  src={imageLinks[notice.category]}
-                  alt={notice.headline}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
-            )}
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <span className={`px-2 py-1 text-xs rounded-full border ${getCategoryColor(notice.category)}`}>
-                  {notice.category}
-                </span>
-                <span className="text-sm text-gray-400">
-                  {notice.postedOn.toLocaleDateString()}
-                </span>
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">{notice.headline}</h3>
-              {notice.link && <p className="text-blue-500 text-md my-1"><a href={notice.link}>View Attached File</a></p>}
-              <p className="text-gray-300 text-sm line-clamp-3">{notice.body}</p>
-              <div className="mt-4 flex justify-end space-x-2 border-t border-gray-800 pt-4">
-                <button
-                  onClick={() => confirmDelete(notice.id)}
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
+        {notices &&
+          notices.map((notice) => (
+            <div
+              key={notice.id}
+              className="backdrop-blur-xl bg-black/30 rounded-lg border border-gray-800 overflow-hidden hover:border-primary-blue/50 transition-all duration-200"
+            >
+              {imageLinks[notice.category] && (
+                <div className="relative h-48">
+                  <img
+                    src={imageLinks[notice.category]}
+                    alt={notice.headline}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+              )}
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span
+                    className={`px-2 py-1 text-xs rounded-full border ${getCategoryColor(notice.category)}`}
+                  >
+                    {notice.category}
+                  </span>
+                  <span className="text-sm text-gray-400">
+                    {notice.postedOn.toLocaleDateString()}
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {notice.headline}
+                </h3>
+                {notice.link && (
+                  <p className="text-blue-500 text-md my-1">
+                    <a href={notice.link}>View Attached File</a>
+                  </p>
+                )}
+                <p className="text-gray-300 text-sm line-clamp-3">
+                  {notice.body}
+                </p>
+                <div className="mt-4 flex justify-end space-x-2 border-t border-gray-800 pt-4">
+                  <button
+                    onClick={() => confirmDelete(notice.id)}
+                    className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       {/* Create/Edit Modal */}
@@ -331,9 +350,8 @@ const NoticeForm = () => {
         title={statusModal?.title || ''}
         message={statusModal?.message || ''}
         type={statusModal?.type || 'success'}
-        onConfirm = {statusModal?.type === 'confirm' ? handleDelete : undefined}
+        onConfirm={statusModal?.type === 'confirm' ? handleDelete : undefined}
       />
-    
     </div>
   );
 };

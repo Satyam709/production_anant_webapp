@@ -1,11 +1,12 @@
-"use client";
-import { gsap } from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+'use client';
+import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -26,7 +27,7 @@ export default function MathematicsDepartment() {
     const fetchAchievements = async () => {
       try {
         const response = await fetch('/api/departments/achievements');
-        const data = await response.json();        
+        const data = await response.json();
         if (data.achievements) {
           setAchievements(data.achievements);
         }
@@ -44,7 +45,7 @@ export default function MathematicsDepartment() {
     gsap.to(window, {
       duration: 1,
       scrollTo: `#${target}`,
-      ease: "power2.inOut",
+      ease: 'power2.inOut',
     });
   };
 
@@ -58,7 +59,7 @@ export default function MathematicsDepartment() {
         <section className="relative w-full">
           {/* Department Header Banner */}
           <Image
-            src={"/mathematics/department.png"}
+            src={'/mathematics/department.png'}
             alt="Department Header Banner"
             width={500}
             height={500}
@@ -114,7 +115,7 @@ export default function MathematicsDepartment() {
             border-t border-b border-gray-800/50 mt-4 px-2"
           >
             <button
-              onClick={() => handleNavClick("vision")}
+              onClick={() => handleNavClick('vision')}
               className="nav-button rounded-lg px-6 py-2 text-gray-300 hover:text-white
               bg-gradient-to-r from-gray-800/50 to-gray-700/50 hover:from-blue-600/20 hover:to-purple-600/20
               transition-all duration-300 border border-gray-700/50 hover:border-gray-600"
@@ -122,7 +123,7 @@ export default function MathematicsDepartment() {
               Vision and Mission
             </button>
             <button
-              onClick={() => handleNavClick("research")}
+              onClick={() => handleNavClick('research')}
               className="nav-button rounded-lg px-6 py-2 text-gray-300 hover:text-white
               bg-gradient-to-r from-gray-800/50 to-gray-700/50 hover:from-blue-600/20 hover:to-purple-600/20
               transition-all duration-300 border border-gray-700/50 hover:border-gray-600"
@@ -130,7 +131,7 @@ export default function MathematicsDepartment() {
               Research Area
             </button>
             <button
-              onClick={() => handleNavClick("achievements")}
+              onClick={() => handleNavClick('achievements')}
               className="nav-button rounded-lg px-6 py-2 text-gray-300 hover:text-white
               bg-gradient-to-r from-gray-800/50 to-gray-700/50 hover:from-blue-600/20 hover:to-purple-600/20
               transition-all duration-300 border border-gray-700/50 hover:border-gray-600"
@@ -161,7 +162,7 @@ export default function MathematicsDepartment() {
                 bg-gradient-to-r from-blue-600/80 to-purple-600/80 hover:from-blue-500/80 hover:to-purple-500/80
                 transition-all duration-300 border border-blue-500/30 hover:border-purple-500/30
                 shadow-lg shadow-blue-500/20 hover:shadow-purple-500/20"
-                onClick={() => router.push("https://nitkkr.ac.in/about-us-5/")}
+                onClick={() => router.push('https://nitkkr.ac.in/about-us-5/')}
               >
                 Read More
               </button>
@@ -205,7 +206,7 @@ export default function MathematicsDepartment() {
                 </ul>
 
                 <div className="flex justify-end w-full mt-4">
-                  {" "}
+                  {' '}
                   <a
                     href="https://nitkkr.ac.in/vision-and-mission-m/"
                     className="text-blue-400"
@@ -341,7 +342,10 @@ export default function MathematicsDepartment() {
                     <div className="aspect-square bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/30 group-hover:border-gray-600/30">
                       <div className="h-full w-full bg-cover bg-center group-hover:scale-110 transition-all duration-300">
                         <Image
-                          src={achievement.imageURL || "/mathematics/placeholder.jpg"}
+                          src={
+                            achievement.imageURL ||
+                            '/mathematics/placeholder.jpg'
+                          }
                           alt={achievement.achievement}
                           width={600}
                           height={600}
@@ -373,4 +377,3 @@ export default function MathematicsDepartment() {
     </>
   );
 }
-

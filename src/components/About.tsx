@@ -1,6 +1,7 @@
+import { Brain, Trophy,Users } from 'lucide-react';
 import React from 'react';
-import { Users, Brain, Trophy } from 'lucide-react';
-import FeatureCard from "@/components/ui/FeatureCard";
+
+import FeatureCard from '@/components/ui/FeatureCard';
 
 const About = () => {
   return (
@@ -9,7 +10,8 @@ const About = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4 text-white">About Anant</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Where mathematical minds converge to explore, innovate, and solve complex problems
+            Where mathematical minds converge to explore, innovate, and solve
+            complex problems
           </p>
         </div>
 

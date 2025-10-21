@@ -1,64 +1,87 @@
+import {
+  Bell,
+  Briefcase,
+  Calendar,
+  ImageIcon,
+  Newspaper,
+  Pencil,
+  Send,
+  Star,
+  Trophy,
+  UserPlus,
+  Users,
+} from 'lucide-react';
 import React from 'react';
-import { Trophy, Calendar, Users, Bell, UserPlus, Send, ImageIcon, Newspaper, Pencil, Briefcase, Star } from 'lucide-react';
 
 type Props = {
-  activeTab: 'competitions' | 'events' | 'meetings' | 'notices' | 'teams' | 'shop' | 'gallery' | 'newsletter' | 'blogs' | 'internships' | 'achievements';
+  activeTab:
+    | 'competitions'
+    | 'events'
+    | 'meetings'
+    | 'notices'
+    | 'teams'
+    | 'shop'
+    | 'gallery'
+    | 'newsletter'
+    | 'blogs'
+    | 'internships'
+    | 'achievements';
 };
 
 const tabConfig = {
   competitions: {
-    title: "Manage Competitions",
-    description: "Create and manage coding competitions",
+    title: 'Manage Competitions',
+    description: 'Create and manage coding competitions',
     icon: Trophy,
   },
   events: {
-    title: "Manage Events",
-    description: "Create and manage club events",
+    title: 'Manage Events',
+    description: 'Create and manage club events',
     icon: Calendar,
   },
   meetings: {
-    title: "Manage Meetings",
-    description: "Schedule and organize team meetings",
+    title: 'Manage Meetings',
+    description: 'Schedule and organize team meetings',
     icon: Users,
   },
   notices: {
-    title: "Manage Notices",
-    description: "Create and publish important announcements",
+    title: 'Manage Notices',
+    description: 'Create and publish important announcements',
     icon: Bell,
   },
   teams: {
-    title: "Team Management",
-    description: "Create and manage your teams",
+    title: 'Team Management',
+    description: 'Create and manage your teams',
     icon: UserPlus,
   },
   shop: {
-    title: "Shop",
-    description: "Manage your shop",
+    title: 'Shop',
+    description: 'Manage your shop',
     icon: Send,
   },
   gallery: {
-    title: "Photo Gallery",
-    description: "Manage albums and photos",
+    title: 'Photo Gallery',
+    description: 'Manage albums and photos',
     icon: ImageIcon,
   },
   newsletter: {
-    title: "Newsletter",
-    description: "Create newsletters",
+    title: 'Newsletter',
+    description: 'Create newsletters',
     icon: Newspaper,
   },
   blogs: {
-    title: "Blogs",
-    description: "Create and manage blogs",
+    title: 'Blogs',
+    description: 'Create and manage blogs',
     icon: Pencil,
   },
   internships: {
-    title: "Manage Internships",
-    description: "Add and manage internship experiences",
+    title: 'Manage Internships',
+    description: 'Add and manage internship experiences',
     icon: Briefcase,
   },
   achievements: {
-    title: "Department Achievements",
-    description: "Add and manage department achievements",
+    title: 'Department Achievements',
+    description: 'Add and manage department achievements',
     icon: Star,
   },
 };

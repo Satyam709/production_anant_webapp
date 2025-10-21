@@ -1,7 +1,9 @@
-import React from "react";
-import CompCard from "./CompCard";
-import { Competitions } from "@prisma/client";
-export const dynamic = "force-dynamic";
+import { Competitions } from '@prisma/client';
+import React from 'react';
+
+import CompCard from './CompCard';
+
+export const dynamic = 'force-dynamic';
 
 async function fetchActiveCompetitions(): Promise<Competitions[]> {
   try {
@@ -10,10 +12,10 @@ async function fetchActiveCompetitions(): Promise<Competitions[]> {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
-      console.error("Failed to fetch competitions:", response.status);
-      throw new Error("Failed to fetch competitions"+data);
+      console.error('Failed to fetch competitions:', response.status);
+      throw new Error('Failed to fetch competitions' + data);
     }
 
     // console.log("Competitions data:", data);
@@ -30,7 +32,7 @@ async function fetchActiveCompetitions(): Promise<Competitions[]> {
 
     return activeCompetitions;
   } catch (error) {
-    console.error("Error parsing competitions data:", error);
+    console.error('Error parsing competitions data:', error);
     return []; // Return an empty array on error
   }
 }
@@ -56,9 +58,9 @@ const CompList = async () => {
               title={competition.competitionName}
               date={new Date(competition.conductedOn).toLocaleDateString()}
               teamSize={`${competition.min_team_size}-${competition.max_team_size} members`}
-              prize={competition.prize || "TBA"}
+              prize={competition.prize || 'TBA'}
               description={competition.description}
-              image={competition.imageURL || "/competition-default.jpg"}
+              image={competition.imageURL || '/competition-default.jpg'}
               registrationDeadline={competition.registration_deadline}
               venue={competition.venue}
             />

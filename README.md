@@ -7,7 +7,9 @@ Setup databases:
 ```bash
 docker compose -f ./docker/docker-compose.yml up -d
 ```
+
 Migrate prisma
+
 ```bash
 npx prisma migrate dev --name init
 ```

@@ -1,7 +1,7 @@
-import React from "react";
-import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import Link from "next/link";
+import gsap from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import Link from 'next/link';
+import React from 'react';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -13,7 +13,7 @@ const TeamHeader = () => {
         y: `#${id}`,
         offsetY: 70,
       },
-      ease: "power2.inOut",
+      ease: 'power2.inOut',
     });
   };
 
@@ -28,13 +28,13 @@ const TeamHeader = () => {
       <div className="flex justify-center gap-4 mt-8">
         <button
           className="px-6 py-2 rounded-lg bg-primary-blue/10 text-primary-cyan border border-primary-blue/20 hover:bg-primary-blue/20 transition-all"
-          onClick={() => scrollToSection("office-bearers")}
+          onClick={() => scrollToSection('office-bearers')}
         >
           Office Bearers
         </button>
         <button
           className="px-6 py-2 rounded-lg bg-primary-blue/10 text-primary-cyan border border-primary-blue/20 hover:bg-primary-blue/20 transition-all"
-          onClick={() => scrollToSection("executive-head")}
+          onClick={() => scrollToSection('executive-head')}
         >
           Executive Heads
         </button>

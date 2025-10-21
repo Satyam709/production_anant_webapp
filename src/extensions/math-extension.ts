@@ -1,11 +1,11 @@
-import { Node, mergeAttributes, type Command } from "@tiptap/core";
-import katex from "katex";
+import { type Command,mergeAttributes, Node } from '@tiptap/core';
+import katex from 'katex';
 
 export interface MathOptions {
   katexOptions?: katex.KatexOptions;
 }
 
-declare module "@tiptap/core" {
+declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     mathInline: {
       setMathInline: (content: string) => ReturnType;
@@ -17,8 +17,8 @@ declare module "@tiptap/core" {
 }
 
 export const MathInline = Node.create<MathOptions>({
-  name: "mathInline",
-  group: "inline",
+  name: 'mathInline',
+  group: 'inline',
   inline: true,
   atom: true,
 
@@ -33,12 +33,12 @@ export const MathInline = Node.create<MathOptions>({
   addAttributes() {
     return {
       content: {
-        default: "",
+        default: '',
         parseHTML: (element: HTMLElement) =>
-          element.getAttribute("data-content"),
+          element.getAttribute('data-content'),
         renderHTML: (attributes: { content: string }) => {
           return {
-            "data-content": attributes.content,
+            'data-content': attributes.content,
           };
         },
       },
@@ -50,9 +50,9 @@ export const MathInline = Node.create<MathOptions>({
       {
         tag: 'span[data-type="math-inline"]',
         getAttrs: (element) => {
-          if (typeof element === "string") return false;
+          if (typeof element === 'string') return false;
           return {
-            content: element.getAttribute("data-content"),
+            content: element.getAttribute('data-content'),
           };
         },
       },
@@ -68,25 +68,25 @@ export const MathInline = Node.create<MathOptions>({
       });
 
       return [
-        "span",
+        'span',
         mergeAttributes(HTMLAttributes, {
-          "data-type": "math-inline",
-          "data-content": content,
-          "data-math": "true",
+          'data-type': 'math-inline',
+          'data-content': content,
+          'data-math': 'true',
         }),
-        ["span", { class: "math-render" }, rendered],
+        ['span', { class: 'math-render' }, rendered],
       ];
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : "Invalid math";
+      const errorMsg = error instanceof Error ? error.message : 'Invalid math';
       return [
-        "span",
+        'span',
         mergeAttributes(HTMLAttributes, {
-          "data-type": "math-inline",
-          "data-content": content,
-          class: "text-red-500",
+          'data-type': 'math-inline',
+          'data-content': content,
+          class: 'text-red-500',
           title: errorMsg,
         }),
-        ["span", { class: "math-render text-red-500" }, `\\(${content}\\)`],
+        ['span', { class: 'math-render text-red-500' }, `\\(${content}\\)`],
       ];
     }
   },
@@ -107,7 +107,7 @@ export const MathInline = Node.create<MathOptions>({
 });
 
 export const MathBlock = Node.create<MathOptions>({
-  name: "mathBlock",
+  name: 'mathBlock',
 
   addOptions() {
     return {
@@ -117,7 +117,7 @@ export const MathBlock = Node.create<MathOptions>({
     };
   },
 
-  group: "block",
+  group: 'block',
   inline: false,
   isolating: true,
   atom: true,
@@ -125,12 +125,12 @@ export const MathBlock = Node.create<MathOptions>({
   addAttributes() {
     return {
       content: {
-        default: "",
+        default: '',
         parseHTML: (element: HTMLElement) =>
-          element.getAttribute("data-content"),
+          element.getAttribute('data-content'),
         renderHTML: (attributes: { content: string }) => {
           return {
-            "data-content": attributes.content,
+            'data-content': attributes.content,
           };
         },
       },
@@ -142,9 +142,9 @@ export const MathBlock = Node.create<MathOptions>({
       {
         tag: 'div[data-type="math-block"]',
         getAttrs: (element) => {
-          if (typeof element === "string") return false;
+          if (typeof element === 'string') return false;
           return {
-            content: element.getAttribute("data-content"),
+            content: element.getAttribute('data-content'),
           };
         },
       },
@@ -160,26 +160,26 @@ export const MathBlock = Node.create<MathOptions>({
       });
 
       return [
-        "div",
+        'div',
         mergeAttributes(HTMLAttributes, {
-          "data-type": "math-block",
-          "data-content": content,
-          "data-math": "true",
-          class: "my-4 text-center",
+          'data-type': 'math-block',
+          'data-content': content,
+          'data-math': 'true',
+          class: 'my-4 text-center',
         }),
-        ["div", { class: "math-render" }, rendered],
+        ['div', { class: 'math-render' }, rendered],
       ];
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : "Invalid math";
+      const errorMsg = error instanceof Error ? error.message : 'Invalid math';
       return [
-        "div",
+        'div',
         mergeAttributes(HTMLAttributes, {
-          "data-type": "math-block",
-          "data-content": content,
-          class: "text-red-500 my-4 text-center",
+          'data-type': 'math-block',
+          'data-content': content,
+          class: 'text-red-500 my-4 text-center',
           title: errorMsg,
         }),
-        ["div", { class: "math-render text-red-500" }, `\\[${content}\\]`],
+        ['div', { class: 'math-render text-red-500' }, `\\[${content}\\]`],
       ];
     }
   },

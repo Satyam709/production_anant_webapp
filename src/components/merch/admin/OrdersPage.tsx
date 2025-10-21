@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { Search, CheckCircle, XCircle, AlertCircle } from "lucide-react";
-import { Order, OrderStatus, OrderStatusSchema } from "@/types/shop";
-import OrderDetailsModal from "./OrderDetailsModal";
-import { useOrders } from "../hooks/useOrders";
+import { AlertCircle,CheckCircle, Search, XCircle } from 'lucide-react';
+import React, { useState } from 'react';
+
+import { Order, OrderStatus, OrderStatusSchema } from '@/types/shop';
+
+import { useOrders } from '../hooks/useOrders';
+import OrderDetailsModal from './OrderDetailsModal';
 
 const OrdersPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [statusFilter, setStatusFilter] = useState<OrderStatus | "ALL">("ALL");
+  const [statusFilter, setStatusFilter] = useState<OrderStatus | 'ALL'>('ALL');
 
   const { orders, loading, error, refetch } = useOrders();
 
@@ -19,10 +21,10 @@ const OrdersPage = () => {
     try {
       console.log(JSON.stringify({ orderId, status, remarks }));
 
-      const res = await fetch("/api/merch/admin/approve", {
-        method: "PUT",
+      const res = await fetch('/api/merch/admin/approve', {
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ order_id: orderId, status, remarks }),
       });
@@ -32,10 +34,10 @@ const OrdersPage = () => {
       }
       if (!res.ok) {
         console.log(data);
-        throw new Error("Failed to update order status " + data);
+        throw new Error('Failed to update order status ' + data);
       }
     } catch (err) {
-      alert("Error : " + err);
+      alert('Error : ' + err);
     }
   };
 
@@ -45,18 +47,18 @@ const OrdersPage = () => {
       (order.user_id &&
         order.user_id.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesStatus =
-      statusFilter === "ALL" || order.status === statusFilter;
+      statusFilter === 'ALL' || order.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
       case OrderStatusSchema.Enum.APPROVED:
-        return "text-green-500 bg-green-500/10 border-green-500/30";
+        return 'text-green-500 bg-green-500/10 border-green-500/30';
       case OrderStatusSchema.enum.REJECTED:
-        return "text-red-500 bg-red-500/10 border-red-500/30";
+        return 'text-red-500 bg-red-500/10 border-red-500/30';
       default:
-        return "text-yellow-500 bg-yellow-500/10 border-yellow-500/30";
+        return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/30';
     }
   };
 
@@ -89,7 +91,7 @@ const OrdersPage = () => {
         <select
           value={statusFilter}
           onChange={(e) =>
-            setStatusFilter(e.target.value as OrderStatus | "ALL")
+            setStatusFilter(e.target.value as OrderStatus | 'ALL')
           }
           className="px-4 py-3 bg-gray-900/50 border border-gray-800 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
         >
@@ -161,7 +163,7 @@ const OrdersPage = () => {
                 <td className="px-6 py-4 text-gray-300">
                   {(order.created_at &&
                     new Date(order.created_at).toLocaleDateString()) ||
-                    "N/A"}
+                    'N/A'}
                 </td>
                 <td className="px-6 py-4">
                   <button

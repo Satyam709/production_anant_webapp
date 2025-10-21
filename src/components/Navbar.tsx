@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { Menu, X, ChevronRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import NavDropdown from "@/components/navigation/NavDropdown";
-import { navItems } from "@/constants/navigation";
+import { ChevronRight,Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import React, { useEffect,useState } from 'react';
+
+import NavDropdown from '@/components/navigation/NavDropdown';
+import { navItems } from '@/constants/navigation';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,8 +19,8 @@ const Navbar = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const toggleSection = (sectionLabel: string | null) => {
@@ -29,14 +30,14 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "py-2" : "py-4"
+        scrolled ? 'py-2' : 'py-4'
       }`}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div
           className={`relative mx-auto bg-black/70 backdrop-blur-md rounded-2xl border border-gray-800/50 
           shadow-lg transition-all duration-300 ${
-            scrolled ? "shadow-black/20" : "shadow-black/10"
+            scrolled ? 'shadow-black/20' : 'shadow-black/10'
           }`}
         >
           {/* Main Navbar Content */}
@@ -51,7 +52,7 @@ const Navbar = () => {
                     fill
                     className="object-contain transform group-hover:scale-105 transition-all duration-300"
                     style={{
-                      filter: "drop-shadow(0 0 10px rgba(0, 224, 255, 0.3))",
+                      filter: 'drop-shadow(0 0 10px rgba(0, 224, 255, 0.3))',
                     }}
                   />
                 </div>
@@ -124,7 +125,7 @@ const Navbar = () => {
           <div
             className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out
               ${
-                isOpen ? "max-h-[85vh] border-t border-gray-800/50" : "max-h-0"
+                isOpen ? 'max-h-[85vh] border-t border-gray-800/50' : 'max-h-0'
               }`}
           >
             <div className="px-2 py-3 max-h-[85vh] overflow-y-auto">
@@ -164,7 +165,7 @@ const Navbar = () => {
                           </span>
                           <ChevronRight
                             className={`h-4 w-4 text-gray-400 transition-transform duration-300
-                              ${activeSection === section.label ? "rotate-90" : ""}`}
+                              ${activeSection === section.label ? 'rotate-90' : ''}`}
                           />
                         </button>
 
@@ -173,8 +174,8 @@ const Navbar = () => {
                           className={`overflow-hidden transition-all duration-300 ease-in-out
                             ${
                               activeSection === section.label
-                                ? "max-h-96 mt-2"
-                                : "max-h-0"
+                                ? 'max-h-96 mt-2'
+                                : 'max-h-0'
                             }`}
                         >
                           <div className="space-y-1 pl-4">

@@ -1,15 +1,16 @@
-import Link from "next/link";
-import { Settings } from "lucide-react";
-import LogoutButton from "@/components/merch/clientUi/LogoutButton";
-import SideBar from "@/components/merch/clientUi/SideBar";
-import isAdmin from "@/lib/actions/Admin";
-import { redirect } from "next/navigation";
+import { Settings } from 'lucide-react';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+
+import LogoutButton from '@/components/merch/clientUi/LogoutButton';
+import SideBar from '@/components/merch/clientUi/SideBar';
+import isAdmin from '@/lib/actions/Admin';
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = async ({
   children,
 }) => {
-  if (!await isAdmin()) {
-    redirect("/");
+  if (!(await isAdmin())) {
+    redirect('/');
   }
 
   return (

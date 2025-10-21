@@ -1,16 +1,18 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
-import { Button } from "@/components/ui/Button";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { Editor } from "@tiptap/react";
-import katex from "katex";
-import "katex/dist/katex.min.css";
+import 'katex/dist/katex.min.css';
 
-type TabType = "inline" | "block";
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Editor } from '@tiptap/react';
+import katex from 'katex';
+import { useCallback,useState } from 'react';
+
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+
+type TabType = 'inline' | 'block';
 
 interface MathModalProps {
   editor: Editor | null;
@@ -18,51 +20,51 @@ interface MathModalProps {
 
 const EXAMPLE_EQUATIONS = {
   inline: [
-    "E=mc^2",
-    "\\sqrt{a^2 + b^2}",
-    "\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}",
+    'E=mc^2',
+    '\\sqrt{a^2 + b^2}',
+    '\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}',
   ],
   block: [
-    "f(x) = \\int_{-\\infty}^{\\infty} \\hat{f}(\\xi)\\,e^{2 \\pi i \\xi x} \\,d\\xi",
-    "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}",
-    "\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}",
+    'f(x) = \\int_{-\\infty}^{\\infty} \\hat{f}(\\xi)\\,e^{2 \\pi i \\xi x} \\,d\\xi',
+    '\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}',
+    '\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}',
   ],
 } as const;
 
 export function MathModal({ editor }: MathModalProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [equation, setEquation] = useState("");
+  const [equation, setEquation] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [tabMode, setTabMode] = useState<TabType>("inline");
+  const [tabMode, setTabMode] = useState<TabType>('inline');
 
   const renderPreview = useCallback(() => {
-    if (!equation) return "";
+    if (!equation) return '';
 
     try {
       return katex.renderToString(equation, {
-        displayMode: tabMode === "block",
+        displayMode: tabMode === 'block',
         throwOnError: false,
-        output: "html",
+        output: 'html',
         strict: false,
         trust: true,
         macros: {
-          "\\RR": "\\mathbb{R}",
-          "\\NN": "\\mathbb{N}",
-          "\\ZZ": "\\mathbb{Z}",
+          '\\RR': '\\mathbb{R}',
+          '\\NN': '\\mathbb{N}',
+          '\\ZZ': '\\mathbb{Z}',
         },
       });
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
       }
-      return tabMode === "block" ? `\\[${equation}\\]` : `\\(${equation}\\)`;
+      return tabMode === 'block' ? `\\[${equation}\\]` : `\\(${equation}\\)`;
     }
   }, [equation, tabMode]);
 
   const handleOpenChange = useCallback((open: boolean) => {
     setIsOpen(open);
     if (!open) {
-      setEquation("");
+      setEquation('');
       setErrorMessage(null);
     }
   }, []);
@@ -76,7 +78,7 @@ export function MathModal({ editor }: MathModalProps) {
   );
 
   const handleTabChange = useCallback((value: string) => {
-    if (value === "inline" || value === "block") {
+    if (value === 'inline' || value === 'block') {
       setTabMode(value);
       setErrorMessage(null);
     }
@@ -88,8 +90,8 @@ export function MathModal({ editor }: MathModalProps) {
   }, []);
 
   const handleEquationInsert = useCallback(() => {
-    console.log("Inserting equation: ", equation);
-    console.log("editor ", editor, "equation ", equation);
+    console.log('Inserting equation: ', equation);
+    console.log('editor ', editor, 'equation ', equation);
 
     if (!editor || !equation) return;
 
@@ -97,10 +99,10 @@ export function MathModal({ editor }: MathModalProps) {
       // Test if the equation is valid first
       katex.renderToString(equation, {
         throwOnError: true,
-        displayMode: tabMode === "block",
+        displayMode: tabMode === 'block',
       });
 
-      if (tabMode === "block") {
+      if (tabMode === 'block') {
         editor.commands.setMathBlock(equation);
       } else {
         editor.commands.setMathInline(equation);
@@ -110,7 +112,7 @@ export function MathModal({ editor }: MathModalProps) {
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
-        console.error("Error inserting equation:", error);
+        console.error('Error inserting equation:', error);
       }
     }
   }, [editor, equation, tabMode, handleOpenChange]);
@@ -202,7 +204,7 @@ export function MathModal({ editor }: MathModalProps) {
                         onClick={() => handleExampleClick(eq)}
                         className="border-[#333] hover:bg-[#252525]"
                       >
-                        {eq.length > 20 ? eq.substring(0, 20) + "..." : eq}
+                        {eq.length > 20 ? eq.substring(0, 20) + '...' : eq}
                       </Button>
                     ))}
                   </div>
@@ -216,7 +218,7 @@ export function MathModal({ editor }: MathModalProps) {
                 <div className="overflow-x-auto space-y-2">
                   <div
                     className={`bg-[#252525] p-4 rounded-md overflow-x-auto ${
-                      tabMode === "block" ? "flex justify-center w-full" : ""
+                      tabMode === 'block' ? 'flex justify-center w-full' : ''
                     }`}
                     dangerouslySetInnerHTML={{ __html: renderPreview() }}
                   />

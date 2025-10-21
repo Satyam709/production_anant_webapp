@@ -1,9 +1,12 @@
-import React from "react";
-import { Calendar, User, Tag, Clock } from "lucide-react";
-import { Blog } from "@prisma/client";
-import { placeholder } from "@/lib/images/placeholder";
-import Image from "next/image";
-import { EditorPreview } from "./BlogPreview";
+import { Blog } from '@prisma/client';
+import { Calendar, Clock,Tag, User } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+
+import { placeholder } from '@/lib/images/placeholder';
+
+import { EditorPreview } from './BlogPreview';
+
 type BlogProp = Blog & {
   writtenBy: { name: string };
 };
@@ -60,14 +63,14 @@ const BlogPost: React.FC<BlogProp> = ({
             <div className="flex items-center gap-2">
               <User size={20} className="text-cyan-500" />
               <span className="text-gray-300">
-                By{" "}
+                By{' '}
                 <span className="text-white font-medium">{writtenBy.name}</span>
               </span>
             </div>
             <div className="flex items-center gap-2">
               <Clock size={20} className="text-cyan-500" />
               <span className="text-gray-300">
-                Updated{" "}
+                Updated{' '}
                 <span className="text-white">{formatDate(updatedAt)}</span>
               </span>
             </div>
@@ -79,10 +82,10 @@ const BlogPost: React.FC<BlogProp> = ({
 };
 
 function formatDate(date: Date | string) {
-  return new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 }
 

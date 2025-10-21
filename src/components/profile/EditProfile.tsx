@@ -1,20 +1,18 @@
 // EditProfile.tsx
-import React, { useState } from "react";
-import { User, Mail, Building, Book, Calendar, Save } from "lucide-react";
+import { branch_options, club_dept_options } from '@prisma/client';
+import { Book, Building, Calendar, Mail, Save,User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { getSession, useSession } from 'next-auth/react';
+import React, { useState , useTransition } from 'react';
 
-import FormDropdown from "@/components/ui/FormDropdown";
-import { branch_options, club_dept_options } from "@prisma/client";
-import { UpdateProfile } from "@/lib/actions/Profile";
-import { useRouter } from "next/navigation";
-import { getSession, useSession } from "next-auth/react";
-import { useTransition } from "react";
-
+import FormDropdown from '@/components/ui/FormDropdown';
+import { UpdateProfile } from '@/lib/actions/Profile';
 
 const EditProfile = () => {
   const teams = Object.values(club_dept_options); // get from db
 
   const branchOptions = Object.values(branch_options);
-  const graduationYears = ["2025", "2026", "2027", "2028", "2029"];
+  const graduationYears = ['2025', '2026', '2027', '2028', '2029'];
 
   const router = useRouter();
   const { data: session, update } = useSession();
@@ -76,7 +74,7 @@ const EditProfile = () => {
         // router.replace("/profile");
       }
     } catch (error) {
-      console.log("Error while updating profile", error);
+      console.log('Error while updating profile', error);
     }
   };
 
@@ -99,7 +97,7 @@ const EditProfile = () => {
               <input
                 type="text"
                 name="name"
-                value={name || ""}
+                value={name || ''}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your full name"
                 className="pl-10 px-3 py-2.5 bg-black/30 border border-gray-700 rounded-lg text-white w-full"

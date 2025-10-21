@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { ShoppingCart, X, Trash2 } from "lucide-react";
-import SignInDialog from "./SignInDialog";
-import CheckoutModal from "./CheckoutModal";
-import { Merchandise } from "@/types/shop";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { placeholder } from "@/lib/images/placeholder";
+import { ShoppingCart, Trash2,X } from 'lucide-react';
+import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import React, { useState } from 'react';
+
+import { placeholder } from '@/lib/images/placeholder';
+import { Merchandise } from '@/types/shop';
+
+import CheckoutModal from './CheckoutModal';
+import SignInDialog from './SignInDialog';
 
 interface CartProps {
   isOpen: boolean;
@@ -48,7 +50,7 @@ const Cart: React.FC<CartProps> = ({
   return (
     <div
       className={`fixed inset-0 z-50 transform transition-transform duration-300 ${
-        isOpen ? "translate-x-0" : "translate-x-full"
+        isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
       <div

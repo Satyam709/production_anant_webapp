@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { Merchandise, ItemCategory, ItemCategoryEnum, ItemCategorySchema } from "@/types/shop";
+import React, { useState } from 'react';
+
+import {
+  ItemCategory,
+  ItemCategoryEnum,
+  ItemCategorySchema,
+  Merchandise,
+} from '@/types/shop';
 
 interface ProductFormProps {
   product?: Merchandise | null;
@@ -8,7 +14,11 @@ interface ProductFormProps {
   onClose: () => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose }) => {
+const ProductForm: React.FC<ProductFormProps> = ({
+  product,
+  onSubmit,
+  onClose,
+}) => {
   const [formData, setFormData] = useState<Partial<Merchandise>>({
     item_id: product?.item_id,
     name: product?.name || '',
@@ -26,7 +36,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div className="relative w-full max-w-2xl bg-gray-900/90 rounded-xl border border-gray-800 overflow-hidden">
         <div className="p-6 border-b border-gray-800 flex justify-between items-center">
           <h2 className="text-xl font-bold">
@@ -49,7 +62,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
                 required
               />
@@ -61,7 +76,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
               </label>
               <textarea
                 value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
                 rows={3}
               />
@@ -75,7 +92,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
                 <input
                   type="number"
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: Number(e.target.value) })
+                  }
                   className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
                   min="0"
                   required
@@ -89,7 +108,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
                 <input
                   type="number"
                   value={formData.stock_quantity}
-                  onChange={(e) => setFormData({ ...formData, stock_quantity: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      stock_quantity: Number(e.target.value),
+                    })
+                  }
                   className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
                   min="0"
                   required
@@ -103,7 +127,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
               </label>
               <select
                 value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value as ItemCategory })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    category: e.target.value as ItemCategory,
+                  })
+                }
                 className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
                 required
               >
@@ -122,7 +151,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onClose })
               <input
                 type="url"
                 value={formData.image_url || ''}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, image_url: e.target.value })
+                }
                 className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary-purple focus:border-transparent"
                 placeholder="https://example.com/image.jpg"
               />

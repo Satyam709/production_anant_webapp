@@ -1,16 +1,18 @@
-"use client"
+'use client';
+import { ChevronLeft } from 'lucide-react';
 import React, { useState } from 'react';
+
+import { AlbumType } from '@/types/common';
+
 import { AlbumCard } from './AlbumCard';
 import { ImageGrid } from './ImageGrid';
 import { ImageViewer } from './ImageViewer';
-import { ChevronLeft } from 'lucide-react';
-import { AlbumType } from '@/types/common';
 
 type AlbumGalleryProps = {
   albums: AlbumType[];
 };
 
-export const AlbumGallery: React.FC<AlbumGalleryProps> = ({albums}) => {
+export const AlbumGallery: React.FC<AlbumGalleryProps> = ({ albums }) => {
   const [selectedAlbum, setSelectedAlbum] = useState<AlbumType | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(-1);
 
@@ -38,17 +40,18 @@ export const AlbumGallery: React.FC<AlbumGalleryProps> = ({albums}) => {
               <ChevronLeft className="w-5 h-5" />
               <span>Back to Albums</span>
             </button>
-            
+
             <div>
               <h1 className="text-3xl font-bold bg-hero-gradient bg-clip-text text-transparent">
                 {selectedAlbum.name}
               </h1>
               <p className="text-primary-cyan/80 mt-1">
-                {selectedAlbum.images.length} photos • Created on {new Date(selectedAlbum.createdAt).toLocaleDateString()}
+                {selectedAlbum.images.length} photos • Created on{' '}
+                {new Date(selectedAlbum.createdAt).toLocaleDateString()}
               </p>
             </div>
 
-            <ImageGrid 
+            <ImageGrid
               images={selectedAlbum.images}
               onImageClick={(index) => setCurrentImageIndex(index)}
             />

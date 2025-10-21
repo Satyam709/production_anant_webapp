@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/PrismaClient/db";
-import { getSession } from "@/lib/actions/Sessions";
-import isAdmin from "@/lib/actions/Admin";
-import z from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import z from 'zod';
+
+import isAdmin from '@/lib/actions/Admin';
+import { getSession } from '@/lib/actions/Sessions';
+import prisma from '@/lib/PrismaClient/db';
 
 const competitionSchema = z.object({
   competitionName: z.string(),
@@ -23,21 +24,21 @@ export async function PUT(
 ) {
   try {
     const body = await req.json();
-    const { id } =await params;
+    const { id } = await params;
     const schema = competitionSchema.safeParse(body);
     const session = await getSession();
 
     if (!session?.user || !(await isAdmin())) {
       return NextResponse.json(
-        { error: "Failed to update competition! Unauthenticated" },
+        { error: 'Failed to update competition! Unauthenticated' },
         { status: 400 }
       );
     }
 
     if (!schema.success) {
       console.log(schema.error);
-      
-      return NextResponse.json({ error: "Bad Request" }, { status: 400 });
+
+      return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
     }
 
     const {
@@ -57,7 +58,7 @@ export async function PUT(
       return NextResponse.json(
         {
           error:
-            "Max team size should be greater than or equal to min team size",
+            'Max team size should be greater than or equal to min team size',
         },
         { status: 400 }
       );
@@ -68,7 +69,7 @@ export async function PUT(
       isNaN(Date.parse(registration_deadline))
     ) {
       return NextResponse.json(
-        { error: "Invalid date format" },
+        { error: 'Invalid date format' },
         { status: 400 }
       );
     }
@@ -83,7 +84,7 @@ export async function PUT(
 
     if (!existingCompetition) {
       return NextResponse.json(
-        { error: "Competition not found" },
+        { error: 'Competition not found' },
         { status: 404 }
       );
     }
@@ -107,13 +108,13 @@ export async function PUT(
 
     return NextResponse.json({
       status: 200,
-      message: "Competition updated successfully",
+      message: 'Competition updated successfully',
       data: updatedCompetition,
     });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

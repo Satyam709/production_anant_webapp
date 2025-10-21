@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { InternshipWithUser } from "@/types/internship";
-import InternshipCard from "@/components/internship/InternshipCard";
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+
+import InternshipCard from '@/components/internship/InternshipCard';
+import { InternshipWithUser } from '@/types/internship';
 
 export default function HomeInternshipSection() {
   const [internships, setInternships] = useState<InternshipWithUser[]>([]);
@@ -13,11 +14,11 @@ export default function HomeInternshipSection() {
   useEffect(() => {
     const fetchInternships = async () => {
       try {
-        const response = await fetch("/api/internships?limit=3");
+        const response = await fetch('/api/internships?limit=3');
         const data = await response.json();
         setInternships(data);
       } catch (error) {
-        console.error("Error fetching internships:", error);
+        console.error('Error fetching internships:', error);
       } finally {
         setLoading(false);
       }

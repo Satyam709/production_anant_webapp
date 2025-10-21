@@ -1,39 +1,47 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
+import {
+  BookOpen,
+  KeyRound,
+  Lock,
+  ShieldCheck,
+  UserCircle2,
+} from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { UserCircle2, BookOpen, KeyRound, Lock, ShieldCheck } from "lucide-react";
-import GradientButton from "@/components/ui/GradientButton";
-import { InputField } from "./InputField";
+import React, { useState } from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
+
+import { InputField } from './InputField';
 
 export default function RegisterForm() {
-  const [username, setUsername] = useState("");
-  const [rollNumber, setRollNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [rollNumber, setRollNumber] = useState('');
+  const [otp, setOtp] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const handleVerify = async (e: React.MouseEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError('');
 
     try {
-      const res = await fetch("/api/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roll_number: rollNumber }),
       });
 
-      if (!res.ok) throw new Error("Failed to send OTP");
+      if (!res.ok) throw new Error('Failed to send OTP');
       setOtpSent(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send OTP");
+      setError(err instanceof Error ? err.message : 'Failed to send OTP');
     } finally {
       setIsLoading(false);
     }
@@ -41,33 +49,33 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return;
     }
 
     setIsLoading(true);
-    setError("");
+    setError('');
 
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username,
           roll_number: rollNumber,
           password,
           otp,
-          confirmpassword : confirmPassword,
+          confirmpassword: confirmPassword,
         }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
+      if (!res.ok) throw new Error(data.message || 'Registration failed');
       router.push('/login');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      setError(err instanceof Error ? err.message : 'Registration failed');
     } finally {
       setIsLoading(false);
     }
@@ -96,7 +104,10 @@ export default function RegisterForm() {
           />
 
           <div>
-            <label htmlFor="rollNumber" className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label
+              htmlFor="rollNumber"
+              className="block text-sm font-medium text-gray-300 mb-1.5"
+            >
               Roll Number
             </label>
             <div className="relative">
@@ -119,7 +130,7 @@ export default function RegisterForm() {
                 disabled={isLoading || otpSent}
                 className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-primary-blue/20 hover:bg-primary-blue/30 text-primary-blue rounded-md transition-colors duration-200 disabled:opacity-50"
               >
-                {isLoading ? "Verifying..." : otpSent ? "Verified" : "Verify"}
+                {isLoading ? 'Verifying...' : otpSent ? 'Verified' : 'Verify'}
               </button>
             </div>
           </div>
@@ -167,12 +178,12 @@ export default function RegisterForm() {
         )}
 
         <div className="pt-2">
-          <GradientButton 
-            type="submit" 
-            className="w-full py-2.5 justify-center" 
+          <GradientButton
+            type="submit"
+            className="w-full py-2.5 justify-center"
             disabled={isLoading || !otpSent}
           >
-            {isLoading ? "Creating Account..." : "Create Account"}
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </GradientButton>
         </div>
       </form>
@@ -182,7 +193,7 @@ export default function RegisterForm() {
           href="/login"
           className="text-sm text-gray-400 hover:text-white transition-colors"
         >
-          Already have an account?{" "}
+          Already have an account?{' '}
           <span className="text-primary-cyan hover:text-primary-blue transition-colors">
             Sign in
           </span>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const EventsHeader = () => {
   return (
@@ -7,9 +7,10 @@ const EventsHeader = () => {
         Events
       </h1>
       <p className="text-gray-400 max-w-2xl mx-auto">
-        Join our events and unlock your potential. Celebrate every achievement with us!
+        Join our events and unlock your potential. Celebrate every achievement
+        with us!
       </p>
     </div>
-  )
-}
-export default EventsHeader
+  );
+};
+export default EventsHeader;

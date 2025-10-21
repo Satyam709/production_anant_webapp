@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
+import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,7 @@ export async function GET(
 ) {
   if (!params.id || isNaN(parseInt(params.id))) {
     return NextResponse.json(
-      { error: "Invalid internship ID" },
+      { error: 'Invalid internship ID' },
       { status: 400 }
     );
   }
@@ -18,7 +18,7 @@ export async function GET(
     const internship = await prisma.internship.findUnique({
       where: {
         id: parseInt(params.id),
-        is_active: true
+        is_active: true,
       },
       include: {
         user: {
@@ -26,24 +26,24 @@ export async function GET(
             name: true,
             imageURL: true,
             branch: true,
-            batch: true
-          }
-        }
-      }
+            batch: true,
+          },
+        },
+      },
     });
 
     if (!internship) {
       return NextResponse.json(
-        { error: "Internship not found" },
+        { error: 'Internship not found' },
         { status: 404 }
       );
     }
 
     return NextResponse.json(internship);
   } catch (error) {
-    console.error("Error fetching internship:", error);
+    console.error('Error fetching internship:', error);
     return NextResponse.json(
-      { error: "Failed to fetch internship" },
+      { error: 'Failed to fetch internship' },
       { status: 500 }
     );
   }

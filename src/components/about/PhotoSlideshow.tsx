@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence,motion } from 'framer-motion';
+import Image from 'next/image';
+import { useEffect,useState } from 'react';
 
 interface PhotoSlideshowProps {
   photos: string[];
@@ -51,8 +51,8 @@ export default function PhotoSlideshow({ photos }: PhotoSlideshowProps) {
             key={index}
             className={`w-2 h-2 rounded-full transition-all ${
               index === currentIndex
-                ? "bg-[#00E0FF] w-4"
-                : "bg-white/50 hover:bg-white/80"
+                ? 'bg-[#00E0FF] w-4'
+                : 'bg-white/50 hover:bg-white/80'
             }`}
             onClick={() => setCurrentIndex(index)}
           />

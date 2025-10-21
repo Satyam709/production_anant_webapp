@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 interface InputFieldProps {
   id: string;
@@ -21,11 +21,14 @@ export function InputField({
   onChange,
   icon,
   placeholder,
-  disabled
+  disabled,
 }: InputFieldProps) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-300 mb-1.5">
+      <label
+        htmlFor={id}
+        className="block text-sm font-medium text-gray-300 mb-1.5"
+      >
         {label}
       </label>
       <div className="relative">

@@ -1,13 +1,16 @@
-import React from "react";
-import Navbar from "@/components/Navbar";
-import ProfileLayout from "@/components/profile/ProfileLayout";
-import Footer from "@/components/Footer";
-import { getUserInfo } from "@/lib/actions/Profile";
-import { isAuthenticated } from "@/lib/actions/Sessions";
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
+import React from 'react';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import ProfileLayout from '@/components/profile/ProfileLayout';
+import { getUserInfo } from '@/lib/actions/Profile';
+import { isAuthenticated } from '@/lib/actions/Sessions';
 
 const Profile = async () => {
-  if(!await isAuthenticated()){redirect("/login");}
+  if (!(await isAuthenticated())) {
+    redirect('/login');
+  }
   const user = await getUserInfo();
 
   return (
@@ -26,8 +29,12 @@ const Profile = async () => {
           <ProfileLayout userInfo={user} />
         ) : (
           <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
-            <h1 className="text-3xl font-semibold text-white">User Not Found</h1>
-            <p className="text-lg mt-2 text-gray-500">The profile you are looking for does not exist.</p>
+            <h1 className="text-3xl font-semibold text-white">
+              User Not Found
+            </h1>
+            <p className="text-lg mt-2 text-gray-500">
+              The profile you are looking for does not exist.
+            </p>
           </div>
         )}
       </main>

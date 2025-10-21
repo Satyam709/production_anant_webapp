@@ -1,19 +1,20 @@
-"use server";
+'use server';
+import { Calendar, Clock, Coins,MapPin, Trophy, Users } from 'lucide-react';
 import React from 'react';
-import { Trophy, Users, Calendar, MapPin, Clock, Coins } from 'lucide-react';
+
 import Register_Button from '@/components/compete/Register';
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import { getSession } from "@/lib/actions/Sessions";
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import { getSession } from '@/lib/actions/Sessions';
 
 async function CompetitionDetails({ params }: { params: { id: string } }) {
-
   const { id } = await params;
   const response = await getCompi(id);
   const competition = await response.competition;
   const session = await getSession();
-  const isLoggedin = session?.user? true : false;
-  const isRegistrationOpen = new Date() < new Date(competition.registration_deadline);
+  const isLoggedin = session?.user ? true : false;
+  const isRegistrationOpen =
+    new Date() < new Date(competition.registration_deadline);
 
   const formatDate = (date: string) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -22,19 +23,18 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     }).format(new Date(date));
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
-      
       <Navbar />
       {/* Hero Section */}
       <div className="relative h-[500px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={competition.imageURL==""?null:competition.imageURL}
+            src={competition.imageURL == '' ? null : competition.imageURL}
             alt="Hackathon background"
             className="w-full h-full object-cover opacity-20 scale-105 transform hover:scale-110 transition-transform duration-700"
           />
@@ -74,7 +74,9 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Registration Deadline</p>
-                <p className="font-semibold">{formatDate(competition.registration_deadline)}</p>
+                <p className="font-semibold">
+                  {formatDate(competition.registration_deadline)}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -83,7 +85,9 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Team Size</p>
-                <p className="font-semibold">{competition.min_team_size} - {competition.max_team_size}</p>
+                <p className="font-semibold">
+                  {competition.min_team_size} - {competition.max_team_size}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -92,7 +96,9 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Event Date</p>
-                <p className="font-semibold">{formatDate(competition.conductedOn)}</p>
+                <p className="font-semibold">
+                  {formatDate(competition.conductedOn)}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-4 group">
@@ -129,7 +135,9 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">First Prize</p>
-                    <p className="font-semibold text-lg">{competition.first_prize_name || "TBD"}</p>
+                    <p className="font-semibold text-lg">
+                      {competition.first_prize_name || 'TBD'}
+                    </p>
                   </div>
                 </div>
                 <div className="text-yellow-400 font-bold">1st</div>
@@ -143,7 +151,9 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Second Prize</p>
-                    <p className="font-semibold text-lg">{competition.second_prize_name || "TBD"}</p>
+                    <p className="font-semibold text-lg">
+                      {competition.second_prize_name || 'TBD'}
+                    </p>
                   </div>
                 </div>
                 <div className="text-gray-400 font-bold">2nd</div>
@@ -157,7 +167,9 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Third Prize</p>
-                    <p className="font-semibold text-lg">{competition.third_prize_name || "TBD"}</p>
+                    <p className="font-semibold text-lg">
+                      {competition.third_prize_name || 'TBD'}
+                    </p>
                   </div>
                 </div>
                 <div className="text-amber-600 font-bold">3rd</div>
@@ -179,28 +191,32 @@ async function CompetitionDetails({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-    <Register_Button compi_id={competition.competition_id} isRegistrationOpen={isRegistrationOpen} isLoggedin={isLoggedin}/>
+      <Register_Button
+        compi_id={competition.competition_id}
+        isRegistrationOpen={isRegistrationOpen}
+        isLoggedin={isLoggedin}
+      />
 
-    <div className="relative z-10">
+      <div className="relative z-10">
         <Footer />
+      </div>
     </div>
-    </div>
-
   );
 }
 
 export default CompetitionDetails;
 
-async function getCompi(id: string){
-  try{
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/competitions/${id}?participant=false`);
-    if(!res.ok){
+async function getCompi(id: string) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/competitions/${id}?participant=false`
+    );
+    if (!res.ok) {
       return [];
     }
-    const data = await res.json(); 
+    const data = await res.json();
     return data;
-  }
-  catch(err){
+  } catch (err) {
     return [];
   }
 }

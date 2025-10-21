@@ -1,6 +1,6 @@
-import React from "react";
-import { Target, Star, Award } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Award,Star, Target } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import React from 'react';
 
 interface StatItemProps {
   icon: React.ReactNode;
@@ -19,12 +19,12 @@ const StatItem = ({ icon, label, value }: StatItemProps) => (
 const ProfileStats = () => {
   const userInfo = useSession().data?.user.info;
   const joinedDate = userInfo?.joinedAt
-    ? new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+    ? new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       }).format(new Date(userInfo.joinedAt))
-    : "August 2024";
+    : 'August 2024';
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -33,11 +33,13 @@ const ProfileStats = () => {
         label="Joined"
         value={joinedDate}
       />
-      {userInfo?.position && <StatItem
-        icon={<Award className="h-6 w-6" />}
-        label="Role"
-        value={userInfo.position}
-      />}
+      {userInfo?.position && (
+        <StatItem
+          icon={<Award className="h-6 w-6" />}
+          label="Role"
+          value={userInfo.position}
+        />
+      )}
     </div>
   );
 };

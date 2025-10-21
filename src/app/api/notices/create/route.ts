@@ -1,15 +1,16 @@
-import prisma from "@/lib/PrismaClient/db";
-import { NextRequest, NextResponse } from "next/server";
-import z from "zod";
-import { getSession } from "@/lib/actions/Sessions";
-import isAdmin from "@/lib/actions/Admin";
-import { link } from "fs";
+import { link } from 'fs';
+import { NextRequest, NextResponse } from 'next/server';
+import z from 'zod';
 
-const categoryEnum = z.enum(["General", "Technical", "Sponsorship"]);
+import isAdmin from '@/lib/actions/Admin';
+import { getSession } from '@/lib/actions/Sessions';
+import prisma from '@/lib/PrismaClient/db';
+
+const categoryEnum = z.enum(['General', 'Technical', 'Sponsorship']);
 
 const noticeSchema = z.object({
-  headline: z.string().min(1, "Headline is required"),
-  body: z.string().min(1, "Body is required"),
+  headline: z.string().min(1, 'Headline is required'),
+  body: z.string().min(1, 'Body is required'),
   category: categoryEnum,
   link: z.string().optional(),
 });
@@ -20,14 +21,14 @@ export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session?.user || !(await isAdmin())) {
     return NextResponse.json(
-      { error: "Failed to create meeting! Unauthenticated" },
+      { error: 'Failed to create meeting! Unauthenticated' },
       { status: 400 }
     );
   }
 
   if (!schema.success) {
     return NextResponse.json(
-      { error: "Invalid schema", resolve: { issues: schema.error.issues } },
+      { error: 'Invalid schema', resolve: { issues: schema.error.issues } },
       { status: 400 }
     );
   }
@@ -45,11 +46,11 @@ export async function POST(req: NextRequest) {
       data: notice,
     });
 
-    return NextResponse.json({ response: "Notice created!", notice: result });
+    return NextResponse.json({ response: 'Notice created!', notice: result });
   } catch (err) {
-    console.error("Error in creating notice " ,err);
+    console.error('Error in creating notice ', err);
     return NextResponse.json(
-      { error: "Failed to create notice!" },
+      { error: 'Failed to create notice!' },
       { status: 500 }
     );
   }

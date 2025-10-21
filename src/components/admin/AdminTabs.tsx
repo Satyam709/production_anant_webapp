@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import NoticeForm from './forms/NoticeForm';
-import MeetingForm from './forms/MeetForm';
+
 import CompetitionForm from './forms/CompForm';
 import EventForm from './forms/EventForm';
+import MeetingForm from './forms/MeetForm';
+import NoticeForm from './forms/NoticeForm';
 
 const tabs = [
   { id: 'notices', label: 'Notices' },
@@ -39,9 +40,10 @@ const AdminTabs = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`
                 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors
-                ${activeTab === tab.id
-                  ? 'border-primary-cyan text-primary-cyan'
-                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+                ${
+                  activeTab === tab.id
+                    ? 'border-primary-cyan text-primary-cyan'
+                    : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
                 }
               `}
             >

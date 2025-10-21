@@ -1,20 +1,20 @@
-import React from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Package, ShoppingBag, Settings, LogOut } from "lucide-react";
+import { LogOut,Package, Settings, ShoppingBag } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
 
   const navItems = [
-    { name: "Products", href: "/admin/products", icon: Package },
-    { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
-    { name: "Settings", href: "/admin/settings", icon: Settings },
+    { name: 'Products', href: '/admin/products', icon: Package },
+    { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
+    { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    router.push("/admin/login");
+    localStorage.removeItem('adminToken');
+    router.push('/admin/login');
   };
 
   return (
@@ -51,8 +51,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         href={item.href}
                         className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
                           router.pathname === item.href
-                            ? "bg-primary-purple/20 text-white border border-primary-purple/30"
-                            : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                            ? 'bg-primary-purple/20 text-white border border-primary-purple/30'
+                            : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
                         }`}
                       >
                         <Icon className="h-5 w-5" />

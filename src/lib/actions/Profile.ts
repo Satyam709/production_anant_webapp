@@ -1,13 +1,14 @@
-"use server";
-import { getSession, isAuthenticated } from "@/lib/actions/Sessions";
-import prisma from "@/lib/PrismaClient/db";
-import { rollNumberSchema } from "@/types/common";
+'use server';
 import {
   branch_options,
   club_dept_options,
   position_options,
-} from "@prisma/client";
-import { uploadServerSideFile } from "@/lib/actions/uploadthing";
+} from '@prisma/client';
+
+import { getSession, isAuthenticated } from '@/lib/actions/Sessions';
+import { uploadServerSideFile } from '@/lib/actions/uploadthing';
+import prisma from '@/lib/PrismaClient/db';
+import { rollNumberSchema } from '@/types/common';
 
 export async function UpdateProfile(
   name: string | undefined,
@@ -21,7 +22,7 @@ export async function UpdateProfile(
 ) {
   try {
     if (!(await isAuthenticated())) return false;
-    
+
     const session = await getSession();
     const currentUserId = session?.user.id;
 
@@ -45,7 +46,7 @@ export async function UpdateProfile(
         instagram: instagram,
       },
     });
-    console.log("user updated", user);
+    console.log('user updated', user);
     if (user) {
       return true;
     }
@@ -200,7 +201,7 @@ export async function getUserInfo(): Promise<getUserInfoType> {
       meetings_attended: user?.meetings_attended,
     };
   } catch (error) {
-    console.log("error while getting user info", error);
+    console.log('error while getting user info', error);
     return null;
   }
 }
@@ -302,7 +303,7 @@ export async function getUserInfoById(
       meetings_attended: user?.meetings_attended,
     };
   } catch (error) {
-    console.log("error while getting user info", error);
+    console.log('error while getting user info', error);
     return null;
   }
 }
@@ -321,7 +322,7 @@ export async function UpdateProfileImage(file: File) {
     });
 
     if (user?.imageURL) {
-      console.log("User already has an image URL.  Update not allowed.");
+      console.log('User already has an image URL.  Update not allowed.');
       return null; // Or throw an error, depending on your desired behavior
     }
 
@@ -329,7 +330,7 @@ export async function UpdateProfileImage(file: File) {
     const uploadResult = await uploadServerSideFile(file);
 
     if (!uploadResult) {
-      console.error("Failed to upload image.");
+      console.error('Failed to upload image.');
       return null;
     }
 
@@ -346,14 +347,14 @@ export async function UpdateProfileImage(file: File) {
     });
 
     if (updatedUser) {
-      console.log("Profile image updated successfully.");
+      console.log('Profile image updated successfully.');
       return updatedUser.imageURL;
     } else {
-      console.log("Failed to update profile image.");
+      console.log('Failed to update profile image.');
       return null;
     }
   } catch (error) {
-    console.error("Error updating profile image:", error);
+    console.error('Error updating profile image:', error);
     return null;
   }
 }

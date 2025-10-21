@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const ShopHeader = () => {
   return (
@@ -7,7 +7,7 @@ const ShopHeader = () => {
         Infi-Shop
       </h1>
       <p className="text-gray-400 max-w-2xl mx-auto">
-          Where Mathematics Meets Style - Exclusive Anant Merchandise
+        Where Mathematics Meets Style - Exclusive Anant Merchandise
       </p>
       <div className="flex justify-center gap-4 mt-8">
         <span className="px-6 py-2 rounded-2xl bg-primary-blue/10 text-primary-cyan border border-primary-blue/20 hover:bg-primary-blue/20 transition-all">
@@ -18,6 +18,6 @@ const ShopHeader = () => {
         </span>
       </div>
     </div>
-  )
-}
-export default ShopHeader
+  );
+};
+export default ShopHeader;
