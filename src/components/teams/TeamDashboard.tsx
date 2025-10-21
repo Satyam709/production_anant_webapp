@@ -1,11 +1,4 @@
-import {
-  Loader,
-  Plus,
-  Send,
-  Trash2,
-  UserPlus,
-  Users,
-} from 'lucide-react';
+import { Loader, Plus, Send, Trash2, UserPlus, Users } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import { DeleteTeam } from '@/lib/actions/DeleteTeam';

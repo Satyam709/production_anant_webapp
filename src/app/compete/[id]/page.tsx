@@ -1,5 +1,5 @@
 'use server';
-import { Calendar, Clock, Coins,MapPin, Trophy, Users } from 'lucide-react';
+import { Calendar, Clock, Coins, MapPin, Trophy, Users } from 'lucide-react';
 import React from 'react';
 
 import Register_Button from '@/components/compete/Register';

@@ -1,6 +1,6 @@
-import { Loader, Plus, Trash2,Trophy } from 'lucide-react';
+import { Loader, Plus, Trash2, Trophy } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { uploadServerSideFile } from '@/lib/actions/uploadthing';
 

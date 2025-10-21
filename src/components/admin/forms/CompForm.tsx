@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import axios from 'axios';
-import { CalendarClock, Clock, Loader,Trophy } from 'lucide-react';
-import React, { type RefObject,useRef, useState } from 'react';
+import { CalendarClock, Clock, Loader, Trophy } from 'lucide-react';
+import React, { type RefObject, useRef, useState } from 'react';
 
 import GradientButton from '@/components/ui/GradientButton';
 import { uploadServerSideFile } from '@/lib/actions/uploadthing';

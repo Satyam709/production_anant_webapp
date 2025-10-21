@@ -1,7 +1,6 @@
 'use server';
 import jwt from 'jsonwebtoken';
 
-
 export async function decodeAttendanceJwt(token: string) {
   const secret = process.env.AttendenceSecret || 'itsasecret';
   if (!secret) {

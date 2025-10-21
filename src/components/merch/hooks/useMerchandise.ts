@@ -1,7 +1,7 @@
 'use client';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { getProductsSchema,Merchandise  } from '@/types/shop';
+import { getProductsSchema, Merchandise } from '@/types/shop';
 
 export function useMerchandise() {
   const [products, setProducts] = useState<Merchandise[]>([]);

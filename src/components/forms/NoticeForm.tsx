@@ -1,6 +1,6 @@
 import { category } from '@prisma/client';
-import { Bell, Loader, Plus,Trash2 } from 'lucide-react';
-import React, { useEffect,useState } from 'react';
+import { Bell, Loader, Plus, Trash2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 import { DeleteNotice } from '@/lib/actions/DeleteNotice';
 

@@ -1,4 +1,4 @@
-import { type Command,mergeAttributes, Node } from '@tiptap/core';
+import { type Command, mergeAttributes, Node } from '@tiptap/core';
 import katex from 'katex';
 
 export interface MathOptions {

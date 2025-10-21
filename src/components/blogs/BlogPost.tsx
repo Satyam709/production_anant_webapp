@@ -1,5 +1,5 @@
 import { Blog } from '@prisma/client';
-import { Calendar, Clock,Tag, User } from 'lucide-react';
+import { Calendar, Clock, Tag, User } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 

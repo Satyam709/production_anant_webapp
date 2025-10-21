@@ -7,11 +7,9 @@ import prisma from '@/lib/PrismaClient/db';
 
 const meetSchema = z.object({
   venue: z.string().min(1, 'Venue is required'),
-  starts: z
-    .string()
-    .refine((date) => !isNaN(Date.parse(date)), {
-      message: 'not a iso date format',
-    }),
+  starts: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: 'not a iso date format',
+  }),
   duration: z.number().int().nullable().optional(),
   topic_of_discussion: z.string().nullable().optional(),
 });

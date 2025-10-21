@@ -1,4 +1,4 @@
-import { branch_options, Meeting,Prisma  } from '@prisma/client';
+import { branch_options, Meeting, Prisma } from '@prisma/client';
 import axios from 'axios';
 import {
   CalendarClock,

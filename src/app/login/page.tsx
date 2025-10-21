@@ -1,10 +1,10 @@
 'use client';
 
-import { Lock,User } from 'lucide-react';
+import { Lock, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import MathSymbols from '@/components/floating/MathSymbols';
 import Footer from '@/components/Footer';

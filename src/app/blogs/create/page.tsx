@@ -1,12 +1,12 @@
 'use client';
 
 import { blog_cat } from '@prisma/client';
-import { ArrowLeft, Eye, ImageIcon,Save } from 'lucide-react';
+import { ArrowLeft, Eye, ImageIcon, Save } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { EditorPreview } from '@/components/blogs/BlogPreview';
 import TiptapEditor from '@/components/blogs/editor/tiptap-editor';

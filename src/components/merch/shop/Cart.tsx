@@ -1,4 +1,4 @@
-import { ShoppingCart, Trash2,X } from 'lucide-react';
+import { ShoppingCart, Trash2, X } from 'lucide-react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';

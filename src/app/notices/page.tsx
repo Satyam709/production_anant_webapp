@@ -1,7 +1,7 @@
 'use client';
 
 import { category } from '@prisma/client';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';

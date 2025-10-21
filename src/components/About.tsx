@@ -1,4 +1,4 @@
-import { Brain, Trophy,Users } from 'lucide-react';
+import { Brain, Trophy, Users } from 'lucide-react';
 import React from 'react';
 
 import FeatureCard from '@/components/ui/FeatureCard';

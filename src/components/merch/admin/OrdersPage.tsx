@@ -1,4 +1,4 @@
-import { AlertCircle,CheckCircle, Search, XCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, Search, XCircle } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { Order, OrderStatus, OrderStatusSchema } from '@/types/shop';

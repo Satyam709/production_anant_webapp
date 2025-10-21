@@ -1,9 +1,9 @@
 // EditProfile.tsx
 import { branch_options, club_dept_options } from '@prisma/client';
-import { Book, Building, Calendar, Mail, Save,User } from 'lucide-react';
+import { Book, Building, Calendar, Mail, Save, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import React, { useState  } from 'react';
+import React, { useState } from 'react';
 
 import FormDropdown from '@/components/ui/FormDropdown';
 import { UpdateProfile } from '@/lib/actions/Profile';

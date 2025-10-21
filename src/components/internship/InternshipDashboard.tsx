@@ -2,7 +2,7 @@
 
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { InternshipWithUser } from '@/types/internship';
 
