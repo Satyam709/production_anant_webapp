@@ -1,19 +1,20 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { User, Lock } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import GradientButton from "@/components/ui/GradientButton";
-import MathSymbols from "@/components/floating/MathSymbols";
-import { useRouter } from "next/navigation";
+import { Lock,User } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { useEffect,useState } from 'react';
+
+import MathSymbols from '@/components/floating/MathSymbols';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import GradientButton from '@/components/ui/GradientButton';
 
 export default function LoginPage() {
-  const [rollNumber, setRollNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [rollNumber, setRollNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
@@ -23,10 +24,10 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError('');
 
     // Call signIn with 'credentials' provider
-    const result = await signIn("credentials", {
+    const result = await signIn('credentials', {
       redirect: false,
       rollNo: rollNumber,
       password: password,
@@ -36,7 +37,7 @@ export default function LoginPage() {
       setError(result.error);
     } else if (result?.ok) {
       // Optional: you can handle redirection or success actions here
-      router.push("/");
+      router.push('/');
     }
   };
 
@@ -135,7 +136,7 @@ export default function LoginPage() {
                 href="/register"
                 className="text-sm text-gray-400 hover:text-white transition-colors"
               >
-                Don't have an account?  &nbsp;&nbsp;&nbsp;
+                Don't have an account? &nbsp;&nbsp;&nbsp;
               </Link>
               <Link
                 href="/forget-password"

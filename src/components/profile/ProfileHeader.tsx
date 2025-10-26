@@ -1,7 +1,8 @@
-import React from "react";
-import { Camera, Mail, MapPin } from "lucide-react";
-import Image from "next/image";
-import { placeholder } from "@/lib/images/placeholder";
+import { Camera, Mail, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+
+import { placeholder } from '@/lib/images/placeholder';
 
 interface ProfileHeaderProps {
   name: string;
@@ -26,7 +27,7 @@ const ProfileHeader = ({
   };
 
   return (
-      <div className="relative mb-6 sm:mb-8">
+    <div className="relative mb-6 sm:mb-8">
       <div className="h-24 sm:h-32 bg-gradient-to-r from-primary-blue/20 via-primary-purple/20 rounded-t-2xl" />
       <div className="px-4 sm:px-6 pb-4 sm:pb-6">
         <div className="relative -mt-16 flex items-end space-x-6">
@@ -52,7 +53,9 @@ const ProfileHeader = ({
           </div>
 
           <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
-            <h2 className="text-lg sm:text-2xl font-bold text-white truncate">{name}</h2>
+            <h2 className="text-lg sm:text-2xl font-bold text-white truncate">
+              {name}
+            </h2>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-400 text-xs sm:text-base">
               <div className="flex items-center min-w-0">
                 <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />

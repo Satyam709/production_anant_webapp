@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { X, CheckCircle, XCircle } from "lucide-react";
-import { Order, OrderStatus, OrderStatusSchema } from "@/types/shop";
-import Image from "next/image";
-import { useMerchandise } from "../hooks/useMerchandise";
-import { placeholder } from "@/lib/images/placeholder";
+import { CheckCircle, X, XCircle } from 'lucide-react';
+import Image from 'next/image';
+import React, { useState } from 'react';
+
+import { placeholder } from '@/lib/images/placeholder';
+import { Order, OrderStatus, OrderStatusSchema } from '@/types/shop';
+
+import { useMerchandise } from '../hooks/useMerchandise';
 
 interface OrderDetailsModalProps {
   order: Order;
@@ -20,11 +22,11 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   onClose,
   onUpdateStatus,
 }) => {
-  const [remarks, setRemarks] = useState("");
+  const [remarks, setRemarks] = useState('');
 
   const handleApprove = () => {
     if (!order.order_id) {
-      alert("Order ID not found");
+      alert('Order ID not found');
       return;
     }
     onUpdateStatus(order.order_id, OrderStatusSchema.enum.APPROVED, remarks);
@@ -33,7 +35,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
   const handleReject = () => {
     if (!order.order_id) {
-      alert("Order ID not found");
+      alert('Order ID not found');
       return;
     }
     onUpdateStatus(order.order_id, OrderStatusSchema.enum.REJECTED, remarks);
@@ -71,19 +73,19 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               <p className="font-medium text-white">
                 {(order.created_at &&
                   new Date(order.created_at).toLocaleString()) ||
-                  "N/A"}
+                  'N/A'}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-400">Payment Method</p>
               <p className="font-medium text-white">
-                {order.payment_method || "N/A"}
+                {order.payment_method || 'N/A'}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-400">Transaction ID</p>
               <p className="font-medium text-white">
-                {order.transaction_id || "N/A"}
+                {order.transaction_id || 'N/A'}
               </p>
             </div>
           </div>
@@ -105,14 +107,14 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     >
                       <Image
                         src={product?.image_url || placeholder}
-                        alt={product?.name || "NA"}
+                        alt={product?.name || 'NA'}
                         width={64}
                         height={64}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                       <div className="flex-1">
                         <h4 className="font-medium text-white">
-                          {product?.name || "NA"}
+                          {product?.name || 'NA'}
                         </h4>
                         <p className="text-sm text-gray-400">
                           Quantity: {item.quantity} × ₹{item.price_per_item}
@@ -127,7 +129,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     </div>
                   );
                 })) ||
-                "No items found"}
+                'No items found'}
             </div>
           </div>
 

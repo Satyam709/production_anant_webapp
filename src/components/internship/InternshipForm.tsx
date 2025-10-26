@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { InternshipDepartment, InternshipClass } from "@prisma/client";
+import { InternshipClass,InternshipDepartment } from '@prisma/client';
+import { useState } from 'react';
 
 interface InternshipFormData {
   title: string;
@@ -16,37 +16,37 @@ interface InternshipFormData {
 
 const InternshipForm = () => {
   const [formData, setFormData] = useState<InternshipFormData>({
-    title: "",
-    company_name: "",
-    duration: "",
-    description: "",
-    link: "",
+    title: '',
+    company_name: '',
+    duration: '',
+    description: '',
+    link: '',
     department: InternshipDepartment.Mathematics,
     class: InternshipClass.MSc,
-    email: "",
+    email: '',
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
     setSuccess(false);
 
     try {
-      const response = await fetch("/api/internships", {
-        method: "POST",
+      const response = await fetch('/api/internships', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create internship");
+        throw new Error('Failed to create internship');
       }
 
       // Show success message and reset form
@@ -55,17 +55,17 @@ const InternshipForm = () => {
         setSuccess(false);
       }, 3000); // Hide success message after 3 seconds
       setFormData({
-        title: "",
-        company_name: "",
-        duration: "",
-        description: "",
-        link: "",
+        title: '',
+        company_name: '',
+        duration: '',
+        description: '',
+        link: '',
         department: InternshipDepartment.Mathematics,
         class: InternshipClass.MSc,
-        email: "",
+        email: '',
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ const InternshipForm = () => {
               id="title"
               value={formData.title}
               onChange={(e) => {
-                setError("");
+                setError('');
                 setFormData({ ...formData, title: e.target.value });
               }}
               required
@@ -211,7 +211,7 @@ const InternshipForm = () => {
             >
               {Object.values(InternshipDepartment).map((dept) => (
                 <option key={dept} value={dept}>
-                  {dept.replace(/_/g, " ")}
+                  {dept.replace(/_/g, ' ')}
                 </option>
               ))}
             </select>
@@ -235,7 +235,7 @@ const InternshipForm = () => {
             >
               {Object.values(InternshipClass).map((cls) => (
                 <option key={cls} value={cls}>
-                  {cls.replace(/_/g, " ")}
+                  {cls.replace(/_/g, ' ')}
                 </option>
               ))}
             </select>
@@ -259,11 +259,11 @@ const InternshipForm = () => {
           disabled={loading}
           className={`w-full py-3 px-6 rounded-xl text-lg font-semibold transition-all ${
             loading
-              ? "bg-blue-900/50 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700 text-white"
+              ? 'bg-blue-900/50 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
           }`}
         >
-          {loading ? "Adding Internship..." : "Add Internship"}
+          {loading ? 'Adding Internship...' : 'Add Internship'}
         </button>
       </form>
     </div>

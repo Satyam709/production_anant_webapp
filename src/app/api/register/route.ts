@@ -1,30 +1,38 @@
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/PrismaClient/db";
-import bcryptjs from "bcryptjs";
-import redis from "@/helpers/redis";
-import z from "zod";
-import fs from "fs";
-import path from "path";
-import { branch_options, club_dept_options, position_options, Prisma } from "@prisma/client";
+import {
+  branch_options,
+  club_dept_options,
+  position_options,
+} from '@prisma/client';
+import bcryptjs from 'bcryptjs';
+import fs from 'fs';
+import { NextRequest, NextResponse } from 'next/server';
+import path from 'path';
+import z from 'zod';
+
+import redis from '@/helpers/redis';
+import prisma from '@/lib/PrismaClient/db';
 
 const RegistrationSchema = z.object({
   roll_number: z
     .string()
-    .min(1, "Roll number is required")
-    .regex(/^\d+$/, "Roll number must be a number"),
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmpassword: z.string().min(8, "Confirm password is required"),
-  otp: z.string().min(6, "OTP is required"),
+    .min(1, 'Roll number is required')
+    .regex(/^\d+$/, 'Roll number must be a number'),
+  username: z.string().min(1, 'Username is required'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmpassword: z.string().min(8, 'Confirm password is required'),
+  otp: z.string().min(6, 'OTP is required'),
 });
 
-async function parseCSV(rno: Number){
-  const filePath = path.join(process.cwd(), "src/data/admins.csv");
-  const csvData = fs.readFileSync(filePath, "utf8");
-  
+async function parseCSV(rno: number) {
+  const filePath = path.join(process.cwd(), 'src/data/admins.csv');
+  const csvData = fs.readFileSync(filePath, 'utf8');
+
   // windows line endings
-  const rows = csvData.replace(/\r/g, "").split("\n").map((row) => row.split(","));
-  // const rows = csvData.split("\n").map((row) => row.split(",")); 
+  const rows = csvData
+    .replace(/\r/g, '')
+    .split('\n')
+    .map((row) => row.split(','));
+  // const rows = csvData.split("\n").map((row) => row.split(","));
   const headers = rows[0];
 
   for (let i = 1; i < rows.length; i++) {
@@ -49,7 +57,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           status: 400,
-          message: errorMessages.join(", "),
+          message: errorMessages.join(', '),
         },
         { status: 400 }
       );
@@ -72,7 +80,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           status: 400,
-          message: "User already exists",
+          message: 'User already exists',
         },
         { status: 400 }
       );
@@ -82,7 +90,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           status: 400,
-          message: "Passwords do not match",
+          message: 'Passwords do not match',
         },
         { status: 400 }
       );
@@ -91,7 +99,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           status: 400,
-          message: "Password must be at least 8 characters",
+          message: 'Password must be at least 8 characters',
         },
         { status: 400 }
       );
@@ -101,7 +109,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           status: 400,
-          message: "Verification not done!",
+          message: 'Verification not done!',
         },
         { status: 400 }
       );
@@ -115,7 +123,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           status: 400,
-          message: "Verification expired!",
+          message: 'Verification expired!',
         },
         { status: 400 }
       );
@@ -126,7 +134,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           status: 400,
-          message: "Invalid OTP!",
+          message: 'Invalid OTP!',
         },
         { status: 400 }
       );
@@ -144,34 +152,41 @@ export async function POST(req: NextRequest) {
 
     let user;
     // not an admin
-    if (!user_details){
+    if (!user_details) {
       user = {
         roll_number: Number(roll_number),
         name: username,
         password: hashedPassword,
-        club_dept: []
+        club_dept: [],
       };
-    }
-    else{
-      console.log("User details: ", user_details);
+    } else {
+      console.log('User details: ', user_details);
       user = {
         roll_number: Number(roll_number),
         name: username,
         password: hashedPassword,
-        batch: user_details["batch"],
-        branch: branch_options[user_details["branch"] as keyof typeof branch_options],
-        position: position_options[user_details["position"] as keyof typeof position_options],
-        club_dept: [club_dept_options[user_details["club_dept"] as keyof typeof club_dept_options]],
+        batch: user_details['batch'],
+        branch:
+          branch_options[user_details['branch'] as keyof typeof branch_options],
+        position:
+          position_options[
+            user_details['position'] as keyof typeof position_options
+          ],
+        club_dept: [
+          club_dept_options[
+            user_details['club_dept'] as keyof typeof club_dept_options
+          ],
+        ],
       };
     }
-    
+
     const newUser = await prisma.user.create({ data: user });
     if (!newUser) {
-      console.log("Error in creating user");
+      console.log('Error in creating user');
       return NextResponse.json(
         {
           status: 500,
-          message: "Internal Server Error: Failed saving user details",
+          message: 'Internal Server Error: Failed saving user details',
         },
         { status: 500 }
       );
@@ -179,16 +194,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         status: 200,
-        message: "Registration Successful!",
+        message: 'Registration Successful!',
       },
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error in registration: ", error);
+    console.log('Error in registration: ', error);
     return NextResponse.json(
       {
         status: 500,
-        message: "Internal Server Error",
+        message: 'Internal Server Error',
       },
       { status: 500 }
     );

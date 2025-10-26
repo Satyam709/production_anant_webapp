@@ -1,7 +1,7 @@
-"use client"
-import { useState, useEffect } from "react";
-import { Merchandise } from "@/types/shop";
-import { getProductsSchema } from "@/types/shop";
+'use client';
+import { useEffect,useState } from 'react';
+
+import { getProductsSchema,Merchandise  } from '@/types/shop';
 
 export function useMerchandise() {
   const [products, setProducts] = useState<Merchandise[]>([]);
@@ -10,21 +10,21 @@ export function useMerchandise() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("/api/merch");
+      const res = await fetch('/api/merch');
 
       if (!res.ok) {
-        throw new Error("Failed to fetch products");
+        throw new Error('Failed to fetch products');
       }
 
       const data = await res.json();
       const products = getProductsSchema.safeParse(data);
       if (!products.success) {
-        throw new Error("Invalid data received");
+        throw new Error('Invalid data received');
       }
       console.log(products.success);
       setProducts(products.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,16 @@
-import React from "react";
-import { User, Mail, Building, Book, Calendar, Linkedin, Github, Instagram } from "lucide-react";
-import { getUserInfoType } from "@/lib/actions/Profile";
+import {
+  Book,
+  Building,
+  Calendar,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  User,
+} from 'lucide-react';
+import React from 'react';
+
+import { getUserInfoType } from '@/lib/actions/Profile';
 
 const ViewProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
   if (!userInfo) return <div>No user information available</div>;
@@ -22,7 +32,9 @@ const ViewProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <label className="block text-sm text-gray-300 mb-1">Email</label>
           <div className="relative flex items-center gap-2">
             <Mail className="text-gray-400" />
-            <span className="text-white">{userInfo.roll_number}@nitkkr.ac.in</span>
+            <span className="text-white">
+              {userInfo.roll_number}@nitkkr.ac.in
+            </span>
           </div>
         </div>
 
@@ -31,7 +43,7 @@ const ViewProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <label className="block text-sm text-gray-300 mb-1">Team</label>
           <div className="relative flex items-center gap-2">
             <Building className="text-gray-400" />
-            <span className="text-white">{userInfo.club_dept?.join(", ")}</span>
+            <span className="text-white">{userInfo.club_dept?.join(', ')}</span>
           </div>
         </div>
 
@@ -46,7 +58,9 @@ const ViewProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
 
         {/* Graduation Year */}
         <div>
-          <label className="block text-sm text-gray-300 mb-1">Graduation Year</label>
+          <label className="block text-sm text-gray-300 mb-1">
+            Graduation Year
+          </label>
           <div className="relative flex items-center gap-2">
             <Calendar className="text-gray-400" />
             <span className="text-white">{userInfo.batch}</span>

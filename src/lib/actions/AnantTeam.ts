@@ -1,7 +1,8 @@
-"use server";
+'use server';
 
-import prisma from "@/lib/PrismaClient/db";
-import { AnantTeamMember } from "@prisma/client";
+import { AnantTeamMember } from '@prisma/client';
+
+import prisma from '@/lib/PrismaClient/db';
 
 // Type for team member data (now directly from AnantTeamMember)
 export type TeamMember = AnantTeamMember;
@@ -14,7 +15,7 @@ export async function getAnantTeamMembers(
   if (!year) {
     const latestMember = await prisma.anantTeamMember.findFirst({
       orderBy: {
-        year: "desc",
+        year: 'desc',
       },
     });
     year =
@@ -36,8 +37,8 @@ export async function getAnantTeamMembers(
 
     return teamMembers;
   } catch (error) {
-    console.error("Error fetching Anant Team members:", error);
-    throw new Error("Failed to fetch Anant Team members");
+    console.error('Error fetching Anant Team members:', error);
+    throw new Error('Failed to fetch Anant Team members');
   }
 }
 
@@ -47,9 +48,9 @@ export async function getAvailableTeamYears(): Promise<string[]> {
       select: {
         year: true,
       },
-      distinct: ["year"],
+      distinct: ['year'],
       orderBy: {
-        year: "desc",
+        year: 'desc',
       },
     });
 
@@ -57,8 +58,8 @@ export async function getAvailableTeamYears(): Promise<string[]> {
       .map((y) => y.year)
       .filter((year): year is string => year !== null);
   } catch (error) {
-    console.error("Error fetching available team years:", error);
-    throw new Error("Failed to fetch available team years");
+    console.error('Error fetching available team years:', error);
+    throw new Error('Failed to fetch available team years');
   }
 }
 
@@ -75,7 +76,7 @@ export async function getAllTeamDataByYears(): Promise<
 
     return teamData;
   } catch (error) {
-    console.error("Error fetching all team data:", error);
-    throw new Error("Failed to fetch all team data");
+    console.error('Error fetching all team data:', error);
+    throw new Error('Failed to fetch all team data');
   }
 }

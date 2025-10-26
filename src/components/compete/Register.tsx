@@ -1,7 +1,7 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { Users } from "lucide-react";
-import { useRouter } from "next/navigation";
+'use client';
+import { Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect,useState } from 'react';
 
 export default function Register_Button({
   compi_id,
@@ -32,7 +32,7 @@ export default function Register_Button({
       const res = await fetch(
         `/api/competitions/${compi_id}/check-registration`,
         {
-          method: "GET",
+          method: 'GET',
         }
       );
       if (res.ok) {
@@ -45,7 +45,7 @@ export default function Register_Button({
       }
       if (searchTeam) {
         const res = await fetch(`/api/competitions/${compi_id}/get-teams`, {
-          method: "GET",
+          method: 'GET',
         });
         if (res.ok) {
           const data = await res.json();
@@ -64,15 +64,15 @@ export default function Register_Button({
         return;
       }
       const res = await fetch(`/api/competitions/${compi_id}/register`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ team_id: selectedTeam }),
       });
       console.log(await res.json());
       if (!res.ok) {
-        return { success: false, message: "Failed to register!" };
+        return { success: false, message: 'Failed to register!' };
       } else {
         setIsRegistered(true);
         setTeamregister(selectedTeamName);
@@ -108,8 +108,8 @@ export default function Register_Button({
                     key={team.team_id}
                     className={`flex items-center justify-between p-6 rounded-xl cursor-pointer transition-all duration-300 ${
                       selectedTeam === team.team_id
-                        ? "bg-teal-500/20 border-2 border-teal-500/50"
-                        : "bg-gray-700/50 border-2 border-transparent hover:bg-gray-700/70"
+                        ? 'bg-teal-500/20 border-2 border-teal-500/50'
+                        : 'bg-gray-700/50 border-2 border-transparent hover:bg-gray-700/70'
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -134,15 +134,15 @@ export default function Register_Button({
                     <div
                       className={`p-2 rounded-lg transition-colors ${
                         selectedTeam === team.team_id
-                          ? "bg-teal-500/20"
-                          : "bg-gray-600/50"
+                          ? 'bg-teal-500/20'
+                          : 'bg-gray-600/50'
                       }`}
                     >
                       <Users
                         className={`${
                           selectedTeam === team.team_id
-                            ? "text-teal-400"
-                            : "text-gray-400"
+                            ? 'text-teal-400'
+                            : 'text-gray-400'
                         }`}
                       />
                     </div>
@@ -157,18 +157,18 @@ export default function Register_Button({
             onClick={handleRegister}
             className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 ${
               selectedTeam
-                ? "bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                : "bg-gray-700/50 text-gray-400 cursor-not-allowed"
+                ? 'bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
             }`}
             disabled={!selectedTeam}
           >
             {isRegistered
               ? `Registered with ${teamRegister}`
               : isRegistrationOpen
-              ? selectedTeam
-                ? "Register Now"
-                : "Select a Team to Register"
-              : "Registrations Closed"}
+                ? selectedTeam
+                  ? 'Register Now'
+                  : 'Select a Team to Register'
+                : 'Registrations Closed'}
           </button>
         </div>
       </>

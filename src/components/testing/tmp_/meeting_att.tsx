@@ -1,12 +1,11 @@
-"use client";
-import React, { useState } from "react";
-import generateQr from "@/lib/actions/GenerateQr";
-import Image from "next/image";
+'use client';
+import Image from 'next/image';
+import React, { useState } from 'react';
 
+import generateQr from '@/lib/actions/GenerateQr';
 
-export default function TmpAttUi({meets}) {
-
-  const [qrCode, setqrCode] = useState("");
+export default function TmpAttUi({ meets }) {
+  const [qrCode, setqrCode] = useState('');
 
   return (
     <div>
@@ -30,9 +29,9 @@ export default function TmpAttUi({meets}) {
         <button
           className="rounded-md p-3 bg-green-500 w-fit active:opacity-70"
           onClick={async () => {
-            let e = document.getElementById("meetSelect");
+            const e = document.getElementById('meetSelect');
             const opt = e.options[e.value];
-            console.log("selected id -> ", opt.innerHTML);
+            console.log('selected id -> ', opt.innerHTML);
             const qr = await generateQr(opt.innerHTML, 2);
             console.log(qr);
             if (qr) setqrCode(qr);
@@ -52,4 +51,3 @@ export default function TmpAttUi({meets}) {
     </div>
   );
 }
-

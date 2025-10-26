@@ -1,66 +1,66 @@
-import React from "react";
 import {
+  Instagram,
+  Linkedin,
   Mail,
   MapPin,
-  Linkedin,
-  Instagram,
-  Youtube,
   Twitter,
-} from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+  Youtube,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 const Footer = () => {
   const quickLinks = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Team Anant", href: "/team_anant" },
-    { name: "Events", href: "/events" },
-    { name: "Blog", href: "/blog" },
-    { name: "Math Department", href: "/department" },
-    { name: "Developers", href: "/developers" },
-    { name: "Certificate-Verification", href: "/certificate-verification" },
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Team Anant', href: '/team_anant' },
+    { name: 'Events', href: '/events' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Math Department', href: '/department' },
+    { name: 'Developers', href: '/developers' },
+    { name: 'Certificate-Verification', href: '/certificate-verification' },
     {
-      name: "Old Website",
-      href: "https://mathematics39.wixsite.com/anantnitkkr",
+      name: 'Old Website',
+      href: 'https://mathematics39.wixsite.com/anantnitkkr',
     },
     {
-      name: "Repository",
-      href: "https://github.com/Anant-WebDev/anant_webapp/",
+      name: 'Repository',
+      href: 'https://github.com/Anant-WebDev/anant_webapp/',
     },
   ];
 
   const contactInfo = [
     {
       icon: <MapPin className="h-4 w-4" />,
-      text: "NIT Kurukshetra, Haryana - 136119",
+      text: 'NIT Kurukshetra, Haryana - 136119',
     },
     {
       icon: <Mail className="h-4 w-4" />,
-      text: "mathematics@nitkkr.ac.in",
+      text: 'mathematics@nitkkr.ac.in',
     },
   ];
 
   const socialLinks = [
     {
       icon: <Linkedin className="h-4 w-4" />,
-      href: "https://www.linkedin.com/company/anant-the-mathematical-society/",
-      label: "LinkedIn",
+      href: 'https://www.linkedin.com/company/anant-the-mathematical-society/',
+      label: 'LinkedIn',
     },
     {
       icon: <Instagram className="h-4 w-4" />,
-      href: "https://www.instagram.com/anant_nit_kkr/",
-      label: "Instagram",
+      href: 'https://www.instagram.com/anant_nit_kkr/',
+      label: 'Instagram',
     },
     {
       icon: <Twitter className="h-4 w-4" />,
-      href: "https://x.com/MathDept_nitkkr",
-      label: "Twitter",
+      href: 'https://x.com/MathDept_nitkkr',
+      label: 'Twitter',
     },
     {
       icon: <Youtube className="h-4 w-4" />,
-      href: "https://www.youtube.com/@anant_nitkkr",
-      label: "YouTube",
+      href: 'https://www.youtube.com/@anant_nitkkr',
+      label: 'YouTube',
     },
   ];
 

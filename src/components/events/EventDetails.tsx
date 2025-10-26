@@ -1,9 +1,11 @@
-import React from 'react';
-import Image from 'next/image';
-import { Calendar, Clock, MapPin } from 'lucide-react';
 import { Events, User } from '@prisma/client';
-import GradientButton from '../ui/GradientButton';
+import { Calendar, Clock, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+
 import { placeholder } from '@/lib/images/placeholder';
+
+import GradientButton from '../ui/GradientButton';
 
 interface EventDetailsProps {
   event: Events & {
@@ -16,7 +18,7 @@ interface EventDetailsProps {
 
 const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
   // console.log('Event:', event);
-  
+
   const isRegistrationOpen = new Date(event.registration_deadline) > new Date();
 
   return (
@@ -56,7 +58,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
                     {new Date(event.conductedOn).toLocaleTimeString('en-US', {
                       hour: '2-digit',
                       minute: '2-digit',
-                      hour12: true
+                      hour12: true,
                     })}
                   </p>
                 </div>
@@ -120,9 +122,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
 
           {/* Registration Button */}
           <div className="flex gap-4">
-            <GradientButton
-              disabled={!isRegistrationOpen}
-            >
+            <GradientButton disabled={!isRegistrationOpen}>
               {isRegistrationOpen ? 'Register Now' : 'Registration Closed'}
             </GradientButton>
           </div>

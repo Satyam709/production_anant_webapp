@@ -1,11 +1,13 @@
-import React from "react";
-import { ChevronRight } from "lucide-react";
-import GradientButton from "@/components/ui/GradientButton";
-import MathSymbols from "@/components/floating/MathSymbols";
-import TechStack from "@/components/floating/TechStack";
-import { ArrowBigDownDash } from "lucide-react";
-import Image from "next/image";
-import HeroLogo from "./HeroLogo";
+import { ArrowBigDownDash  } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+
+import MathSymbols from '@/components/floating/MathSymbols';
+import TechStack from '@/components/floating/TechStack';
+import GradientButton from '@/components/ui/GradientButton';
+
+import HeroLogo from './HeroLogo';
+
 const Hero = () => {
   return (
     <div
@@ -31,10 +33,10 @@ const Hero = () => {
             width={150}
             height={150}
             style={{
-              filter: "drop-shadow(0 0 20px rgba(0, 224, 255, 0.3))",
-              maxWidth: "100%", // Ensure it doesn't overflow
-              height: "auto", // Maintain aspect ratio
-              maxHeight: "20rem",
+              filter: 'drop-shadow(0 0 20px rgba(0, 224, 255, 0.3))',
+              maxWidth: '100%', // Ensure it doesn't overflow
+              height: 'auto', // Maintain aspect ratio
+              maxHeight: '20rem',
             }}
           />
           <HeroLogo></HeroLogo>

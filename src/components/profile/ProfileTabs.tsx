@@ -21,9 +21,10 @@ const ProfileTabs = ({ tabs, activeTab, onTabChange }: ProfileTabsProps) => {
             onClick={() => onTabChange(tab.id)}
             className={`
               py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors
-              ${activeTab === tab.id
-                ? 'border-primary-cyan text-primary-cyan'
-                : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+              ${
+                activeTab === tab.id
+                  ? 'border-primary-cyan text-primary-cyan'
+                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
               }
             `}
           >

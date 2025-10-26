@@ -1,22 +1,23 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { blog_cat } from "@prisma/client";
-import Link from "next/link";
-import Image from "next/image";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { EditorPreview } from "@/components/blogs/BlogPreview";
-import TiptapEditor from "@/components/blogs/editor/tiptap-editor";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { Card } from "@/components/ui/Card";
-import { ArrowLeft, Save, Eye, ImageIcon } from "lucide-react";
-import { uploadServerSideFile } from "@/lib/actions/uploadthing";
+import { blog_cat } from '@prisma/client';
+import { ArrowLeft, Eye, ImageIcon,Save } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useEffect,useState } from 'react';
+
+import { EditorPreview } from '@/components/blogs/BlogPreview';
+import TiptapEditor from '@/components/blogs/editor/tiptap-editor';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { uploadServerSideFile } from '@/lib/actions/uploadthing';
 
 interface BlogFormData {
   title: string;
@@ -33,25 +34,25 @@ interface UploadError extends Error {
 
 export default function CreateBlogPage() {
   const [formData, setFormData] = useState<BlogFormData>({
-    title: "",
-    shortDescription: "",
-    content: "",
+    title: '',
+    shortDescription: '',
+    content: '',
     contentJson: null,
     category: blog_cat.Mathematics,
   });
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("edit");
+  const [activeTab, setActiveTab] = useState('edit');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const router = useRouter();
   const { data: session, status } = useSession();
 
   // Redirect if not authenticated
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login?callbackUrl=/blogs/create");
+    if (status === 'unauthenticated') {
+      router.push('/login?callbackUrl=/blogs/create');
     }
   }, [status, router]);
 
@@ -78,29 +79,29 @@ export default function CreateBlogPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("Form data submitting");
+    console.log('Form data submitting');
 
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     if (!formData.title.trim()) {
-      setError("Title is required");
+      setError('Title is required');
       return;
     }
 
     if (!formData.shortDescription.trim()) {
-      setError("Short description is required");
+      setError('Short description is required');
       return;
     }
 
     if (!formData.content.trim()) {
-      setError("Content is required");
+      setError('Content is required');
       return;
     }
 
     if (!file && !formData.coverImage) {
-      setError("Cover image is required");
+      setError('Cover image is required');
       return;
     }
 
@@ -112,13 +113,13 @@ export default function CreateBlogPage() {
       if (file) {
         const res = await uploadServerSideFile(file);
         if (!res) {
-          throw new Error("Failed to upload cover image");
+          throw new Error('Failed to upload cover image');
         }
         coverImageURL = res.ufsUrl;
       }
 
       if (!session?.user?.id) {
-        throw new Error("User not authenticated");
+        throw new Error('User not authenticated');
       }
 
       // Format payload to match Zod schema
@@ -130,32 +131,32 @@ export default function CreateBlogPage() {
         description: formData.shortDescription,
       };
 
-      console.log("Submitting blog with payload:", payload);
+      console.log('Submitting blog with payload:', payload);
 
       console.log(
-        "Submitting blog with payload:",
+        'Submitting blog with payload:',
         JSON.stringify(payload, null, 2)
       );
 
-      const response = await fetch("/api/blogs/create", {
-        method: "POST",
+      const response = await fetch('/api/blogs/create', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "Failed to create blog");
+        throw new Error(data.error || 'Failed to create blog');
       }
 
-      setSuccess("Blog created successfully!");
-      router.push("/blogs"); // Redirect to blogs list
+      setSuccess('Blog created successfully!');
+      router.push('/blogs'); // Redirect to blogs list
     } catch (error: unknown) {
-      console.error("Error creating blog:", error);
+      console.error('Error creating blog:', error);
       const uploadError = error as UploadError;
-      setError(uploadError.message || "Failed to create blog");
+      setError(uploadError.message || 'Failed to create blog');
     } finally {
       setIsSubmitting(false);
     }
@@ -201,7 +202,7 @@ export default function CreateBlogPage() {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    category: e.target.value as BlogFormData["category"],
+                    category: e.target.value as BlogFormData['category'],
                   })
                 }
                 className="w-full px-4 py-2.5 bg-[#1a1a1a] border border-[#333] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-purple"
@@ -293,7 +294,7 @@ export default function CreateBlogPage() {
                 className="gap-2 bg-primary-purple hover:bg-primary-purple/90"
               >
                 <Save className="h-4 w-4" />
-                {isSubmitting ? "Publishing..." : "Publish Blog"}
+                {isSubmitting ? 'Publishing...' : 'Publish Blog'}
               </Button>
             </div>
 
@@ -317,7 +318,7 @@ export default function CreateBlogPage() {
                 ) : (
                   <div className="space-y-4">
                     <h1 className="text-3xl font-bold">
-                      {formData.title || "Untitled Blog"}
+                      {formData.title || 'Untitled Blog'}
                     </h1>
                     {formData.shortDescription && (
                       <p className="text-gray-400">

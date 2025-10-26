@@ -1,9 +1,10 @@
-import React from 'react';
-import { X, ShoppingCart,StarsIcon } from 'lucide-react';
-import GradientButton from '@/components/ui/GradientButton';
+import { ShoppingCart, StarsIcon,X } from 'lucide-react';
 import Image from 'next/image';
-import { Merchandise } from '@/types/shop';
+import React from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
 import { placeholder } from '@/lib/images/placeholder';
+import { Merchandise } from '@/types/shop';
 
 interface QuickViewModalProps {
   product: Merchandise;
@@ -22,7 +23,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}></div>
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+        onClick={onClose}
+      ></div>
       <div className="relative bg-gray-900/90 rounded-2xl w-full max-w-4xl mx-4 overflow-hidden border border-gray-800">
         <button
           onClick={onClose}
@@ -49,23 +53,39 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 <span className="px-3 py-1 bg-primary-cyan/10 text-primary-cyan text-sm rounded-full border border-primary-cyan/30">
                   {product.category}
                 </span>
-                <span className={`px-3 py-1 rounded-full text-sm border ${
-                  product.stock_quantity > 0 
-                    ? 'bg-green-500/10 text-green-500 border-green-500/30'
-                    : 'bg-red-500/10 text-red-500 border-red-500/30'
-                }`}>
-                  {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
+                <span
+                  className={`px-3 py-1 rounded-full text-sm border ${
+                    product.stock_quantity > 0
+                      ? 'bg-green-500/10 text-green-500 border-green-500/30'
+                      : 'bg-red-500/10 text-red-500 border-red-500/30'
+                  }`}
+                >
+                  {product.stock_quantity > 0
+                    ? `${product.stock_quantity} in stock`
+                    : 'Out of stock'}
                 </span>
               </div>
-              <h2 className="text-3xl font-bol d text-white mb-4">{product.name}</h2>
-              <p className="text-gray-400 leading-relaxed mb-6">{product.description}</p>
+              <h2 className="text-3xl font-bol d text-white mb-4">
+                {product.name}
+              </h2>
+              <p className="text-gray-400 leading-relaxed mb-6">
+                {product.description}
+              </p>
             </div>
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-primary-cyan">₹{product.price}</span>
-                <span className="text-sm text-gray-400">Free shipping on orders above ₹999</span>
+                <span className="text-3xl font-bold text-primary-cyan">
+                  ₹{product.price}
+                </span>
+                <span className="text-sm text-gray-400">
+                  Free shipping on orders above ₹999
+                </span>
               </div>
-              <GradientButton href="" onClick={onAddToCart} className="w-1/2 hover:border-green-400">
+              <GradientButton
+                href=""
+                onClick={onAddToCart}
+                className="w-1/2 hover:border-green-400"
+              >
                 <ShoppingCart className="h-5 w-15" />
                 Add to Cart
               </GradientButton>

@@ -1,17 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import prisma from "@/lib/PrismaClient/db";
-import { ItemCategorySchema } from "@/types/shop";
-import isAdmin from "@/lib/actions/Admin";
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+
+import isAdmin from '@/lib/actions/Admin';
+import prisma from '@/lib/PrismaClient/db';
+import { ItemCategorySchema } from '@/types/shop';
 
 const MerchEditSchema = z.object({
   item_id: z.number().nonnegative(),
-  name: z.string().min(1, "Name is required"),
-  price: z.number().nonnegative("Price must be non-negative"),
+  name: z.string().min(1, 'Name is required'),
+  price: z.number().nonnegative('Price must be non-negative'),
   description: z.string().optional(),
   category: ItemCategorySchema,
-  image_url: z.string().url("Invalid image URL").optional(),
-  stock_quantity: z.number().int().min(0, "Stock must be non-negative"),
+  image_url: z.string().url('Invalid image URL').optional(),
+  stock_quantity: z.number().int().min(0, 'Stock must be non-negative'),
 });
 
 export async function PUT(req: NextRequest) {
@@ -22,7 +23,7 @@ export async function PUT(req: NextRequest) {
     const checkAdmin = await isAdmin();
     if (!checkAdmin) {
       return NextResponse.json(
-        { error: "You are not authorized to perform this action" },
+        { error: 'You are not authorized to perform this action' },
         { status: 403 }
       );
     }
@@ -30,7 +31,7 @@ export async function PUT(req: NextRequest) {
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
       return NextResponse.json(
-        { error: errorMessages.join(", ") },
+        { error: errorMessages.join(', ') },
         { status: 400 }
       );
     }
@@ -49,15 +50,15 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Merchandise updated successfully",
+        message: 'Merchandise updated successfully',
         data: updatedMerch,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating merchandise:", error);
+    console.error('Error updating merchandise:', error);
     return NextResponse.json(
-      { error: "Failed to update merchandise" },
+      { error: 'Failed to update merchandise' },
       { status: 500 }
     );
   }

@@ -1,7 +1,7 @@
-"use client";
-import ProductsPage from "@/components/merch/admin/ProductsPage";
+'use client';
+import ProductsPage from '@/components/merch/admin/ProductsPage';
 
-function AdminProducts() {  
+function AdminProducts() {
   return <ProductsPage />;
 }
 

@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import Image from "next/image";
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect } from 'react';
 
 interface ImageViewerProps {
   images: Array<{ id: string; url: string }>;
@@ -19,17 +19,17 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
 }) => {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") onNext();
-      if (e.key === "ArrowLeft") onPrevious();
-      if (e.key === "Escape") onClose();
+      if (e.key === 'ArrowRight') onNext();
+      if (e.key === 'ArrowLeft') onPrevious();
+      if (e.key === 'Escape') onClose();
     };
 
-    window.addEventListener("keydown", handleKeyPress);
-    document.body.style.overflow = "hidden";
+    window.addEventListener('keydown', handleKeyPress);
+    document.body.style.overflow = 'hidden';
 
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-      document.body.style.overflow = "auto";
+      window.removeEventListener('keydown', handleKeyPress);
+      document.body.style.overflow = 'auto';
     };
   }, [onNext, onPrevious, onClose]);
 
@@ -71,7 +71,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           src={images[currentIndex].url}
           alt=""
           width={800}
-          height = {800}
+          height={800}
           className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg"
           onClick={(e) => e.stopPropagation()}
         />

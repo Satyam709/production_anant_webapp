@@ -1,29 +1,30 @@
-import React, { useState, useRef, type RefObject } from "react";
-import { Trophy, CalendarClock, Clock, Loader } from "lucide-react";
-import axios from "axios";
-import GradientButton from "@/components/ui/GradientButton";
-import type { Prisma } from "@prisma/client";
-import { uploadServerSideFile } from "@/lib/actions/uploadthing";
+import type { Prisma } from '@prisma/client';
+import axios from 'axios';
+import { CalendarClock, Clock, Loader,Trophy } from 'lucide-react';
+import React, { type RefObject,useRef, useState } from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
+import { uploadServerSideFile } from '@/lib/actions/uploadthing';
 
 // type for formData, omitting 'createdBy'
-type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, "createdBy">;
+type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, 'createdBy'>;
 
 const CompForm = () => {
   const [formData, setFormData] = useState<CompetitionFormInput>({
-    competitionName: "",
-    conductedBy: "",
+    competitionName: '',
+    conductedBy: '',
     conductedOn: new Date(),
     registration_deadline: new Date(),
-    venue: "",
-    prize: "",
-    description: "",
-    imageURL: "",
+    venue: '',
+    prize: '',
+    description: '',
+    imageURL: '',
     min_team_size: 1,
     max_team_size: 4,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const conductedOnRef = useRef<HTMLInputElement | null>(null);
   const deadlineRef = useRef<HTMLInputElement | null>(null);
@@ -31,7 +32,7 @@ const CompForm = () => {
 
   const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
-      if (typeof ref.current.showPicker === "function") {
+      if (typeof ref.current.showPicker === 'function') {
         ref.current.showPicker();
       } else {
         ref.current.focus();
@@ -42,22 +43,22 @@ const CompForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      setError("Please upload an image");
+      setError('Please upload an image');
       return;
     }
     setLoading(true);
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       const res = await uploadServerSideFile(file);
       if (!res) {
-        setError("Failed to upload image");
+        setError('Failed to upload image');
         return;
       }
-      console.log("Image uploaded:", res);
+      console.log('Image uploaded:', res);
 
-      const response = await axios.post("/api/competitions/create", {
+      const response = await axios.post('/api/competitions/create', {
         ...formData,
         imageURL: res.ufsUrl,
         conductedOn: new Date(formData.conductedOn).toISOString(),
@@ -69,23 +70,23 @@ const CompForm = () => {
         // creator_id will be handled by the backend from the session
       });
 
-      console.log("Competition created:", response.data);
-      setSuccess("Competition created successfully!");
+      console.log('Competition created:', response.data);
+      setSuccess('Competition created successfully!');
 
       setFormData({
-        competitionName: "",
-        conductedBy: "",
+        competitionName: '',
+        conductedBy: '',
         conductedOn: new Date(),
         registration_deadline: new Date(),
-        venue: "",
-        prize: "",
-        description: "",
-        imageURL: "",
+        venue: '',
+        prize: '',
+        description: '',
+        imageURL: '',
         min_team_size: 1,
         max_team_size: 4,
       });
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to create competition");
+      setError(err.response?.data?.message || 'Failed to create competition');
       console.error(err);
     } finally {
       setLoading(false);
@@ -96,7 +97,7 @@ const CompForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "min_team_size" || name === "max_team_size") {
+    if (name === 'min_team_size' || name === 'max_team_size') {
       setFormData((prev) => ({ ...prev, [name]: parseInt(value) })); // Parse number directly
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -178,7 +179,7 @@ const CompForm = () => {
                 value={
                   formData.conductedOn instanceof Date
                     ? formData.conductedOn.toISOString().slice(0, 16)
-                    : ""
+                    : ''
                 }
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -212,7 +213,7 @@ const CompForm = () => {
                 value={
                   formData.registration_deadline instanceof Date
                     ? formData.registration_deadline.toISOString().slice(0, 16)
-                    : ""
+                    : ''
                 }
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -254,7 +255,7 @@ const CompForm = () => {
             <input
               type="text"
               name="prize"
-              value={formData.prize ?? ""}
+              value={formData.prize ?? ''}
               onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                        focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -341,7 +342,7 @@ const CompForm = () => {
               ) : (
                 <Trophy className="h-5 w-5" />
               )}
-              <span>{loading ? "Creating..." : "Create Competition"}</span>
+              <span>{loading ? 'Creating...' : 'Create Competition'}</span>
             </div>
           </GradientButton>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const NewsLetterHeader = () => {
   return (
@@ -10,7 +10,7 @@ const NewsLetterHeader = () => {
         Stay Updated About Anant...
       </p>
     </div>
-  )
-}
+  );
+};
 
 export default NewsLetterHeader;

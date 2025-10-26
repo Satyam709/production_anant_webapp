@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect,useState } from 'react';
 
 interface PhotoSlideshowProps {
   photos: string[];
@@ -17,7 +17,7 @@ export default function PhotoSlideshow({
   width = 800,
   height = 450,
   showGalleryLink = true,
-  className = "",
+  className = '',
 }: PhotoSlideshowProps) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
@@ -58,8 +58,8 @@ export default function PhotoSlideshow({
               onClick={() => setCurrentPhotoIndex(index)}
               className={`w-2 h-2 rounded-full transition-all ${
                 index === currentPhotoIndex
-                  ? "bg-[#00E0FF] w-4"
-                  : "bg-white/50 hover:bg-white/80"
+                  ? 'bg-[#00E0FF] w-4'
+                  : 'bg-white/50 hover:bg-white/80'
               }`}
               aria-label={`Go to photo ${index + 1}`}
             />

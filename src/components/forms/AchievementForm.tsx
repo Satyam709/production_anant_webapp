@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Trophy, Loader, Plus, Trash2 } from "lucide-react";
-import GradientButton from "../ui/GradientButton";
-import Modal from "../ui/Modal";
-import StatusModal from "../ui/StatusModal";
-import { uploadServerSideFile } from "@/lib/actions/uploadthing";
-import Image from "next/image";
+import { Loader, Plus, Trash2,Trophy } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect,useState } from 'react';
+
+import { uploadServerSideFile } from '@/lib/actions/uploadthing';
+
+import GradientButton from '../ui/GradientButton';
+import Modal from '../ui/Modal';
+import StatusModal from '../ui/StatusModal';
 
 type Achievement = {
   id: number;
@@ -16,7 +18,7 @@ type Achievement = {
 };
 
 interface StatusMessage {
-  type: "success" | "error" | "confirm";
+  type: 'success' | 'error' | 'confirm';
   title: string;
   message: string;
 }
@@ -26,24 +28,28 @@ const AchievementForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Achievement | null>(null);
-  const [formData, setFormData] = useState<Omit<Achievement, "id" | "created_at">>({
-    department: "Mathematics",
-    achievement: "",
-    description: "",
-    imageURL: ""
+  const [formData, setFormData] = useState<
+    Omit<Achievement, 'id' | 'created_at'>
+  >({
+    department: 'Mathematics',
+    achievement: '',
+    description: '',
+    imageURL: '',
   });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [statusModal, setStatusModal] = useState<StatusMessage | null>(null);
-  const [deleteAchievementId, setDeleteAchievementId] = useState<number | null>(null);
+  const [deleteAchievementId, setDeleteAchievementId] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await fetch("/api/departments/achievements");
-        if (!res.ok) throw new Error("Failed to fetch achievements");
+        const res = await fetch('/api/departments/achievements');
+        if (!res.ok) throw new Error('Failed to fetch achievements');
         const resData = await res.json();
         const data = resData.achievements;
         setAchievements(
@@ -53,8 +59,8 @@ const AchievementForm = () => {
           }))
         );
       } catch (error) {
-        console.error("Error loading achievements:", error);
-        setError("Failed to load achievements");
+        console.error('Error loading achievements:', error);
+        setError('Failed to load achievements');
       }
     }
     loadData();
@@ -63,12 +69,12 @@ const AchievementForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       if (!file && !editingEvent?.imageURL) {
-        setError("Please upload an image");
+        setError('Please upload an image');
         return;
       }
 
@@ -77,7 +83,7 @@ const AchievementForm = () => {
       if (file) {
         const res = await uploadServerSideFile(file);
         if (!res) {
-          setError("Failed to upload image");
+          setError('Failed to upload image');
           return;
         }
         imageURL = res.ufsUrl;
@@ -85,9 +91,9 @@ const AchievementForm = () => {
         imageURL = editingEvent.imageURL;
       }
 
-      const res = await fetch("/api/departments/achievements", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/departments/achievements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           imageURL,
@@ -96,22 +102,22 @@ const AchievementForm = () => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to create achievement");
+        throw new Error(errorData.error || 'Failed to create achievement');
       }
 
-      setSuccess("Achievement created successfully!");
+      setSuccess('Achievement created successfully!');
       setRefresh(!refresh);
       setFile(null);
       setFormData({
-        department: "Mathematics",
-        achievement: "",
-        description: "",
-        imageURL: ""
+        department: 'Mathematics',
+        achievement: '',
+        description: '',
+        imageURL: '',
       });
       setIsModalOpen(false);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to create achievement";
+        error instanceof Error ? error.message : 'Failed to create achievement';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -125,37 +131,37 @@ const AchievementForm = () => {
       const res = await fetch(
         `/api/departments/achievements?id=${deleteAchievementId}`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         }
       );
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to delete achievement");
+        throw new Error(errorData.error || 'Failed to delete achievement');
       }
 
       setAchievements(
         achievements.filter((ach) => ach.id !== deleteAchievementId)
       );
       setStatusModal({
-        type: "success",
-        title: "Achievement Deleted",
-        message: "The achievement has been deleted successfully.",
+        type: 'success',
+        title: 'Achievement Deleted',
+        message: 'The achievement has been deleted successfully.',
       });
-      setSuccess("Deleted Achievement Successfully");
+      setSuccess('Deleted Achievement Successfully');
     } catch (error) {
-      console.error("Error deleting achievement:", error);
-      setError("Failed to delete achievement");
+      console.error('Error deleting achievement:', error);
+      setError('Failed to delete achievement');
     }
   };
 
   const confirmDelete = (id: number) => {
     setDeleteAchievementId(id);
     setStatusModal({
-      type: "confirm",
-      title: "Delete Achievement",
+      type: 'confirm',
+      title: 'Delete Achievement',
       message:
-        "Are you sure you want to delete this achievement? This action cannot be undone.",
+        'Are you sure you want to delete this achievement? This action cannot be undone.',
     });
   };
 
@@ -170,10 +176,10 @@ const AchievementForm = () => {
     setFile(null);
     setEditingEvent(null);
     setFormData({
-      department: "Mathematics",
-      achievement: "",
-      description: "",
-      imageURL: ""
+      department: 'Mathematics',
+      achievement: '',
+      description: '',
+      imageURL: '',
     });
     setIsModalOpen(true);
   };
@@ -337,10 +343,10 @@ const AchievementForm = () => {
       <StatusModal
         isOpen={statusModal !== null}
         onClose={() => setStatusModal(null)}
-        title={statusModal?.title || ""}
-        message={statusModal?.message || ""}
-        type={statusModal?.type || "success"}
-        onConfirm={statusModal?.type === "confirm" ? handleDelete : undefined}
+        title={statusModal?.title || ''}
+        message={statusModal?.message || ''}
+        type={statusModal?.type || 'success'}
+        onConfirm={statusModal?.type === 'confirm' ? handleDelete : undefined}
       />
     </div>
   );

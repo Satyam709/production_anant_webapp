@@ -1,4 +1,4 @@
-import { Internship } from "@prisma/client";
+import { Internship } from '@prisma/client';
 
 export interface InternshipWithUser extends Internship {
   user: {

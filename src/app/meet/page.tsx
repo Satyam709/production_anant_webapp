@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Navbar from "@/components/Navbar"
+import Footer from '@/components/Footer';
 import MeetHeader from '@/components/meet/MeetHeader';
 import MeetList from '@/components/meet/MeetList';
-import Footer from "@/components/Footer"
+import Navbar from '@/components/Navbar';
 
 export default function MeetPage() {
   return (
@@ -13,7 +13,7 @@ export default function MeetPage() {
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary-purple/10 rounded-full blur-[100px]" />
       </div>
 
-        <Navbar />
+      <Navbar />
 
       <main className="relative z-10 container mx-auto px-4 py-20">
         <MeetHeader />

@@ -1,21 +1,21 @@
-import { AlbumGallery } from "@/components/gallery/AlbumGalleryLinksVersion";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { GDriveGallery } from "@prisma/client";
+import { GDriveGallery } from '@prisma/client';
+
+import Footer from '@/components/Footer';
+import { AlbumGallery } from '@/components/gallery/AlbumGalleryLinksVersion';
+import Navbar from '@/components/Navbar';
 
 async function getGalleries() {
   let galleries: GDriveGallery[] = [];
   try {
     const res = await fetch(`${process.env.API_URL}/api/gdrivegallery`);
 
-    if (!res.ok) throw new Error("Failed to fetch galleries");
+    if (!res.ok) throw new Error('Failed to fetch galleries');
     const data = (await res.json()) as { galleries: GDriveGallery[] };
     galleries = data.galleries;
   } catch (error) {
-    console.log(error);    
+    console.log(error);
     galleries = [];
-  }
-  finally {
+  } finally {
     return { galleries };
   }
 }

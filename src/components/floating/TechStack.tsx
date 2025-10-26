@@ -1,9 +1,9 @@
-"use client";
-import React, { useState, useEffect } from 'react';
+'use client';
+import React, { useEffect,useState } from 'react';
 
 interface TechPosition {
   name: string;
-  color: string; 
+  color: string;
   top: string;
   left: string;
   delay: string;
@@ -12,21 +12,23 @@ interface TechPosition {
 const TechStack = () => {
   const technologies = [
     { name: 'Python', color: '#0046FF' }, // Blue
-    { name: 'R', color: '#00E0FF' },     // Cyan
+    { name: 'R', color: '#00E0FF' }, // Cyan
     { name: 'Julia', color: '#A259FF' }, // Purple
     { name: 'MATLAB', color: '#FF59E6' }, // Pink
     { name: 'LaTeX', color: '#0046FF' }, // Blue
     { name: 'Jupyter', color: '#00E0FF' }, // Cyan
   ];
 
-  const [techWithPositions, setTechWithPositions] = useState<TechPosition[]>([]);
+  const [techWithPositions, setTechWithPositions] = useState<TechPosition[]>(
+    []
+  );
 
   useEffect(() => {
     const positions = technologies.map((tech, index) => ({
       ...tech,
       top: `${Math.random() * 100}%`,
       left: `${Math.random() * 100}%`,
-      delay: `${index * 0.5}s`
+      delay: `${index * 0.5}s`,
     }));
     setTechWithPositions(positions);
   }, []);

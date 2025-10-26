@@ -1,6 +1,19 @@
-import React, { useState } from "react";
-import { User, Mail, Building, Book, Calendar, Linkedin, Github, Instagram, Pencil, Save, X } from "lucide-react";
-import { getUserInfoType, UpdateProfile } from "@/lib/actions/Profile";
+import {
+  Book,
+  Building,
+  Calendar,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  Pencil,
+  Save,
+  User,
+  X,
+} from 'lucide-react';
+import React, { useState } from 'react';
+
+import { getUserInfoType, UpdateProfile } from '@/lib/actions/Profile';
 
 const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
   const [isEditing, setIsEditing] = useState({
@@ -8,52 +21,60 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
     linkedIn: false,
     github: false,
     instagram: false,
-    batch: false
+    batch: false,
   });
 
   const [formData, setFormData] = useState({
-    name: userInfo?.name || "",
-    linkedIn: userInfo?.linkedIn || "",
-    github: userInfo?.github || "",
-    instagram: userInfo?.instagram || "",
-    batch: userInfo?.batch || ""
+    name: userInfo?.name || '',
+    linkedIn: userInfo?.linkedIn || '',
+    github: userInfo?.github || '',
+    instagram: userInfo?.instagram || '',
+    batch: userInfo?.batch || '',
   });
 
   const [optimisticData, setOptimisticData] = useState({
-    name: userInfo?.name || "",
-    linkedIn: userInfo?.linkedIn || "",
-    github: userInfo?.github || "",
-    instagram: userInfo?.instagram || "",
-    batch: userInfo?.batch || ""
+    name: userInfo?.name || '',
+    linkedIn: userInfo?.linkedIn || '',
+    github: userInfo?.github || '',
+    instagram: userInfo?.instagram || '',
+    batch: userInfo?.batch || '',
   });
 
-  const handleSave = async (field: 'name' | 'linkedIn' | 'github' | 'instagram' | 'batch') => {
+  const handleSave = async (
+    field: 'name' | 'linkedIn' | 'github' | 'instagram' | 'batch'
+  ) => {
     try {
       const result = await UpdateProfile(
-        field === 'name' ? formData.name : userInfo?.name ?? undefined,
+        field === 'name' ? formData.name : (userInfo?.name ?? undefined),
         userInfo?.branch,
-        field === 'batch' ? formData.batch : userInfo?.batch ?? undefined,
+        field === 'batch' ? formData.batch : (userInfo?.batch ?? undefined),
         userInfo?.club_dept,
-        field === 'linkedIn' ? formData.linkedIn : userInfo?.linkedIn ?? undefined,
-        field === 'github' ? formData.github : userInfo?.github ?? undefined,
-        field === 'instagram' ? formData.instagram : userInfo?.instagram ?? undefined
+        field === 'linkedIn'
+          ? formData.linkedIn
+          : (userInfo?.linkedIn ?? undefined),
+        field === 'github' ? formData.github : (userInfo?.github ?? undefined),
+        field === 'instagram'
+          ? formData.instagram
+          : (userInfo?.instagram ?? undefined)
       );
       if (result) {
         // Update optimistic data on success
-        setOptimisticData(prev => ({
+        setOptimisticData((prev) => ({
           ...prev,
-          [field]: formData[field]
+          [field]: formData[field],
         }));
-        setIsEditing(prev => ({ ...prev, [field]: false }));
+        setIsEditing((prev) => ({ ...prev, [field]: false }));
       }
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error('Error updating profile:', error);
     }
   };
 
   // Generate graduation year options
   const currentYear = new Date().getFullYear();
-  const graduationYears = Array.from({ length: 5 }, (_, i) => (currentYear + i).toString());
+  const graduationYears = Array.from({ length: 5 }, (_, i) =>
+    (currentYear + i).toString()
+  );
 
   if (!userInfo) return <div>No user information available</div>;
 
@@ -66,11 +87,13 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <div className="relative flex items-center gap-2">
             <User className="text-gray-400" />
             {isEditing.name ? (
-                <div className="flex items-center gap-2 w-full">
+              <div className="flex items-center gap-2 w-full">
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
@@ -80,7 +103,9 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                   <Save className="w-4 h-4 text-green-400" />
                 </button>
                 <button
-                  onClick={() => setIsEditing(prev => ({ ...prev, name: false }))}
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, name: false }))
+                  }
                   className="p-1 hover:bg-red-700/50 rounded-full transition-colors"
                 >
                   <X className="w-4 h-4 text-red-400" />
@@ -89,8 +114,10 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
             ) : (
               <>
                 <span className="text-white">{optimisticData.name}</span>
-                <button 
-                  onClick={() => setIsEditing(prev => ({ ...prev, name: !prev.name }))}
+                <button
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, name: !prev.name }))
+                  }
                   className="p-1 hover:bg-gray-700/50 rounded-full transition-colors"
                 >
                   <Pencil className="w-4 h-4 text-gray-400" />
@@ -105,7 +132,9 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <label className="block text-sm text-gray-300 mb-1">Email</label>
           <div className="relative flex items-center gap-2">
             <Mail className="text-gray-400" />
-            <span className="text-white">{userInfo.roll_number}@nitkkr.ac.in</span>
+            <span className="text-white">
+              {userInfo.roll_number}@nitkkr.ac.in
+            </span>
           </div>
         </div>
 
@@ -114,7 +143,7 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
           <label className="block text-sm text-gray-300 mb-1">Team</label>
           <div className="relative flex items-center gap-2">
             <Building className="text-gray-400" />
-            <span className="text-white">{userInfo.club_dept?.join(", ")}</span>
+            <span className="text-white">{userInfo.club_dept?.join(', ')}</span>
           </div>
         </div>
 
@@ -129,18 +158,24 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
 
         {/* Graduation Year */}
         <div>
-          <label className="block text-sm text-gray-300 mb-1">Graduation Year</label>
+          <label className="block text-sm text-gray-300 mb-1">
+            Graduation Year
+          </label>
           <div className="relative flex items-center gap-2">
             <Calendar className="text-gray-400" />
             {isEditing.batch ? (
               <div className="flex items-center gap-2 w-full">
                 <select
                   value={formData.batch}
-                  onChange={(e) => setFormData(prev => ({ ...prev, batch: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, batch: e.target.value }))
+                  }
                   className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 >
-                  {graduationYears.map(year => (
-                    <option key={year} value={year}>{year}</option>
+                  {graduationYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
                   ))}
                 </select>
                 <button
@@ -150,7 +185,9 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                   <Save className="w-4 h-4 text-green-400" />
                 </button>
                 <button
-                  onClick={() => setIsEditing(prev => ({ ...prev, batch: false }))}
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, batch: false }))
+                  }
                   className="p-1 hover:bg-red-700/50 rounded-full transition-colors"
                 >
                   <X className="w-4 h-4 text-red-400" />
@@ -159,8 +196,10 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
             ) : (
               <>
                 <span className="text-white">{optimisticData.batch}</span>
-                <button 
-                  onClick={() => setIsEditing(prev => ({ ...prev, batch: !prev.batch }))}
+                <button
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, batch: !prev.batch }))
+                  }
                   className="p-1 hover:bg-gray-700/50 rounded-full transition-colors"
                 >
                   <Pencil className="w-4 h-4 text-gray-400" />
@@ -180,7 +219,12 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                 <input
                   type="text"
                   value={formData.linkedIn}
-                  onChange={(e) => setFormData(prev => ({ ...prev, linkedIn: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      linkedIn: e.target.value,
+                    }))
+                  }
                   className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
@@ -190,7 +234,9 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                   <Save className="w-4 h-4 text-green-400" />
                 </button>
                 <button
-                  onClick={() => setIsEditing(prev => ({ ...prev, linkedIn: false }))}
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, linkedIn: false }))
+                  }
                   className="p-1 hover:bg-red-700/50 rounded-full transition-colors"
                 >
                   <X className="w-4 h-4 text-red-400" />
@@ -198,9 +244,16 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
               </div>
             ) : (
               <>
-                <span className="text-white">{optimisticData.linkedIn || ''}</span>
-                <button 
-                  onClick={() => setIsEditing(prev => ({ ...prev, linkedIn: !prev.linkedIn }))}
+                <span className="text-white">
+                  {optimisticData.linkedIn || ''}
+                </span>
+                <button
+                  onClick={() =>
+                    setIsEditing((prev) => ({
+                      ...prev,
+                      linkedIn: !prev.linkedIn,
+                    }))
+                  }
                   className="p-1 hover:bg-gray-700/50 rounded-full transition-colors"
                 >
                   <Pencil className="w-4 h-4 text-gray-400" />
@@ -220,7 +273,9 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                 <input
                   type="text"
                   value={formData.github}
-                  onChange={(e) => setFormData(prev => ({ ...prev, github: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, github: e.target.value }))
+                  }
                   className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
@@ -230,7 +285,9 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                   <Save className="w-4 h-4 text-green-400" />
                 </button>
                 <button
-                  onClick={() => setIsEditing(prev => ({ ...prev, github: false }))}
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, github: false }))
+                  }
                   className="p-1 hover:bg-red-700/50 rounded-full transition-colors"
                 >
                   <X className="w-4 h-4 text-red-400" />
@@ -238,9 +295,13 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
               </div>
             ) : (
               <>
-                <span className="text-white">{optimisticData.github || ''}</span>
-                <button 
-                  onClick={() => setIsEditing(prev => ({ ...prev, github: !prev.github }))}
+                <span className="text-white">
+                  {optimisticData.github || ''}
+                </span>
+                <button
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, github: !prev.github }))
+                  }
                   className="p-1 hover:bg-gray-700/50 rounded-full transition-colors"
                 >
                   <Pencil className="w-4 h-4 text-gray-400" />
@@ -260,7 +321,12 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                 <input
                   type="text"
                   value={formData.instagram}
-                  onChange={(e) => setFormData(prev => ({ ...prev, instagram: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      instagram: e.target.value,
+                    }))
+                  }
                   className="bg-gray-800 text-white px-2 py-1 rounded flex-1 w-full text-sm"
                 />
                 <button
@@ -270,7 +336,9 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
                   <Save className="w-4 h-4 text-green-400" />
                 </button>
                 <button
-                  onClick={() => setIsEditing(prev => ({ ...prev, instagram: false }))}
+                  onClick={() =>
+                    setIsEditing((prev) => ({ ...prev, instagram: false }))
+                  }
                   className="p-1 hover:bg-red-700/50 rounded-full transition-colors"
                 >
                   <X className="w-4 h-4 text-red-400" />
@@ -278,9 +346,16 @@ const ProfileInfo = ({ userInfo }: { userInfo: getUserInfoType }) => {
               </div>
             ) : (
               <>
-                <span className="text-white">{optimisticData.instagram || ''}</span>
-                <button 
-                  onClick={() => setIsEditing(prev => ({ ...prev, instagram: !prev.instagram }))}
+                <span className="text-white">
+                  {optimisticData.instagram || ''}
+                </span>
+                <button
+                  onClick={() =>
+                    setIsEditing((prev) => ({
+                      ...prev,
+                      instagram: !prev.instagram,
+                    }))
+                  }
                   className="p-1 hover:bg-gray-700/50 rounded-full transition-colors"
                 >
                   <Pencil className="w-4 h-4 text-gray-400" />

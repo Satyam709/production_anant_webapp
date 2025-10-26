@@ -1,8 +1,7 @@
-"use client"
-import React from "react";
-import { X, LogIn } from "lucide-react";
-
-import { useRouter } from "next/navigation";
+'use client';
+import { LogIn,X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 interface SignInDialogProps {
   isOpen: boolean;
@@ -15,7 +14,7 @@ const SignInDialog: React.FC<SignInDialogProps> = ({ isOpen, onClose }) => {
 
   const handleSignIn = () => {
     // navigate to /signin
-    router.push("/login");
+    router.push('/login');
     onClose();
   };
 
@@ -56,9 +55,9 @@ const SignInDialog: React.FC<SignInDialogProps> = ({ isOpen, onClose }) => {
           </button>
 
           <p className="mt-4 text-sm text-center text-gray-500">
-            Don't have an account?{" "}
+            Don't have an account?{' '}
             <button
-              onClick={() => router.push("/signup")}
+              onClick={() => router.push('/signup')}
               className="text-primary-cyan hover:text-primary-purple transition-colors"
             >
               Sign up

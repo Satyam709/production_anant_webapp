@@ -1,15 +1,15 @@
-"use server";
+'use server';
 
-import prisma from "@/lib/PrismaClient/db";
-import { getSession } from "@/lib/actions/Sessions";
-import isAdmin from "@/lib/actions/Admin";
+import isAdmin from '@/lib/actions/Admin';
+import { getSession } from '@/lib/actions/Sessions';
+import prisma from '@/lib/PrismaClient/db';
 
 export async function deleteEvent(id: string) {
   try {
     const session = await getSession();
 
     if (!session?.user || !(await isAdmin())) {
-      return { error: "Unauthorized", status: 403 };
+      return { error: 'Unauthorized', status: 403 };
     }
 
     // Check if competition exists
@@ -18,7 +18,7 @@ export async function deleteEvent(id: string) {
     });
 
     if (!events) {
-      return { error: "Competition not found", status: 404 };
+      return { error: 'Competition not found', status: 404 };
     }
 
     // Delete the competition
@@ -26,10 +26,10 @@ export async function deleteEvent(id: string) {
       where: { event_id: id },
     });
 
-    return { message: "Competition deleted successfully", status: 200 };
+    return { message: 'Competition deleted successfully', status: 200 };
   } catch (error) {
     console.error(error);
-    return { error: "Internal Server Error", status: 500 };
+    return { error: 'Internal Server Error', status: 500 };
   }
 }
 

@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { ChevronDown, Archive, Calendar } from "react-feather";
-import { TeamMember } from "@/lib/actions/AnantTeam";
-import { position_options } from "@prisma/client";
-import OfficeBearers from "@/components/team/OfficeBearers";
-import Members from "@/components/team/Members";
+import { position_options } from '@prisma/client';
+import React, { useState } from 'react';
+import { Archive, Calendar,ChevronDown } from 'react-feather';
+
+import Members from '@/components/team/Members';
+import OfficeBearers from '@/components/team/OfficeBearers';
+import { TeamMember } from '@/lib/actions/AnantTeam';
 
 interface TeamArchiveProps {
   allTeamData: Record<string, TeamMember[]>;
@@ -26,7 +27,7 @@ const TeamArchive: React.FC<TeamArchiveProps> = ({
   // Sort years in descending order
   availableYears.sort((a, b) => (a > b ? -1 : 1));
   // Determine active year (most recent)
-  const activeYear = availableYears[0] || "";
+  const activeYear = availableYears[0] || '';
 
   // If not showing current year, filter it out from available years
   availableYears =
@@ -34,7 +35,7 @@ const TeamArchive: React.FC<TeamArchiveProps> = ({
       ? availableYears.filter((year) => year !== activeYear)
       : availableYears;
   const [selectedYear, setSelectedYear] = useState<string>(
-    availableYears[0] || ""
+    availableYears[0] || ''
   );
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
@@ -74,9 +75,9 @@ const TeamArchive: React.FC<TeamArchiveProps> = ({
           className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-blue/20 to-primary-purple/20 border border-primary-blue/30 hover:border-primary-blue/50 transition-all duration-300 text-white hover:bg-primary-blue/30"
         >
           <Calendar size={20} />
-          <span>{isExpanded ? "Hide" : "View"} Archive</span>
+          <span>{isExpanded ? 'Hide' : 'View'} Archive</span>
           <ChevronDown
-            className={`transform transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+            className={`transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
             size={20}
           />
         </button>
@@ -85,7 +86,7 @@ const TeamArchive: React.FC<TeamArchiveProps> = ({
       {/* Archive Content - Expandable */}
       <div
         className={`transition-all duration-500 ease-in-out overflow-hidden ${
-          isExpanded ? "max-h-none opacity-100" : "max-h-0 opacity-0"
+          isExpanded ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         {/* Year Selector */}
@@ -98,8 +99,8 @@ const TeamArchive: React.FC<TeamArchiveProps> = ({
                   onClick={() => setSelectedYear(year)}
                   className={`px-4 py-2 rounded-lg transition-all duration-300 font-medium ${
                     selectedYear === year
-                      ? "bg-gradient-to-r from-primary-blue to-primary-cyan text-white shadow-lg"
-                      : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                      ? 'bg-gradient-to-r from-primary-blue to-primary-cyan text-white shadow-lg'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
                   }`}
                 >
                   {year}

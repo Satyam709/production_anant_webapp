@@ -1,6 +1,6 @@
-import React from 'react';
+import {Trophy, Users } from 'lucide-react';
 import Link from 'next/link';
-import { Trophy, Users, Bell } from 'lucide-react';
+import React from 'react';
 
 const CompHeader = () => {
   return (
@@ -9,13 +9,19 @@ const CompHeader = () => {
       <p className="text-gray-400 mb-8">
         Form teams, participate in competitions, and showcase your skills !
       </p>
-      
+
       <div className="flex justify-center gap-4">
-        <Link href="/compete" className="flex items-center gap-2 px-6 py-2 rounded-lg bg-[#0A0A0A]/80 backdrop-blur-sm border border-gray-800">
+        <Link
+          href="/compete"
+          className="flex items-center gap-2 px-6 py-2 rounded-lg bg-[#0A0A0A]/80 backdrop-blur-sm border border-gray-800"
+        >
           <Trophy size={18} className="text-primary-blue" />
           <span>Active Competitions</span>
         </Link>
-        <Link href="/dashboard" className="flex items-center gap-2 px-6 py-2 rounded-lg bg-[#0A0A0A]/80 backdrop-blur-sm border border-gray-800">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 px-6 py-2 rounded-lg bg-[#0A0A0A]/80 backdrop-blur-sm border border-gray-800"
+        >
           <Users size={18} className="text-primary-blue" />
           <span>My Teams</span>
         </Link>

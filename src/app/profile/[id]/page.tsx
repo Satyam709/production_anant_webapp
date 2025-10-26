@@ -1,11 +1,12 @@
-import React from "react";
-import Navbar from "@/components/Navbar";
-import ViewProfileLayout from "@/components/profile/ViewProfileLayout";
-import Footer from "@/components/Footer";
-import { getUserInfoById } from "@/lib/actions/Profile";
+import React from 'react';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import ViewProfileLayout from '@/components/profile/ViewProfileLayout';
+import { getUserInfoById } from '@/lib/actions/Profile';
 
 const ViewProfile = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = await params;  
+  const { id } = await params;
   const user = await getUserInfoById(id);
 
   return (
@@ -22,8 +23,12 @@ const ViewProfile = async ({ params }: { params: Promise<{ id: string }> }) => {
           <ViewProfileLayout userInfo={user} />
         ) : (
           <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
-            <h1 className="text-3xl font-semibold text-white">User Not Found</h1>
-            <p className="text-lg mt-2 text-gray-500">The profile you are looking for does not exist.</p>
+            <h1 className="text-3xl font-semibold text-white">
+              User Not Found
+            </h1>
+            <p className="text-lg mt-2 text-gray-500">
+              The profile you are looking for does not exist.
+            </p>
           </div>
         )}
       </main>

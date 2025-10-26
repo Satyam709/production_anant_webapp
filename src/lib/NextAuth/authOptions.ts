@@ -1,17 +1,18 @@
-import prisma from "@/lib/PrismaClient/db";
-import { AuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcryptjs from "bcryptjs";
-import { rollNumberSchema } from "@/types/common";
+import bcryptjs from 'bcryptjs';
+import { AuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+
+import prisma from '@/lib/PrismaClient/db';
+import { rollNumberSchema } from '@/types/common';
 
 // configurations for the NextAuth
 const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: 'credentials',
       credentials: {
-        rollNo: { label: "Roll No", type: "text", placeholder: "123108031" },
-        password: { label: "Password", type: "password" },
+        rollNo: { label: 'Roll No', type: 'text', placeholder: '123108031' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         let rollNo = credentials?.rollNo?.trim();
@@ -26,7 +27,7 @@ const authOptions: AuthOptions = {
         rollNo = result.data;
 
         if (!rollNo || !password) {
-          throw new Error("RollNo and Password is required");
+          throw new Error('RollNo and Password is required');
         }
 
         let gotUser;
@@ -35,12 +36,12 @@ const authOptions: AuthOptions = {
             where: { roll_number: Number(rollNo) },
           });
         } catch (error) {
-          console.log("error while sigin : ", error);
-          throw new Error("Something went wrong");
+          console.log('error while sigin : ', error);
+          throw new Error('Something went wrong');
         }
 
         if (!gotUser) {
-          throw new Error("User not found please register");
+          throw new Error('User not found please register');
         }
 
         const validPassword = await bcryptjs.compare(
@@ -49,7 +50,7 @@ const authOptions: AuthOptions = {
         );
 
         if (!validPassword) {
-          throw new Error("Invalid Password");
+          throw new Error('Invalid Password');
         }
 
         // Return a user object in the expected format
@@ -68,7 +69,7 @@ const authOptions: AuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
   callbacks: {
     // async redirect({ url }) {
@@ -86,7 +87,7 @@ const authOptions: AuthOptions = {
       return session;
     },
     async jwt({ token, user, trigger, session }) {
-      if (trigger === "update" && session) {
+      if (trigger === 'update' && session) {
         // Merge the updates with existing token data
         token.user = {
           ...token.user,

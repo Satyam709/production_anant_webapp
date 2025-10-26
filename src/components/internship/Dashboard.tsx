@@ -1,13 +1,14 @@
-"use client";
+'use client';
 
-import InternshipForm from "./InternshipForm";
-import InternshipDashboard from "./InternshipDashboard";
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+
+import InternshipDashboard from './InternshipDashboard';
+import InternshipForm from './InternshipForm';
 
 const Dashboard = () => {
   const session = useSession();
   const user = session.data?.user;
-  const isAdmin = user?.info?.position != "Member";
+  const isAdmin = user?.info?.position != 'Member';
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Internship Form */}

@@ -1,27 +1,28 @@
-import React, { useState, useRef, type RefObject } from "react";
-import { Calendar, CalendarClock, Clock, Loader } from "lucide-react";
-import axios from "axios";
-import GradientButton from "@/components/ui/GradientButton";
-import type { Prisma } from "@prisma/client";
-import { uploadServerSideFile } from "@/lib/actions/uploadthing";
+import type { Prisma } from '@prisma/client';
+import axios from 'axios';
+import { Calendar, CalendarClock, Clock, Loader } from 'lucide-react';
+import React, { type RefObject,useRef, useState } from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
+import { uploadServerSideFile } from '@/lib/actions/uploadthing';
 
 //type for formData that makes createdBy optional for the form
-type EventFormInput = Omit<Prisma.EventsCreateInput, "createdBy">;
+type EventFormInput = Omit<Prisma.EventsCreateInput, 'createdBy'>;
 
 const EventForm = () => {
   const [formData, setFormData] = useState<EventFormInput>({
-    eventName: "",
-    conductedBy: "",
+    eventName: '',
+    conductedBy: '',
     conductedOn: new Date(),
     registration_deadline: new Date(),
-    venue: "",
-    prize: "",
-    description: "",
-    imageURL: "",
+    venue: '',
+    prize: '',
+    description: '',
+    imageURL: '',
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
   const conductedOnRef = useRef<HTMLInputElement | null>(null);
@@ -29,7 +30,7 @@ const EventForm = () => {
 
   const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
-      if (typeof ref.current.showPicker === "function") {
+      if (typeof ref.current.showPicker === 'function') {
         ref.current.showPicker();
       } else {
         ref.current.focus();
@@ -40,22 +41,22 @@ const EventForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      setError("Please upload an image");
+      setError('Please upload an image');
       return;
     }
     setLoading(true);
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       const res = await uploadServerSideFile(file);
       if (!res) {
-        setError("Failed to upload image");
+        setError('Failed to upload image');
         return;
       }
-      console.log("Image uploaded:", res);
+      console.log('Image uploaded:', res);
 
-      const response = await axios.post("/api/events/create", {
+      const response = await axios.post('/api/events/create', {
         ...formData,
         imageURL: res.ufsUrl,
         conductedOn: new Date(formData.conductedOn).toISOString(),
@@ -64,25 +65,25 @@ const EventForm = () => {
         ).toISOString(),
       });
 
-      console.log("Event created:", response.data);
-      setSuccess("Event created successfully!");
+      console.log('Event created:', response.data);
+      setSuccess('Event created successfully!');
 
       // Reset form
       setFormData({
-        eventName: "",
-        conductedBy: "",
+        eventName: '',
+        conductedBy: '',
         conductedOn: new Date(),
         registration_deadline: new Date(),
-        venue: "",
-        prize: "",
-        description: "",
-        imageURL: "",
+        venue: '',
+        prize: '',
+        description: '',
+        imageURL: '',
       });
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Failed to create event");
+        setError(err.response?.data?.message || 'Failed to create event');
       } else {
-        setError("Failed to create event");
+        setError('Failed to create event');
       }
       console.error(err);
     } finally {
@@ -171,8 +172,13 @@ const EventForm = () => {
                 name="conductedOn"
                 value={
                   formData.conductedOn instanceof Date
-                    ? new Date(formData.conductedOn.getTime() - formData.conductedOn.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-                    : ""
+                    ? new Date(
+                        formData.conductedOn.getTime() -
+                          formData.conductedOn.getTimezoneOffset() * 60000
+                      )
+                        .toISOString()
+                        .slice(0, 16)
+                    : ''
                 }
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -205,8 +211,14 @@ const EventForm = () => {
                 name="registration_deadline"
                 value={
                   formData.registration_deadline instanceof Date
-                    ? new Date(formData.registration_deadline.getTime() - formData.registration_deadline.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-                    : ""
+                    ? new Date(
+                        formData.registration_deadline.getTime() -
+                          formData.registration_deadline.getTimezoneOffset() *
+                            60000
+                      )
+                        .toISOString()
+                        .slice(0, 16)
+                    : ''
                 }
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -248,7 +260,7 @@ const EventForm = () => {
             <input
               type="text"
               name="prize"
-              value={formData.prize ?? ""}
+              value={formData.prize ?? ''}
               onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                        focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -299,7 +311,7 @@ const EventForm = () => {
               ) : (
                 <Calendar className="h-5 w-5" />
               )}
-              <span>{loading ? "Creating..." : "Create Event"}</span>
+              <span>{loading ? 'Creating...' : 'Create Event'}</span>
             </div>
           </GradientButton>
         </div>

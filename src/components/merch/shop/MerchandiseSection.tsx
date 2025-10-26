@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Filter, SortDesc } from "lucide-react";
-import ProductCard from "@/components/merch/shop/ProductCard";
-import QuickViewModal from "@/components/merch/shop/QuickViewModal";
-import ProductSkeleton from "@/components/merch/shop/ProductSkeleton";
-import SignInDialog from "@/components/merch/shop/SignInDialog";
-import { ItemCategorySchema, Merchandise } from "@/types/shop";
+import { Filter, SortDesc } from 'lucide-react';
+import React, { useState } from 'react';
+
+import ProductCard from '@/components/merch/shop/ProductCard';
+import ProductSkeleton from '@/components/merch/shop/ProductSkeleton';
+import QuickViewModal from '@/components/merch/shop/QuickViewModal';
+import SignInDialog from '@/components/merch/shop/SignInDialog';
+import { ItemCategorySchema, Merchandise } from '@/types/shop';
 
 interface MerchandiseSectionProps {
   onAddToCart: (productId: number) => void;
@@ -24,23 +25,22 @@ const MerchandiseSection: React.FC<MerchandiseSectionProps> = ({
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState('All');
   const [showSignInDialog, setShowSignInDialog] = useState(false);
 
-  const categories = ["All", ...ItemCategorySchema.options];
+  const categories = ['All', ...ItemCategorySchema.options];
 
   const filteredProducts =
-    activeCategory === "All"
+    activeCategory === 'All'
       ? products
       : products.filter((product) => product.category === activeCategory);
 
   const featuredProducts = products.filter(
-    (product) => "featured" in product && product.featured
+    (product) => 'featured' in product && product.featured
   );
-  
-  
+
   const handleAddToCart = (productId: number) => {
-    // Cart will just be localusage for now 
+    // Cart will just be localusage for now
     onAddToCart(productId);
   };
 
@@ -105,10 +105,10 @@ const MerchandiseSection: React.FC<MerchandiseSectionProps> = ({
                   className="w-full px-4 py-2 bg-gray-900/90 backdrop-blur-sm rounded-lg text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-cyan appearance-none"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                    backgroundPosition: "right 0.5rem center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "1.5em 1.5em",
-                    paddingRight: "2.5rem",
+                    backgroundPosition: 'right 0.5rem center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '2.5rem',
                   }}
                 >
                   {categories.map((category) => (
@@ -132,8 +132,8 @@ const MerchandiseSection: React.FC<MerchandiseSectionProps> = ({
                       onClick={() => setActiveCategory(category)}
                       className={`px-3 sm:px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-300 ${
                         activeCategory === category
-                          ? "bg-primary-purple/20 text-white border border-primary-purple/30"
-                          : "text-gray-400 hover:text-white hover:bg-gray-700/50"
+                          ? 'bg-primary-purple/20 text-white border border-primary-purple/30'
+                          : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
                       }`}
                     >
                       {category}

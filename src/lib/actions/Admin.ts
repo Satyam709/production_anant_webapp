@@ -1,6 +1,6 @@
-"use server";
-import { getSession } from "@/lib/actions/Sessions";
-import prisma from "@/lib/PrismaClient/db";
+'use server';
+import { getSession } from '@/lib/actions/Sessions';
+import prisma from '@/lib/PrismaClient/db';
 
 export default async function isAdmin() {
   const session = await getSession();
@@ -19,18 +19,18 @@ export default async function isAdmin() {
     });
 
     // Verify user position
-    if (!user?.position || user.position === "Member") {
+    if (!user?.position || user.position === 'Member') {
       return false;
     }
   } catch (err) {
-    console.log("cannot get the position of user ", err);
+    console.log('cannot get the position of user ', err);
     return false;
   }
-  
+
   return true;
 }
 
-export async function isSuperAdmin(userId: string) {
+export async function isSuperAdmin() {
   const session = await getSession();
 
   // Check if user is authenticated
@@ -51,16 +51,21 @@ export async function isSuperAdmin(userId: string) {
       return false;
     }
 
-    if (user.position === "President" || user.position === "VicePresident" || user.position === "Secretary" || user.position === "Website_Developer" || user.position === "Coordinator") {
+    if (
+      user.position === 'President' ||
+      user.position === 'VicePresident' ||
+      user.position === 'Secretary' ||
+      user.position === 'Website_Developer' ||
+      user.position === 'Coordinator'
+    ) {
       return true;
     }
 
     return false;
-
   } catch (err) {
-    console.log("cannot get the position of user ", err);
+    console.log('cannot get the position of user ', err);
     return false;
   }
-  
+
   return true;
 }

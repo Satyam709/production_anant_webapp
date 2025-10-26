@@ -1,35 +1,36 @@
-"use client";
+'use client';
 
-import { Editor } from "@tiptap/react";
+import { Editor } from '@tiptap/react';
 import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   Bold,
-  Italic,
-  Underline,
-  Strikethrough,
   Code,
   Heading1,
   Heading2,
   Heading3,
+  Image,
+  Italic,
+  Link,
   List,
   ListOrdered,
   Quote,
-  Undo,
   Redo,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  Superscript,
+  Strikethrough,
   Subscript,
+  Superscript,
   Table,
-  Image,
-  Link,
-} from "lucide-react";
-import { Toggle } from "@/components/ui/Toggle";
-import { Button } from "@/components/ui/Button";
-import { MathModal } from "@/components/blogs/editor/math-modal";
-import { Separator } from "@/components/ui/Separator";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
+  Underline,
+  Undo,
+} from 'lucide-react';
+
+import { MathModal } from '@/components/blogs/editor/math-modal';
+import { Button } from '@/components/ui/Button';
+import { Separator } from '@/components/ui/Separator';
+import { Toggle } from '@/components/ui/Toggle';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { cn } from '@/lib/utils';
 
 interface EditorMenuBarProps {
   editor: Editor | null;
@@ -44,7 +45,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
   return (
     <div
       className={cn(
-        "flex flex-wrap gap-1 p-1 rounded-md border border-[#333] mb-2 bg-[#1a1a1a] sticky top-0 z-10",
+        'flex flex-wrap gap-1 p-1 rounded-md border border-[#333] mb-2 bg-[#1a1a1a] sticky top-0 z-10',
         className
       )}
     >
@@ -52,7 +53,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("bold")}
+          pressed={editor.isActive('bold')}
           onPressedChange={() => editor.chain().focus().toggleBold().run()}
           aria-label="Toggle bold"
           className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
@@ -62,7 +63,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("italic")}
+          pressed={editor.isActive('italic')}
           onPressedChange={() => editor.chain().focus().toggleItalic().run()}
           aria-label="Toggle italic"
           className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
@@ -72,7 +73,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("underline")}
+          pressed={editor.isActive('underline')}
           onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
           aria-label="Toggle underline"
           className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
@@ -81,18 +82,22 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         </Toggle>
 
         <Toggle
-          size={"sm"}
+          size={'sm'}
           variant="outline"
-          pressed={editor.isActive("link")}
+          pressed={editor.isActive('link')}
           onPressedChange={() => {
-            const url = editor.isActive("link")
+            const url = editor.isActive('link')
               ? false // If link is active, unset it
-              : window.prompt("Enter the URL:", "https://");
-            
+              : window.prompt('Enter the URL:', 'https://');
+
             if (url === false) {
               editor.chain().focus().unsetLink().run();
             } else if (url) {
-              editor.chain().focus().setLink({ href: url, target: "_blank" }).run();
+              editor
+                .chain()
+                .focus()
+                .setLink({ href: url, target: '_blank' })
+                .run();
             }
           }}
           aria-label="Toggle link"
@@ -104,7 +109,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("strike")}
+          pressed={editor.isActive('strike')}
           onPressedChange={() => editor.chain().focus().toggleStrike().run()}
           aria-label="Toggle strikethrough"
           className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
@@ -114,7 +119,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("code")}
+          pressed={editor.isActive('code')}
           onPressedChange={() => editor.chain().focus().toggleCode().run()}
           aria-label="Toggle code"
           className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
@@ -124,7 +129,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("superscript")}
+          pressed={editor.isActive('superscript')}
           onPressedChange={() =>
             editor.chain().focus().toggleSuperscript().run()
           }
@@ -136,7 +141,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("subscript")}
+          pressed={editor.isActive('subscript')}
           onPressedChange={() => editor.chain().focus().toggleSubscript().run()}
           aria-label="Toggle subscript"
           className="data-[state=on]:bg-primary-purple/20 data-[state=on]:text-primary-purple data-[state=on]:border-primary-purple"
@@ -152,13 +157,13 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
           type="single"
           className="bg-[#1a1a1a] border-[#333] [&_[data-state=on]]:bg-primary-purple/20 [&_[data-state=on]]:text-primary-purple [&_[data-state=on]]:border-primary-purple"
           value={
-            editor.isActive("heading", { level: 1 })
-              ? "heading-1"
-              : editor.isActive("heading", { level: 2 })
-              ? "heading-2"
-              : editor.isActive("heading", { level: 3 })
-              ? "heading-3"
-              : ""
+            editor.isActive('heading', { level: 1 })
+              ? 'heading-1'
+              : editor.isActive('heading', { level: 2 })
+                ? 'heading-2'
+                : editor.isActive('heading', { level: 3 })
+                  ? 'heading-3'
+                  : ''
           }
         >
           <ToggleGroupItem
@@ -197,7 +202,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("bulletList")}
+          pressed={editor.isActive('bulletList')}
           onPressedChange={() =>
             editor.chain().focus().toggleBulletList().run()
           }
@@ -209,7 +214,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("orderedList")}
+          pressed={editor.isActive('orderedList')}
           onPressedChange={() =>
             editor.chain().focus().toggleOrderedList().run()
           }
@@ -221,7 +226,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
         <Toggle
           size="sm"
           variant="outline"
-          pressed={editor.isActive("blockquote")}
+          pressed={editor.isActive('blockquote')}
           onPressedChange={() =>
             editor.chain().focus().toggleBlockquote().run()
           }
@@ -239,33 +244,33 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
           type="single"
           className="bg-[#1a1a1a] border-[#333] [&_[data-state=on]]:bg-primary-purple/20 [&_[data-state=on]]:text-primary-purple [&_[data-state=on]]:border-primary-purple"
           value={
-            editor.isActive({ textAlign: "left" })
-              ? "left"
-              : editor.isActive({ textAlign: "center" })
-              ? "center"
-              : editor.isActive({ textAlign: "right" })
-              ? "right"
-              : "left"
+            editor.isActive({ textAlign: 'left' })
+              ? 'left'
+              : editor.isActive({ textAlign: 'center' })
+                ? 'center'
+                : editor.isActive({ textAlign: 'right' })
+                  ? 'right'
+                  : 'left'
           }
         >
           <ToggleGroupItem
             value="left"
             aria-label="Align left"
-            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            onClick={() => editor.chain().focus().setTextAlign('left').run()}
           >
             <AlignLeft className="h-4 w-4" />
           </ToggleGroupItem>
           <ToggleGroupItem
             value="center"
             aria-label="Align center"
-            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            onClick={() => editor.chain().focus().setTextAlign('center').run()}
           >
             <AlignCenter className="h-4 w-4" />
           </ToggleGroupItem>
           <ToggleGroupItem
             value="right"
             aria-label="Align right"
-            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            onClick={() => editor.chain().focus().setTextAlign('right').run()}
           >
             <AlignRight className="h-4 w-4" />
           </ToggleGroupItem>
@@ -284,7 +289,7 @@ export function EditorMenuBar({ editor, className }: EditorMenuBarProps) {
               .chain()
               .focus()
               .setImage({
-                src: window.prompt("Enter the URL of the image:", "") || "",
+                src: window.prompt('Enter the URL of the image:', '') || '',
               })
               .run()
           }

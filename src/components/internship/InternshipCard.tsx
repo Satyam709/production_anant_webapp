@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import { InternshipWithUser } from "@/types/internship";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Linkedin, Link2 } from "lucide-react";
-import { useState } from "react";
+import { Link2,Linkedin } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+import { InternshipWithUser } from '@/types/internship';
 
 interface InternshipCardProps {
   internship: InternshipWithUser;
@@ -12,7 +13,9 @@ interface InternshipCardProps {
 
 const InternshipCard = ({ internship }: InternshipCardProps) => {
   const router = useRouter();
-  const [imgSrc, setImgSrc] = useState(internship.user.imageURL || "/placeholder-avatar.png");
+  const [imgSrc, setImgSrc] = useState(
+    internship.user.imageURL || '/placeholder-avatar.png'
+  );
 
   return (
     <div
@@ -28,7 +31,7 @@ const InternshipCard = ({ internship }: InternshipCardProps) => {
             alt={internship.user.name}
             fill
             sizes="(max-width: 64px) 100vw"
-            onError={() => setImgSrc("/placeholder-avatar.png")}
+            onError={() => setImgSrc('/placeholder-avatar.png')}
             priority
           />
         </div>
@@ -52,7 +55,7 @@ const InternshipCard = ({ internship }: InternshipCardProps) => {
         <div className="flex items-center gap-2 text-[#00E0FF]">
           {internship.link && (
             <>
-              {internship.link.includes("linkedin.com") ? (
+              {internship.link.includes('linkedin.com') ? (
                 <Linkedin className="h-4 w-4" />
               ) : (
                 <Link2 className="h-4 w-4" />

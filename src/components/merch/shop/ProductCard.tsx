@@ -1,10 +1,15 @@
-import React from 'react';
-import { ShoppingCart, Eye } from 'lucide-react';
-import { Merchandise } from "@/types/shop";
+import { Eye,ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
-import { placeholder } from '@/lib/images/placeholder';
+import React from 'react';
 
-interface ProductCardProps extends Pick<Merchandise, 'item_id' | 'name' | 'price' | 'image_url' | 'category' | 'stock_quantity'> {
+import { placeholder } from '@/lib/images/placeholder';
+import { Merchandise } from '@/types/shop';
+
+interface ProductCardProps
+  extends Pick<
+    Merchandise,
+    'item_id' | 'name' | 'price' | 'image_url' | 'category' | 'stock_quantity'
+  > {
   featured?: boolean;
   onQuickView: () => void;
   onAddToCart: () => void;
@@ -24,10 +29,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <div className="group relative bg-gray-900/30 rounded-2xl overflow-hidden backdrop-blur-sm border border-gray-800 hover:border-primary-cyan/30 transition-all duration-500 hover:shadow-lg hover:shadow-primary-cyan/5">
       {/* Mathematical Pattern Overlay */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div className="absolute top-4 left-4 text-2xl transform -rotate-12">∫</div>
-        <div className="absolute bottom-4 right-4 text-2xl transform rotate-12">∑</div>
+        <div className="absolute top-4 left-4 text-2xl transform -rotate-12">
+          ∫
+        </div>
+        <div className="absolute bottom-4 right-4 text-2xl transform rotate-12">
+          ∑
+        </div>
       </div>
-      
+
       {featured && (
         <div className="absolute top-4 right-4 z-10">
           <span className="px-3 py-1 bg-primary-cyan/50 text-primary-white text-xs rounded-full border border-primary-cyan backdrop-blur-sm">
@@ -37,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       )}
       <div className="relative overflow-hidden aspect-[4/5]">
         <Image
-          src={image_url||placeholder}
+          src={image_url || placeholder}
           alt={name}
           width={400}
           height={500}
@@ -69,7 +78,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <span className="text-primary-cyan/70 text-sm px-3 py-1 bg-primary-cyan/10 rounded-full">
             {category}
           </span>
-          <span className={`text-sm ${stock_quantity > 0 ? 'text-green-500' : 'text-red-500'}`}>
+          <span
+            className={`text-sm ${stock_quantity > 0 ? 'text-green-500' : 'text-red-500'}`}
+          >
             {stock_quantity > 0 ? `${stock_quantity} in stock` : 'Out of stock'}
           </span>
         </div>

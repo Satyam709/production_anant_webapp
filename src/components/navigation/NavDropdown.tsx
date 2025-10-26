@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import React, { useEffect,useRef, useState } from 'react';
 
 interface DropdownItem {
   label: string;
@@ -29,7 +29,7 @@ const NavDropdown: React.FC<NavDropdownProps> = ({ label, items }) => {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setIsOpen(false);
-    }, 150); 
+    }, 150);
   };
 
   useEffect(() => {
@@ -66,8 +66,8 @@ const NavDropdown: React.FC<NavDropdownProps> = ({ label, items }) => {
         className={`absolute top-full left-0 mt-1 w-48 rounded-xl bg-black/90 backdrop-blur-sm 
           border border-gray-800 shadow-lg overflow-hidden transform transition-all duration-300 
           ease-out origin-top ${
-            isOpen 
-              ? 'opacity-100 translate-y-0 scale-100' 
+            isOpen
+              ? 'opacity-100 translate-y-0 scale-100'
               : 'opacity-0 -translate-y-2 scale-95 pointer-events-none'
           }`}
       >

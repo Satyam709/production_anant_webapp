@@ -1,41 +1,45 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  type RefObject,
-  useCallback,
-} from "react";
+import { Competitions, Prisma } from '@prisma/client';
+import axios from 'axios';
 import {
-  Trophy,
-  Loader,
-  Pencil,
-  Trash2,
-  Plus,
   CalendarClock,
   Clock,
   Download,
-} from "lucide-react";
-import GradientButton from "../ui/GradientButton";
-import Modal from "../ui/Modal";
-import { Competitions, Prisma } from "@prisma/client";
-import Image from "next/image";
-import { placeholder } from "@/lib/images/placeholder";
-import axios from "axios";
-import { uploadServerSideFile } from "@/lib/actions/uploadthing";
-import { deleteCompetition, getCompetitionParticipants } from "@/lib/actions/Competitions";
-import { ConfirmModal } from "./ConfirmModal";
-import { convertToCSV } from "@/helpers/convertToCsv";
-import { toLocalDatetimeString } from "@/helpers/toLocalDTString";
+  Loader,
+  Pencil,
+  Plus,
+  Trash2,
+  Trophy,
+} from 'lucide-react';
+import Image from 'next/image';
+import React, {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
+import { convertToCSV } from '@/helpers/convertToCsv';
+import { toLocalDatetimeString } from '@/helpers/toLocalDTString';
+import {
+  deleteCompetition,
+  getCompetitionParticipants,
+} from '@/lib/actions/Competitions';
+import { uploadServerSideFile } from '@/lib/actions/uploadthing';
+import { placeholder } from '@/lib/images/placeholder';
 
-type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, "createdBy">;
+import GradientButton from '../ui/GradientButton';
+import Modal from '../ui/Modal';
+import { ConfirmModal } from './ConfirmModal';
+
+type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, 'createdBy'>;
 
 async function fetchActiveCompetitions(): Promise<Competitions[]> {
   try {
     const response = await fetch(`/api/competitions`);
 
     if (!response.ok) {
-      console.error("Failed to fetch competitions:", response.status);
+      console.error('Failed to fetch competitions:', response.status);
       return [];
     }
 
@@ -55,11 +59,10 @@ async function fetchActiveCompetitions(): Promise<Competitions[]> {
 
     return activeCompetitions;
   } catch (error) {
-    console.error("Error parsing competitions data:", error);
+    console.error('Error parsing competitions data:', error);
     return [];
   }
 }
-
 
 const CompForm = () => {
   const [competitions, setCompetitions] = useState<Competitions[]>([]);
@@ -67,32 +70,30 @@ const CompForm = () => {
   const [editingCompetition, setEditingCompetition] =
     useState<Competitions | null>(null);
   const [formData, setFormData] = useState<CompetitionFormInput>({
-    competitionName: "",
-    conductedBy: "",
+    competitionName: '',
+    conductedBy: '',
     conductedOn: new Date(),
     registration_deadline: new Date(),
-    venue: "",
-    prize: "",
-    description: "",
+    venue: '',
+    prize: '',
+    description: '',
     min_team_size: 1,
     max_team_size: 4,
-    imageURL: "",
+    imageURL: '',
   });
   const [loading, setLoading] = useState(false);
   const [loadingCompetitions, setLoadingCompetitions] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
   const conductedOnRef = useRef<HTMLInputElement | null>(null);
   const deadlineRef = useRef<HTMLInputElement | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  
-
   const handleDateClick = (ref: RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
-      if (typeof ref.current.showPicker === "function") {
+      if (typeof ref.current.showPicker === 'function') {
         ref.current.showPicker();
       } else {
         ref.current.focus();
@@ -106,8 +107,8 @@ const CompForm = () => {
       const data = await fetchActiveCompetitions();
       setCompetitions(data);
     } catch (error) {
-      console.error("Error refetching competitions:", error);
-      setError("Failed to refetch competitions.");
+      console.error('Error refetching competitions:', error);
+      setError('Failed to refetch competitions.');
     } finally {
       setLoadingCompetitions(false);
     }
@@ -120,12 +121,12 @@ const CompForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
 
     try {
       if (!file && !editingCompetition?.imageURL) {
-        setError("Please upload an image");
+        setError('Please upload an image');
         return;
       }
 
@@ -134,7 +135,7 @@ const CompForm = () => {
       if (file) {
         const res = await uploadServerSideFile(file);
         if (!res) {
-          setError("Failed to upload image");
+          setError('Failed to upload image');
           return;
         }
         imageURL = res.ufsUrl;
@@ -145,7 +146,7 @@ const CompForm = () => {
       const payload = {
         ...formData,
         imageURL: imageURL,
-        conductedOn: new Date(formData.conductedOn ).toISOString(),
+        conductedOn: new Date(formData.conductedOn).toISOString(),
         registration_deadline: new Date(
           formData.registration_deadline
         ).toISOString(),
@@ -158,23 +159,23 @@ const CompForm = () => {
           `/api/competitions/${editingCompetition.competition_id}/edit`,
           payload
         );
-        setSuccess("Competition updated successfully!");
+        setSuccess('Competition updated successfully!');
       } else {
-        await axios.post("/api/competitions/create", payload);
-        setSuccess("Competition created successfully!");
+        await axios.post('/api/competitions/create', payload);
+        setSuccess('Competition created successfully!');
       }
 
       setFormData({
-        competitionName: "",
-        conductedBy: "",
+        competitionName: '',
+        conductedBy: '',
         conductedOn: new Date(),
         registration_deadline: new Date(),
-        venue: "",
-        prize: "",
-        description: "",
+        venue: '',
+        prize: '',
+        description: '',
         min_team_size: 1,
         max_team_size: 4,
-        imageURL: "",
+        imageURL: '',
       });
       setFile(null);
       setIsModalOpen(false);
@@ -184,8 +185,8 @@ const CompForm = () => {
       setError(
         err.response?.data?.message ||
           (editingCompetition
-            ? "Failed to update competition"
-            : "Failed to create competition")
+            ? 'Failed to update competition'
+            : 'Failed to create competition')
       );
       console.error(err);
     } finally {
@@ -201,61 +202,61 @@ const CompForm = () => {
 
   const handleDelete = async (id: string) => {
     try {
-     const res = await deleteCompetition(id);
+      const res = await deleteCompetition(id);
       if (res.error) {
         throw new Error(res.error);
       }
       setCompetitions(
         competitions?.filter((comp) => comp.competition_id !== id) || []
       );
-      setSuccess("Competition deleted successfully!");
+      setSuccess('Competition deleted successfully!');
       refetchCompetitions();
     } catch (err) {
-      setError("Failed to delete competition");
+      setError('Failed to delete competition');
     }
   };
 
-    const handleDownload = useCallback(async (id : string) => {
-      try {
-        // Fetch the attendees for the meeting
-        const res = await getCompetitionParticipants(id);
-        if (!res) {
-          setError("Failed to fetch participants");
-        } else {
-          setSuccess("Participants fetched successfully!");
-        }
-  
-        if (res.length === 0) {
-          setError("No participants found");
-          return;
-        }
-  
-        // Convert the attendees data to CSV
-        const csv = convertToCSV(res);
-  
-        // Trigger the download of the CSV file
-        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-        const link = document.createElement("a");
-        if (link.download !== undefined) {
-          const url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", `competition_participants_${id}.csv`);
-          link.style.visibility = "hidden";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      } catch (error) {
-        console.error("Error downloading attendees:", error);
+  const handleDownload = useCallback(async (id: string) => {
+    try {
+      // Fetch the attendees for the meeting
+      const res = await getCompetitionParticipants(id);
+      if (!res) {
+        setError('Failed to fetch participants');
+      } else {
+        setSuccess('Participants fetched successfully!');
       }
-    }, []);
+
+      if (res.length === 0) {
+        setError('No participants found');
+        return;
+      }
+
+      // Convert the attendees data to CSV
+      const csv = convertToCSV(res);
+
+      // Trigger the download of the CSV file
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `competition_participants_${id}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error('Error downloading attendees:', error);
+    }
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     let { name, value } = e.target;
-    if (name === "min_team_size" || name === "max_team_size") {
-      if(value == "")value="0";
+    if (name === 'min_team_size' || name === 'max_team_size') {
+      if (value == '') value = '0';
       setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -265,16 +266,16 @@ const CompForm = () => {
   const openCreateModal = () => {
     setEditingCompetition(null);
     setFormData({
-      competitionName: "",
-      conductedBy: "",
+      competitionName: '',
+      conductedBy: '',
       conductedOn: new Date(),
       registration_deadline: new Date(),
-      venue: "",
-      prize: "",
-      description: "",
+      venue: '',
+      prize: '',
+      description: '',
       min_team_size: 1,
       max_team_size: 4,
-      imageURL: "",
+      imageURL: '',
     });
     setIsModalOpen(true);
   };
@@ -335,21 +336,21 @@ const CompForm = () => {
                 </h3>
                 <div className="space-y-2 text-sm text-gray-300">
                   <p>
-                    <span className="text-gray-400">Date:</span>{" "}
+                    <span className="text-gray-400">Date:</span>{' '}
                     {new Date(competition.conductedOn).toLocaleDateString()}
                   </p>
                   <p>
-                    <span className="text-gray-400">Venue:</span>{" "}
+                    <span className="text-gray-400">Venue:</span>{' '}
                     {competition.venue}
                   </p>
                   <p>
-                    <span className="text-gray-400">Team Size:</span>{" "}
-                    {competition.min_team_size} - {competition.max_team_size}{" "}
+                    <span className="text-gray-400">Team Size:</span>{' '}
+                    {competition.min_team_size} - {competition.max_team_size}{' '}
                     members
                   </p>
                   {competition.prize && (
                     <p>
-                      <span className="text-gray-400">Prize:</span>{" "}
+                      <span className="text-gray-400">Prize:</span>{' '}
                       {competition.prize}
                     </p>
                   )}
@@ -405,8 +406,8 @@ const CompForm = () => {
       ) : (
         <div className="text-center text-gray-400">
           {competitions === null
-            ? "Failed to load competitions."
-            : "No competitions found."}
+            ? 'Failed to load competitions.'
+            : 'No competitions found.'}
         </div>
       )}
 
@@ -414,7 +415,7 @@ const CompForm = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingCompetition ? "Edit Competition" : "Create Competition"}
+        title={editingCompetition ? 'Edit Competition' : 'Create Competition'}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -498,7 +499,9 @@ const CompForm = () => {
                   type="datetime-local"
                   ref={deadlineRef}
                   name="registration_deadline"
-                  value={toLocalDatetimeString(new Date(formData.registration_deadline))}
+                  value={toLocalDatetimeString(
+                    new Date(formData.registration_deadline)
+                  )}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -539,7 +542,7 @@ const CompForm = () => {
               <input
                 type="text"
                 name="prize"
-                value={formData.prize || ""}
+                value={formData.prize || ''}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
                          focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
@@ -637,11 +640,11 @@ const CompForm = () => {
                 <span>
                   {loading
                     ? editingCompetition
-                      ? "Updating..."
-                      : "Creating..."
+                      ? 'Updating...'
+                      : 'Creating...'
                     : editingCompetition
-                    ? "Update Competition"
-                    : "Create Competition"}
+                      ? 'Update Competition'
+                      : 'Create Competition'}
                 </span>
               </div>
             </GradientButton>

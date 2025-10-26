@@ -1,8 +1,9 @@
-import isAdmin from "@/lib/actions/Admin";
-import prisma from "@/lib/PrismaClient/db";
-import { ItemCategorySchema } from "@/types/shop";
-import { NextRequest, NextResponse } from "next/server";
-import z from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import z from 'zod';
+
+import isAdmin from '@/lib/actions/Admin';
+import prisma from '@/lib/PrismaClient/db';
+import { ItemCategorySchema } from '@/types/shop';
 
 const MerchandiseSchema = z.object({
   name: z.string(),
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     const checkAdmin = await isAdmin();
     if (!checkAdmin) {
       return NextResponse.json(
-        { error: "You are not authorized to perform this action" },
+        { error: 'You are not authorized to perform this action' },
         { status: 403 }
       );
     }
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
     const res = MerchandiseSchema.safeParse(data);
     if (!res.success) {
       return NextResponse.json(
-        { message: "Invalid data", errors: res.error.errors },
+        { message: 'Invalid data', errors: res.error.errors },
         { status: 400 }
       );
     }
@@ -44,9 +45,9 @@ export async function POST(req: NextRequest) {
     // Return the created merchandise
     return NextResponse.json(merchandise, { status: 201 });
   } catch (error) {
-    console.error("Error creating merchandise:", error);
+    console.error('Error creating merchandise:', error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: 'Internal Server Error' },
       { status: 500 }
     );
   }

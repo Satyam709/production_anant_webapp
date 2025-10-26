@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export default function HeroLogo() {
   return (
@@ -8,7 +8,9 @@ export default function HeroLogo() {
         <h1 className="text-[64px] md:text-[100px] leading-none m-0 font-bold">
           अनंत
         </h1>
-        <p className="text-[10px] md:text-[26px] mt-[16px] text-right">अनंतस्य गणितम् विद्यते</p>
+        <p className="text-[10px] md:text-[26px] mt-[16px] text-right">
+          अनंतस्य गणितम् विद्यते
+        </p>
       </div>
 
       {/* Divider */}

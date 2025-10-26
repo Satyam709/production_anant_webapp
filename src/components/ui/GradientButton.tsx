@@ -1,6 +1,7 @@
-"use client"
-import React, { useEffect, useState } from "react";
-import GSAP from "gsap";
+'use client';
+import GSAP from 'gsap';
+import React, { useEffect, useState } from 'react';
+
 interface GradientButtonProps {
   href?: string;
   children: React.ReactNode;
@@ -13,16 +14,16 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   href,
   children,
   onClick,
-  className = "",
+  className = '',
   disabled = false,
 }) => {
   const [gsap, setGsap] = useState<typeof GSAP>();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      import("gsap").then((module) => {
+    if (typeof window !== 'undefined') {
+      import('gsap').then((module) => {
         const gsapInstance = module.default;
-        import("gsap/ScrollToPlugin").then((plugin) => {
+        import('gsap/ScrollToPlugin').then((plugin) => {
           gsapInstance.registerPlugin(plugin.ScrollToPlugin);
           setGsap(gsapInstance);
         });
@@ -54,7 +55,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
       gsap.to(window, {
         duration: 1,
         scrollTo: { y: href, autoKill: true },
-        ease: "power3",
+        ease: 'power3',
       });
     } else if (onClick) {
       onClick();
@@ -62,7 +63,11 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   };
 
   return (
-    <button onClick={handleClick} className={buttonClassName} disabled={disabled}>
+    <button
+      onClick={handleClick}
+      className={buttonClassName}
+      disabled={disabled}
+    >
       {content}
     </button>
   );

@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 function page() {
-  return (
-    <div>setting</div>
-  )
+  return <div>setting</div>;
 }
 
-export default page
+export default page;

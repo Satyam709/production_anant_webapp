@@ -1,9 +1,9 @@
-import { getSession } from "@/lib/actions/Sessions";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
+import { createUploadthing, type FileRouter } from 'uploadthing/next';
+import { UploadThingError } from 'uploadthing/server';
+
+import { getSession } from '@/lib/actions/Sessions';
 
 const f = createUploadthing();
-
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
@@ -14,7 +14,7 @@ export const ourFileRouter = {
        * For full list of options and defaults, see the File Route API reference
        * @see https://docs.uploadthing.com/file-routes#route-config
        */
-      maxFileSize: "4MB",
+      maxFileSize: '4MB',
       maxFileCount: 1,
     },
   })
@@ -25,19 +25,19 @@ export const ourFileRouter = {
       const session = await getSession();
 
       // If you throw, the user will not be able to upload
-      if (!session?.user) throw new UploadThingError("Unauthorized");
+      if (!session?.user) throw new UploadThingError('Unauthorized');
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: session.user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
+      console.log('Upload complete for userId:', metadata.userId);
 
-      console.log("file url", file.ufsUrl);
+      console.log('file url', file.ufsUrl);
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId , fileUrl: file.ufsUrl};
+      return { uploadedBy: metadata.userId, fileUrl: file.ufsUrl };
     }),
 } satisfies FileRouter;
 

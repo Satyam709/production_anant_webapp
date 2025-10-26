@@ -1,7 +1,8 @@
-"use client";
-import React from "react";
-import { ArrowRight } from "lucide-react";
-import PhotoSlideshow from "@/components/shared/PhotoSlideshow";
+'use client';
+import { ArrowRight } from 'lucide-react';
+import React from 'react';
+
+import PhotoSlideshow from '@/components/shared/PhotoSlideshow';
 
 interface WelcomeSectionProps {
   photos: string[];

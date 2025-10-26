@@ -1,24 +1,24 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Enums
 export const ItemCategorySchema = z.enum([
-  "Apparel",
-  "Accessories",
-  "Stationery",
-  "Gadgets",
-  "Books",
+  'Apparel',
+  'Accessories',
+  'Stationery',
+  'Gadgets',
+  'Books',
 ]);
 export type ItemCategory = z.infer<typeof ItemCategorySchema>;
 
 export enum ItemCategoryEnum {
-  Apparel = "Apparel",
-  Accessories = "Accessories",
-  Stationery = "Stationery",
-  Gadgets = "Gadgets",
-  Books = "Books",
+  Apparel = 'Apparel',
+  Accessories = 'Accessories',
+  Stationery = 'Stationery',
+  Gadgets = 'Gadgets',
+  Books = 'Books',
 }
 
-export const OrderStatusSchema = z.enum(["PENDING", "APPROVED", "REJECTED"]);
+export const OrderStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 
 // Merchandise Schema

@@ -1,23 +1,24 @@
-"use client";
+'use client';
 
-import { useEditor, EditorContent, JSONContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Superscript from "@tiptap/extension-superscript";
-import Subscript from "@tiptap/extension-subscript";
-import TextAlign from "@tiptap/extension-text-align";
-import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
-import Table from "@tiptap/extension-table";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
-import TableRow from "@tiptap/extension-table-row";
-import Placeholder from "@tiptap/extension-placeholder";
-import { EditorMenuBar } from "@/components/blogs/editor/editor-menu-bar";
-import { MathInline, MathBlock } from "@/extensions/math-extension";
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/Card";
-import { cn } from "@/lib/utils";
+import Image from '@tiptap/extension-image';
+import Link from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
+import Subscript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
+import Table from '@tiptap/extension-table';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+import TableRow from '@tiptap/extension-table-row';
+import TextAlign from '@tiptap/extension-text-align';
+import Underline from '@tiptap/extension-underline';
+import { EditorContent, JSONContent,useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { useEffect,useState } from 'react';
+
+import { EditorMenuBar } from '@/components/blogs/editor/editor-menu-bar';
+import { Card } from '@/components/ui/Card';
+import { MathBlock,MathInline } from '@/extensions/math-extension';
+import { cn } from '@/lib/utils';
 
 export interface EditorProps {
   content?: string;
@@ -28,9 +29,9 @@ export interface EditorProps {
 }
 
 export default function TiptapEditor({
-  content = "",
+  content = '',
   onChange,
-  placeholder = "Start writing something...",
+  placeholder = 'Start writing something...',
   className,
   readOnly = false,
 }: EditorProps) {
@@ -45,36 +46,36 @@ export default function TiptapEditor({
         },
         bulletList: {
           HTMLAttributes: {
-            class: "list-disc ml-4 my-4 space-y-1",
+            class: 'list-disc ml-4 my-4 space-y-1',
           },
           keepMarks: true,
           keepAttributes: true,
         },
         orderedList: {
           HTMLAttributes: {
-            class: "list-decimal ml-4 my-4 space-y-1",
+            class: 'list-decimal ml-4 my-4 space-y-1',
           },
           keepMarks: true,
           keepAttributes: true,
         },
         listItem: {
           HTMLAttributes: {
-            class: "pl-1 my-1",
+            class: 'pl-1 my-1',
           },
         },
         blockquote: {
           HTMLAttributes: {
-            class: "border-l-4 border-primary-purple pl-4 my-4",
+            class: 'border-l-4 border-primary-purple pl-4 my-4',
           },
         },
         codeBlock: {
           HTMLAttributes: {
-            class: "bg-[#1a1a1a] rounded-md p-4 my-4",
+            class: 'bg-[#1a1a1a] rounded-md p-4 my-4',
           },
         },
         horizontalRule: {
           HTMLAttributes: {
-            class: "border-t border-gray-600 my-8",
+            class: 'border-t border-gray-600 my-8',
           },
         },
       }),
@@ -82,15 +83,15 @@ export default function TiptapEditor({
       Superscript,
       Subscript,
       TextAlign.configure({
-        types: ["heading", "paragraph", "image"],
-        alignments: ["left", "center", "right"],
-        defaultAlignment: "left",
+        types: ['heading', 'paragraph', 'image'],
+        alignments: ['left', 'center', 'right'],
+        defaultAlignment: 'left',
       }),
       Image.configure({
         inline: true,
         HTMLAttributes: {
           class:
-            "rounded-lg max-w-[600px] max-h-[500px] object-contain mx-auto my-4",
+            'rounded-lg max-w-[600px] max-h-[500px] object-contain mx-auto my-4',
           contenteditable: false,
         },
         allowBase64: true,
@@ -110,12 +111,12 @@ export default function TiptapEditor({
       Link.configure({
         openOnClick: false,
         autolink: true,
-        defaultProtocol: "https",
-        protocols: ["http", "https"],
+        defaultProtocol: 'https',
+        protocols: ['http', 'https'],
         isAllowedUri: (url, ctx) => {
           try {
             // construct URL
-            const parsedUrl = url.includes(":")
+            const parsedUrl = url.includes(':')
               ? new URL(url)
               : new URL(`${ctx.defaultProtocol}://${url}`);
 
@@ -125,8 +126,8 @@ export default function TiptapEditor({
             }
 
             // disallowed protocols
-            const disallowedProtocols = ["ftp", "file"];
-            const protocol = parsedUrl.protocol.replace(":", "");
+            const disallowedProtocols = ['ftp', 'file'];
+            const protocol = parsedUrl.protocol.replace(':', '');
 
             if (disallowedProtocols.includes(protocol)) {
               return false;
@@ -134,7 +135,7 @@ export default function TiptapEditor({
 
             // only allow protocols specified in ctx.protocols
             const allowedProtocols = ctx.protocols.map((p) =>
-              typeof p === "string" ? p : p.scheme
+              typeof p === 'string' ? p : p.scheme
             );
 
             if (!allowedProtocols.includes(protocol)) {
@@ -143,8 +144,8 @@ export default function TiptapEditor({
 
             // disallowed domains
             const disallowedDomains = [
-              "example-phishing.com",
-              "malicious-site.net",
+              'example-phishing.com',
+              'malicious-site.net',
             ];
             const domain = parsedUrl.hostname;
 
@@ -161,17 +162,16 @@ export default function TiptapEditor({
         shouldAutoLink: (url) => {
           try {
             // construct URL
-            const parsedUrl = url.includes(":")
+            const parsedUrl = url.includes(':')
               ? new URL(url)
               : new URL(`https://${url}`);
 
-              console.log("parsed url" , parsedUrl);
-              
+            console.log('parsed url', parsedUrl);
 
             // only auto-link if the domain is not in the disallowed list
             const disallowedDomains = [
-              "example-no-autolink.com",
-              "another-no-autolink.com",
+              'example-no-autolink.com',
+              'another-no-autolink.com',
             ];
             const domain = parsedUrl.hostname;
 
@@ -185,20 +185,20 @@ export default function TiptapEditor({
     content,
     editorProps: {
       handleDrop: (view, event, slice, moved) => {
-        const isImage = event.dataTransfer?.files[0]?.type.startsWith("image");
+        const isImage = event.dataTransfer?.files[0]?.type.startsWith('image');
         if (!moved && isImage) {
           return true;
         }
         return false;
       },
       handleKeyDown: (view, event) => {
-        if (event.key === "Enter") {
+        if (event.key === 'Enter') {
           const { state } = view;
           const { selection } = state;
           const { $from } = selection;
           const node = $from.node();
 
-          if (node.type.name === "heading") {
+          if (node.type.name === 'heading') {
             event.preventDefault();
             // Create a new paragraph after heading
             view.dispatch(
@@ -211,7 +211,7 @@ export default function TiptapEditor({
             return true;
           }
 
-          if (node.type.name === "list_item" && node.textContent === "") {
+          if (node.type.name === 'list_item' && node.textContent === '') {
             // Exit list when Enter is pressed on empty list item
             const range = $from.blockRange(selection.$to);
             if (range) {
@@ -221,10 +221,10 @@ export default function TiptapEditor({
           }
         }
 
-        if (event.key === "Backspace") {
+        if (event.key === 'Backspace') {
           const { empty, anchor } = view.state.selection;
           const node = view.state.doc.nodeAt(anchor);
-          if (empty && node?.type.name === "image") {
+          if (empty && node?.type.name === 'image') {
             return true;
           }
         }
@@ -232,7 +232,7 @@ export default function TiptapEditor({
       },
       handleClick: (view, pos, event) => {
         const node = view.state.doc.nodeAt(pos);
-        if (node?.type.name === "image") {
+        if (node?.type.name === 'image') {
           event.preventDefault();
           return true;
         }
@@ -240,24 +240,24 @@ export default function TiptapEditor({
       },
       attributes: {
         class: cn(
-          "prose prose-sm sm:prose dark:prose-invert focus:outline-none max-w-none",
-          "prose-headings:tracking-tight",
-          "prose-p:my-2 prose-img:rounded-md prose-img:my-4 prose-img:mx-auto",
-          "prose-pre:bg-[#1a1a1a] prose-code:text-white",
-          "prose-blockquote:border-l-primary-purple prose-blockquote:text-gray-300",
-          "prose-ul:ml-4 prose-ul:space-y-1",
-          "prose-ol:ml-4 prose-ol:space-y-1",
-          "prose-li:my-1",
-          "[&_.ProseMirror-selectednode]:ring-2 [&_.ProseMirror-selectednode]:ring-primary-purple",
-          "[&>ul]:mt-4 [&>ol]:mt-4 [&>ul]:mb-4 [&>ol]:mb-4",
+          'prose prose-sm sm:prose dark:prose-invert focus:outline-none max-w-none',
+          'prose-headings:tracking-tight',
+          'prose-p:my-2 prose-img:rounded-md prose-img:my-4 prose-img:mx-auto',
+          'prose-pre:bg-[#1a1a1a] prose-code:text-white',
+          'prose-blockquote:border-l-primary-purple prose-blockquote:text-gray-300',
+          'prose-ul:ml-4 prose-ul:space-y-1',
+          'prose-ol:ml-4 prose-ol:space-y-1',
+          'prose-li:my-1',
+          '[&_.ProseMirror-selectednode]:ring-2 [&_.ProseMirror-selectednode]:ring-primary-purple',
+          '[&>ul]:mt-4 [&>ol]:mt-4 [&>ul]:mb-4 [&>ol]:mb-4',
           // Heading styles
-          "[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:my-6 [&_h1]:tracking-tight [&_h1]:text-white",
-          "[&_h2]:text-3xl [&_h2]:font-bold [&_h2]:my-5 [&_h2]:tracking-tight [&_h2]:text-white",
-          "[&_h3]:text-2xl [&_h3]:font-bold [&_h3]:my-4 [&_h3]:tracking-tight [&_h3]:text-white",
-          "[&_h1]:mt-10 [&_h2]:mt-8 [&_h3]:mt-6",
-          "[&_h1]:mb-6 [&_h2]:mb-5 [&_h3]:mb-4",
+          '[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:my-6 [&_h1]:tracking-tight [&_h1]:text-white',
+          '[&_h2]:text-3xl [&_h2]:font-bold [&_h2]:my-5 [&_h2]:tracking-tight [&_h2]:text-white',
+          '[&_h3]:text-2xl [&_h3]:font-bold [&_h3]:my-4 [&_h3]:tracking-tight [&_h3]:text-white',
+          '[&_h1]:mt-10 [&_h2]:mt-8 [&_h3]:mt-6',
+          '[&_h1]:mb-6 [&_h2]:mb-5 [&_h3]:mb-4',
           // hyperlink styles
-          "[&_a]:text-primary-purple [&_a]:underline [&_a]:decoration-primary-purple",
+          '[&_a]:text-primary-purple [&_a]:underline [&_a]:decoration-primary-purple'
         ),
       },
     },
@@ -283,7 +283,7 @@ export default function TiptapEditor({
   return (
     <Card
       className={cn(
-        "p-4 overflow-hidden bg-[#1a1a1a] border-[#333] text-white",
+        'p-4 overflow-hidden bg-[#1a1a1a] border-[#333] text-white',
         className
       )}
     >
@@ -291,8 +291,8 @@ export default function TiptapEditor({
       <EditorContent
         editor={editor}
         className={cn(
-          "min-h-[200px] max-h-[400px] focus-visible:outline-none p-4 overflow-y-auto",
-          readOnly ? "pointer-events-none" : ""
+          'min-h-[200px] max-h-[400px] focus-visible:outline-none p-4 overflow-y-auto',
+          readOnly ? 'pointer-events-none' : ''
         )}
       />
     </Card>

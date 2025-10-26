@@ -1,23 +1,26 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import InternshipCard from "@/components/internship/InternshipCard";
-import { InternshipWithUser } from "@/types/internship";
-import Link from "next/link";
+import Link from 'next/link';
+
+import Footer from '@/components/Footer';
+import InternshipCard from '@/components/internship/InternshipCard';
+import Navbar from '@/components/Navbar';
+import { InternshipWithUser } from '@/types/internship';
 
 async function getInternships() {
   const response = await fetch(`${process.env.API_URL}/api/internships`, {
-    next: { revalidate: 300 } // Revalidate every hour
+    next: { revalidate: 300 }, // Revalidate every hour
   });
-  
+
   if (!response.ok) {
-    throw new Error("Failed to fetch internships");
+    throw new Error('Failed to fetch internships');
   }
-  
+
   return response.json();
 }
 
 export default async function InternshipPage() {
-  const internships = await Promise.resolve().then(() => getInternships()) as InternshipWithUser[];
+  const internships = (await Promise.resolve().then(() =>
+    getInternships()
+  )) as InternshipWithUser[];
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">

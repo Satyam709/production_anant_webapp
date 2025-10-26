@@ -1,9 +1,10 @@
-import { InternshipWithUser } from "@/types/internship";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { Linkedin, Link2 } from "lucide-react";
-import Image from "next/image";
-import { notFound } from "next/navigation";
+import { Link2,Linkedin } from 'lucide-react';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import { InternshipWithUser } from '@/types/internship';
 
 export default async function InternshipDetailPage({
   params,
@@ -41,7 +42,7 @@ export default async function InternshipDetailPage({
           <div className="flex items-center gap-6 mb-8">
             <div className="relative w-20 h-20">
               <Image
-                src={internship.user.imageURL || "/placeholder-avatar.png"}
+                src={internship.user.imageURL || '/placeholder-avatar.png'}
                 alt={internship.user.name}
                 className="rounded-full bg-blue-900/20 object-cover"
                 fill
@@ -107,7 +108,7 @@ export default async function InternshipDetailPage({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 text-[#00E0FF] hover:text-[#f7d452] transition-colors"
                 >
-                  {internship.link.includes("linkedin.com") ? (
+                  {internship.link.includes('linkedin.com') ? (
                     <>
                       <Linkedin className="h-5 w-5" />
                       <span>View LinkedIn</span>

@@ -1,12 +1,13 @@
-import React, { useState, useRef, type RefObject } from 'react';
-import { Users, CalendarClock, Loader } from 'lucide-react';
-import axios from 'axios';
-import GradientButton from '@/components/ui/GradientButton';
 import type { Prisma } from '@prisma/client';
+import axios from 'axios';
+import { CalendarClock, Loader,Users } from 'lucide-react';
+import React, { type RefObject,useRef, useState } from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
 
 type MeetFormInput = Omit<
   Prisma.MeetingCreateInput,
-  "hostID" | "conductor" | "attendees"
+  'hostID' | 'conductor' | 'attendees'
 >;
 
 const MeetForm = () => {
@@ -51,7 +52,7 @@ const MeetForm = () => {
         setError(response.data.error);
       } else {
         setSuccess(response.data.response || 'Meeting scheduled successfully!');
-        // Reset form 
+        // Reset form
         setFormData({
           venue: '',
           starts: new Date(),
@@ -72,11 +73,11 @@ const MeetForm = () => {
   ) => {
     const { name, value } = e.target;
     if (name === 'duration') {
-      setFormData(prev => ({ ...prev, [name]: parseInt(value) }));
+      setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));
     } else if (name === 'starts') {
-      setFormData(prev => ({ ...prev, starts: new Date(e.target.value) }));
+      setFormData((prev) => ({ ...prev, starts: new Date(e.target.value) }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 

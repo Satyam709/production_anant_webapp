@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Bell, Loader } from 'lucide-react';
 import axios from 'axios';
+import { Bell, Loader } from 'lucide-react';
+import React, { useState } from 'react';
+
 import GradientButton from '@/components/ui/GradientButton';
 
 const NoticeForm = () => {
   const [headline, setHeadline] = useState('');
   const [body, setBody] = useState('');
-  const [category, setCategory] = useState<'General' | 'Technical' | 'Sponsorship'>('General');
+  const [category, setCategory] = useState<
+    'General' | 'Technical' | 'Sponsorship'
+  >('General');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
 
   const userID = 'test-user-id';
 
@@ -107,7 +109,9 @@ const NoticeForm = () => {
           <select
             value={category}
             onChange={(e) =>
-              setCategory(e.target.value as 'General' | 'Technical' | 'Sponsorship')
+              setCategory(
+                e.target.value as 'General' | 'Technical' | 'Sponsorship'
+              )
             }
             className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg 
                        focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50 
@@ -124,7 +128,11 @@ const NoticeForm = () => {
         <div className="flex justify-end">
           <GradientButton type="submit" disabled={loading}>
             <div className="flex items-center space-x-2">
-              {loading ? <Loader className="h-5 w-5 animate-spin" /> : <Bell className="h-5 w-5" />}
+              {loading ? (
+                <Loader className="h-5 w-5 animate-spin" />
+              ) : (
+                <Bell className="h-5 w-5" />
+              )}
               <span>{loading ? 'Creating...' : 'Create Notice'}</span>
             </div>
           </GradientButton>

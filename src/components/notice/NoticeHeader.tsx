@@ -1,5 +1,4 @@
 import React from 'react';
-import { Bell, Filter } from 'lucide-react';
 
 const NoticeHeader = () => {
   return (
@@ -8,7 +7,8 @@ const NoticeHeader = () => {
         Notices
       </h1>
       <p className="text-gray-400 max-w-2xl mx-auto">
-        Stay updated with the latest announcements, updates, and important information.
+        Stay updated with the latest announcements, updates, and important
+        information.
       </p>
     </div>
   );

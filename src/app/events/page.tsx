@@ -1,9 +1,10 @@
-import Navbar from "@/components/Navbar";
-import EventsHeader from "@/components/events/EventsHeader";
-import UpcomingEvents from "@/components/events/UpcomingEvents";
-import PastEvents from "@/components/events/PastEvents";
-import Footer from "@/components/Footer";
-import { Events } from "@prisma/client";
+import { Events } from '@prisma/client';
+
+import EventsHeader from '@/components/events/EventsHeader';
+import PastEvents from '@/components/events/PastEvents';
+import UpcomingEvents from '@/components/events/UpcomingEvents';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 export default async function EventsPage() {
   const { upcomingEvents, pastEvents } = await getEvents();
@@ -33,7 +34,7 @@ export async function getEvents() {
   try {
     // Fetch data for both upcoming and past events from the API
     const response = await fetch(`${process.env.API_URL}/api/events`);
-    if (!response.ok) throw new Error("Failed to fetch events");
+    if (!response.ok) throw new Error('Failed to fetch events');
 
     const data = await response.json();
 
@@ -49,7 +50,7 @@ export async function getEvents() {
       pastEvents: data.pastEvents as Events[],
     };
   } catch (error) {
-    console.error("Error fetching events:", error);
+    console.error('Error fetching events:', error);
 
     return {
       upcomingEvents: [],

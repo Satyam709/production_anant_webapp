@@ -1,11 +1,13 @@
-"use client";
-import React from "react";
-import { Package, Clock, CheckCircle, XCircle } from "lucide-react";
-import { useOrders } from "../hooks/useOrders";
-import Image from "next/image";
-import { OrderStatus } from "@/types/shop";
-import { useMerchandise } from "../hooks/useMerchandise";
-import { placeholder } from "@/lib/images/placeholder";
+'use client';
+import { CheckCircle, Clock, Package, XCircle } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+
+import { placeholder } from '@/lib/images/placeholder';
+import { OrderStatus } from '@/types/shop';
+
+import { useMerchandise } from '../hooks/useMerchandise';
+import { useOrders } from '../hooks/useOrders';
 
 interface OrderStatusBadgeProps {
   status: OrderStatus;
@@ -15,18 +17,18 @@ const OrderStatusBadge: React.FC<OrderStatusBadgeProps> = ({ status }) => {
   const statusConfig = {
     PENDING: {
       icon: Clock,
-      text: "Pending",
-      className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/30",
+      text: 'Pending',
+      className: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
     },
     APPROVED: {
       icon: CheckCircle,
-      text: "Approved",
-      className: "bg-green-500/10 text-green-500 border-green-500/30",
+      text: 'Approved',
+      className: 'bg-green-500/10 text-green-500 border-green-500/30',
     },
     REJECTED: {
       icon: XCircle,
-      text: "Rejected",
-      className: "bg-red-500/10 text-red-500 border-red-500/30",
+      text: 'Rejected',
+      className: 'bg-red-500/10 text-red-500 border-red-500/30',
     },
   }[status];
 
@@ -94,11 +96,11 @@ const OrdersPage = () => {
                       <p className="text-sm text-gray-400">Date</p>
                       <p className="font-medium text-white">
                         {new Date(order.created_at).toLocaleDateString(
-                          "en-US",
+                          'en-US',
                           {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
                           }
                         )}
                       </p>
@@ -122,9 +124,7 @@ const OrdersPage = () => {
                         {product && (
                           <>
                             <Image
-                              src={
-                                product.image_url || placeholder
-                              }
+                              src={product.image_url || placeholder}
                               height={150}
                               width={150}
                               alt={product.name}

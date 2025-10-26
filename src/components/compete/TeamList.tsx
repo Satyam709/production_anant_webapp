@@ -1,53 +1,58 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Team, User } from '@prisma/client'
-import { Users } from 'lucide-react'
-import { placeholder } from '@/lib/images/placeholder'
+import { Team, User } from '@prisma/client';
+import { Users } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+import { placeholder } from '@/lib/images/placeholder';
 
 type TeamWithMembers = Team & {
-  team_leader: User
-  team_members: User[]
-}
+  team_leader: User;
+  team_members: User[];
+};
 
 export default function TeamList() {
-  const [teams, setTeams] = useState<TeamWithMembers[]>([])
-  const [loading, setLoading] = useState(true)
+  const [teams, setTeams] = useState<TeamWithMembers[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch('/api/teams/my-teams')
-        if (!response.ok) throw new Error('Failed to fetch teams')
-        const data = await response.json()
-        setTeams(data)
+        const response = await fetch('/api/teams/my-teams');
+        if (!response.ok) throw new Error('Failed to fetch teams');
+        const data = await response.json();
+        setTeams(data);
       } catch (error) {
-        console.error('Error fetching teams:', error)
+        console.error('Error fetching teams:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchTeams()
-  }, [])
+    fetchTeams();
+  }, []);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-blue"></div>
       </div>
-    )
+    );
   }
 
   if (teams.length === 0) {
     return (
       <div className="bg-black/30 backdrop-blur-sm rounded-xl p-8 border border-gray-800 text-center">
-        <p className="text-gray-400 mb-4">You haven&apos;t joined any teams yet.</p>
-        <p className="text-sm text-gray-500">Create a team or accept an invitation to get started!</p>
+        <p className="text-gray-400 mb-4">
+          You haven&apos;t joined any teams yet.
+        </p>
+        <p className="text-sm text-gray-500">
+          Create a team or accept an invitation to get started!
+        </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -61,7 +66,9 @@ export default function TeamList() {
           <div className="flex items-start justify-between mb-4">
             <h3 className="text-xl font-semibold">{team.team_name}</h3>
             <span className="px-3 py-1 rounded-full bg-primary-blue/10 text-primary-blue text-sm">
-              {team.team_leader.id === team.team_leader.id ? 'Leader' : 'Member'}
+              {team.team_leader.id === team.team_leader.id
+                ? 'Leader'
+                : 'Member'}
             </span>
           </div>
 
@@ -118,5 +125,5 @@ export default function TeamList() {
         </Link>
       ))}
     </div>
-  )
+  );
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Video, Calendar, Clock } from 'lucide-react';
 
 const MeetHeader = () => {
   return (

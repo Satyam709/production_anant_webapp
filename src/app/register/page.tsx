@@ -1,7 +1,7 @@
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import RegisterForm from "@/components/auth/Register";
-import MathSymbols from "@/components/floating/MathSymbols";
+import RegisterForm from '@/components/auth/Register';
+import MathSymbols from '@/components/floating/MathSymbols';
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 export default function RegisterPage() {
   return (

@@ -1,13 +1,14 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, Loader, Link as LinkIcon } from "lucide-react";
-import GradientButton from "@/components/ui/GradientButton";
-import Modal from "@/components/ui/Modal";
-import StatusModal from "@/components/ui/StatusModal";
-import Image from "next/image";
-import { placeholder } from "@/lib/images/placeholder";
-import { uploadAdminServerSideFile } from "@/lib/actions/uploadthing";
+import { Link as LinkIcon,Loader, Pencil, Plus, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+
+import GradientButton from '@/components/ui/GradientButton';
+import Modal from '@/components/ui/Modal';
+import StatusModal from '@/components/ui/StatusModal';
+import { uploadAdminServerSideFile } from '@/lib/actions/uploadthing';
+import { placeholder } from '@/lib/images/placeholder';
 
 interface GDriveGalleryItem {
   id: string;
@@ -27,7 +28,7 @@ const GDriveGalleryManage = () => {
   const [isFetching, setIsFetching] = useState(false);
 
   const [statusModal, setStatusModal] = useState<{
-    type: "success" | "error" | "confirm";
+    type: 'success' | 'error' | 'confirm';
     title: string;
     message: string;
   } | null>(null);
@@ -36,15 +37,15 @@ const GDriveGalleryManage = () => {
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
 
   const [galleryForm, setGalleryForm] = useState({
-    title: "",
-    description: "",
-    link: "",
+    title: '',
+    description: '',
+    link: '',
   });
 
   const fetchGalleries = async () => {
     try {
-      const res = await fetch("/api/gdrivegallery");
-      if (!res.ok) throw new Error("Failed to fetch galleries");
+      const res = await fetch('/api/gdrivegallery');
+      if (!res.ok) throw new Error('Failed to fetch galleries');
       const data = await res.json();
       setGalleries(data.galleries);
     } catch (error) {
@@ -66,15 +67,15 @@ const GDriveGalleryManage = () => {
       if (coverImageFile) {
         const uploadResult = await uploadAdminServerSideFile(coverImageFile);
         if (!uploadResult) {
-          throw new Error("Failed to upload cover image");
+          throw new Error('Failed to upload cover image');
         }
         coverImageUrl = uploadResult?.ufsUrl;
       }
 
-      const res = await fetch("/api/gdrivegallery", {
-        method: "POST",
+      const res = await fetch('/api/gdrivegallery', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...galleryForm,
@@ -83,23 +84,23 @@ const GDriveGalleryManage = () => {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to create gallery");
+      if (!res.ok) throw new Error(data.error || 'Failed to create gallery');
 
       setIsModalOpen(false);
-      setGalleryForm({ title: "", description: "", link: "" });
+      setGalleryForm({ title: '', description: '', link: '' });
       setCoverImageFile(null);
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Gallery created successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Gallery created successfully',
       });
       await fetchGalleries();
     } catch (error) {
       const err = error as Error;
       setStatusModal({
-        type: "error",
-        title: "Error",
-        message: err.message || "Failed to create gallery",
+        type: 'error',
+        title: 'Error',
+        message: err.message || 'Failed to create gallery',
       });
     } finally {
       setLoading(false);
@@ -116,15 +117,15 @@ const GDriveGalleryManage = () => {
       if (coverImageFile) {
         const uploadResult = await uploadAdminServerSideFile(coverImageFile);
         if (!uploadResult) {
-          throw new Error("Failed to upload cover image");
+          throw new Error('Failed to upload cover image');
         }
         coverImageUrl = uploadResult?.url;
       }
 
       const res = await fetch(`/api/gdrivegallery/${selectedGallery.id}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...galleryForm,
@@ -133,7 +134,7 @@ const GDriveGalleryManage = () => {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to update gallery");
+      if (!res.ok) throw new Error(data.error || 'Failed to update gallery');
 
       setGalleries(
         galleries.map((gallery) =>
@@ -145,18 +146,18 @@ const GDriveGalleryManage = () => {
 
       setIsModalOpen(false);
       setSelectedGallery(null);
-      setGalleryForm({ title: "", description: "", link: "" });
+      setGalleryForm({ title: '', description: '', link: '' });
       setCoverImageFile(null);
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Gallery updated successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Gallery updated successfully',
       });
     } catch (error) {
       const err = error as Error;
       setStatusModal({
-        type: "error",
-        title: "Error",
+        type: 'error',
+        title: 'Error',
         message: err.message,
       });
     } finally {
@@ -169,26 +170,26 @@ const GDriveGalleryManage = () => {
 
     try {
       const res = await fetch(`/api/gdrivegallery/${galleryToDelete}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to delete gallery");
+      if (!res.ok) throw new Error(data.error || 'Failed to delete gallery');
 
       setGalleries(
         galleries.filter((gallery) => gallery.id !== galleryToDelete)
       );
       setStatusModal({
-        type: "success",
-        title: "Success",
-        message: "Gallery deleted successfully",
+        type: 'success',
+        title: 'Success',
+        message: 'Gallery deleted successfully',
       });
     } catch (error) {
       const err = error as Error;
       setStatusModal({
-        type: "error",
-        title: "Error",
-        message: err.message || "Failed to delete gallery",
+        type: 'error',
+        title: 'Error',
+        message: err.message || 'Failed to delete gallery',
       });
     } finally {
       setGalleryToDelete(null);
@@ -261,7 +262,7 @@ const GDriveGalleryManage = () => {
                         setSelectedGallery(gallery);
                         setGalleryForm({
                           title: gallery.title,
-                          description: gallery.description || "",
+                          description: gallery.description || '',
                           link: gallery.link,
                         });
                         setIsModalOpen(true);
@@ -274,10 +275,10 @@ const GDriveGalleryManage = () => {
                       onClick={() => {
                         setGalleryToDelete(gallery.id);
                         setStatusModal({
-                          type: "confirm",
-                          title: "Delete Gallery",
+                          type: 'confirm',
+                          title: 'Delete Gallery',
                           message:
-                            "Are you sure you want to delete this gallery? This action cannot be undone.",
+                            'Are you sure you want to delete this gallery? This action cannot be undone.',
                         });
                       }}
                       className="p-2 text-gray-400 hover:text-red-500 transition-colors"
@@ -302,10 +303,10 @@ const GDriveGalleryManage = () => {
         onClose={() => {
           setIsModalOpen(false);
           setSelectedGallery(null);
-          setGalleryForm({ title: "", description: "", link: "" });
+          setGalleryForm({ title: '', description: '', link: '' });
           setCoverImageFile(null);
         }}
-        title={selectedGallery ? "Edit Gallery" : "Add Gallery"}
+        title={selectedGallery ? 'Edit Gallery' : 'Add Gallery'}
       >
         <form
           onSubmit={selectedGallery ? handleEditGallery : handleCreateGallery}
@@ -399,7 +400,7 @@ const GDriveGalleryManage = () => {
               onClick={() => {
                 setIsModalOpen(false);
                 setSelectedGallery(null);
-                setGalleryForm({ title: "", description: "", link: "" });
+                setGalleryForm({ title: '', description: '', link: '' });
                 setCoverImageFile(null);
               }}
               className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
@@ -416,11 +417,11 @@ const GDriveGalleryManage = () => {
                 <span>
                   {loading
                     ? selectedGallery
-                      ? "Updating..."
-                      : "Creating..."
+                      ? 'Updating...'
+                      : 'Creating...'
                     : selectedGallery
-                    ? "Update Gallery"
-                    : "Add Gallery"}
+                      ? 'Update Gallery'
+                      : 'Add Gallery'}
                 </span>
               </div>
             </GradientButton>
@@ -432,11 +433,11 @@ const GDriveGalleryManage = () => {
       <StatusModal
         isOpen={statusModal !== null}
         onClose={() => setStatusModal(null)}
-        title={statusModal?.title || ""}
-        message={statusModal?.message || ""}
-        type={statusModal?.type || "success"}
+        title={statusModal?.title || ''}
+        message={statusModal?.message || ''}
+        type={statusModal?.type || 'success'}
         onConfirm={
-          statusModal?.type === "confirm" && galleryToDelete
+          statusModal?.type === 'confirm' && galleryToDelete
             ? handleDeleteGallery
             : undefined
         }

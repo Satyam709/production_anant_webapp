@@ -1,14 +1,23 @@
+import {
+  Loader,
+  Plus,
+  Send,
+  Trash2,
+  UserPlus,
+  Users,
+} from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { Users, UserPlus, Send, Plus, Pencil, Trash2, Loader } from 'lucide-react';
+
+import { DeleteTeam } from '@/lib/actions/DeleteTeam';
+
 import GradientButton from '../ui/GradientButton';
 import Modal from '../ui/Modal';
 import StatusModal from '../ui/StatusModal';
-import { DeleteTeam } from '@/lib/actions/DeleteTeam';
 
 interface Team {
   team_id: string;
   team_name: string;
-  team_leader: string,
+  team_leader: string;
   team_members: string[];
 }
 
@@ -16,7 +25,7 @@ interface Invitation {
   request_id: string;
   teamName: string;
   team_id: string;
-  team_leader: string
+  team_leader: string;
   request_time: Date;
 }
 
@@ -42,65 +51,70 @@ const TeamDashboard = () => {
   const [refresh, set_refresh] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
-    name: ''
+    name: '',
   });
 
   const [newMemberRoll, setNewMemberRoll] = useState('');
 
-  useEffect(()=>{
-    async function getData(){
+  useEffect(() => {
+    async function getData() {
       const details = await fetch(`/api/teams`, {
-        method:"GET",
-        headers:{"Content-Type":"application/json"}
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
       });
 
       const response = await details.json();
 
-      let teams_member = response.teams_member;
-      let modified_teams_member = [];
-      for (let i=0;i<teams_member.length;i++){
+      const teams_member = response.teams_member;
+      const modified_teams_member = [];
+      for (let i = 0; i < teams_member.length; i++) {
         modified_teams_member.push({
-          team_id : teams_member[i].team_id,
+          team_id: teams_member[i].team_id,
           team_name: teams_member[i].team_name,
-          team_members: teams_member[i].team_members.map((el:any)=>String(el.roll_number)),
-          team_leader: String(teams_member[i].team_leader.roll_number) 
+          team_members: teams_member[i].team_members.map((el: any) =>
+            String(el.roll_number)
+          ),
+          team_leader: String(teams_member[i].team_leader.roll_number),
         });
       }
 
       const teams_leaded = response.teams_leaded;
-      let modified_teams_leaded = [];
-      for(let i=0;i<teams_leaded.length;i++){
+      const modified_teams_leaded = [];
+      for (let i = 0; i < teams_leaded.length; i++) {
         modified_teams_leaded.push({
           team_id: teams_leaded[i].team_id,
           team_name: teams_leaded[i].team_name,
-          team_members: teams_leaded[i].team_members.map((el:any)=>String(el.roll_number)),
-          team_leader: teams_leaded[i].team_leader
-        })
+          team_members: teams_leaded[i].team_members.map((el: any) =>
+            String(el.roll_number)
+          ),
+          team_leader: teams_leaded[i].team_leader,
+        });
       }
 
       const invitations = response.invitations;
-      let modified_invitations = [];
-      for(let i=0;i<invitations.length;i++){
+      const modified_invitations = [];
+      for (let i = 0; i < invitations.length; i++) {
         modified_invitations.push({
           request_id: invitations[i].request_id,
           teamName: invitations[i].team.team_name,
-          team_id:invitations[i].team_id,
-          team_leader:invitations[i].team.team_leader_id,
-          request_time: invitations[i].request_time
-        })
+          team_id: invitations[i].team_id,
+          team_leader: invitations[i].team.team_leader_id,
+          request_time: invitations[i].request_time,
+        });
       }
-      
+
       setInvitations(modified_invitations);
       setTeams(modified_teams_leaded);
       setMemberTeams(modified_teams_member);
     }
     getData();
-  },[refresh]);
+  }, [refresh]);
 
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const createTeam = async (e: React.FormEvent) => {
@@ -108,25 +122,24 @@ const TeamDashboard = () => {
     if (formData.name.trim()) {
       setLoading(true);
       try {
-  
         const createTeam = await fetch(`/api/teams/create`, {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({"team_name":formData.name})
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ team_name: formData.name }),
         });
 
         if (!createTeam.ok) {
           const errorResponse = await createTeam.json();
-          throw new Error(errorResponse.error || "Failed to create team");
+          throw new Error(errorResponse.error || 'Failed to create team');
         }
 
         const response = await createTeam.json();
         let newTeam = response.data;
-        newTeam = {...newTeam, team_members:[]}
-        
+        newTeam = { ...newTeam, team_members: [] };
+
         setTeams([...teams, newTeam]);
         setIsCreateModalOpen(false);
-        setFormData({ name: ''});
+        setFormData({ name: '' });
         setStatusModal({
           type: 'success',
           title: 'Team Created',
@@ -137,7 +150,7 @@ const TeamDashboard = () => {
         setStatusModal({
           type: 'error',
           title: 'Error',
-          message:  errorMessage || 'Failed to create team. Please try again.',
+          message: errorMessage || 'Failed to create team. Please try again.',
         });
       } finally {
         setLoading(false);
@@ -150,7 +163,8 @@ const TeamDashboard = () => {
     setStatusModal({
       type: 'confirm',
       title: 'Delete Team',
-      message: 'Are you sure you want to delete this team? This action cannot be undone.',
+      message:
+        'Are you sure you want to delete this team? This action cannot be undone.',
     });
   };
 
@@ -158,10 +172,10 @@ const TeamDashboard = () => {
     if (teamToDelete) {
       try {
         const delete_team = await DeleteTeam(teamToDelete);
-        if(!delete_team?.success){
+        if (!delete_team?.success) {
           throw new Error(delete_team.message);
         }
-        setTeams(teams.filter(team => team.team_id !== teamToDelete));
+        setTeams(teams.filter((team) => team.team_id !== teamToDelete));
         setStatusModal({
           type: 'success',
           title: 'Team Deleted',
@@ -183,25 +197,24 @@ const TeamDashboard = () => {
     e.preventDefault();
     if (selectedTeam && newMemberRoll.trim()) {
       setLoading(true);
-      try { 
-        
-        if(isNaN(Number(newMemberRoll.trim()))){
-          throw new Error("Roll Number should be a number");
+      try {
+        if (isNaN(Number(newMemberRoll.trim()))) {
+          throw new Error('Roll Number should be a number');
         }
 
         const data = {
-          team_id : selectedTeam.team_id,
-          invitee_roll_number: newMemberRoll.trim()
+          team_id: selectedTeam.team_id,
+          invitee_roll_number: newMemberRoll.trim(),
         };
 
         const invite = await fetch(`/api/invite-to-team`, {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body: JSON.stringify(data)
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
         });
 
-        if(!invite.ok){
-          const errorMsg = await invite.json(); 
+        if (!invite.ok) {
+          const errorMsg = await invite.json();
           throw new Error(errorMsg.error);
         }
 
@@ -224,27 +237,26 @@ const TeamDashboard = () => {
     }
   };
 
-  const acceptInvitation = async (req_id: string, joinTeam: boolean) =>{
-    try{
+  const acceptInvitation = async (req_id: string, joinTeam: boolean) => {
+    try {
       const invite = await fetch(`/api/join-team`, {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({request_id: req_id, joinTeam: joinTeam})
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request_id: req_id, joinTeam: joinTeam }),
       });
 
-      if(!invite.ok){
+      if (!invite.ok) {
         const errorMsg = await invite.json();
         throw new Error(errorMsg);
       }
 
-      if(joinTeam){
+      if (joinTeam) {
         setStatusModal({
           type: 'success',
           title: 'Invitation accepted',
           message: 'Team joined successfully.',
         });
-      }
-      else{
+      } else {
         setStatusModal({
           type: 'success',
           title: 'Invitation rejected',
@@ -252,15 +264,14 @@ const TeamDashboard = () => {
         });
       }
       set_refresh(!refresh);
-    }
-    catch(err){
+    } catch (err) {
       setStatusModal({
         type: 'error',
         title: 'Error',
         message: String(err) || 'Failed to process request.',
       });
     }
-  }
+  };
 
   const handleAddMemberClick = (team: Team) => {
     setSelectedTeam(team);
@@ -283,9 +294,14 @@ const TeamDashboard = () => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <Users className="text-primary-cyan" size={24} />
-              <h2 className="text-xl font-semibold text-white">Teams You Lead</h2>
+              <h2 className="text-xl font-semibold text-white">
+                Teams You Lead
+              </h2>
             </div>
-            <GradientButton type="button" onClick={() => setIsCreateModalOpen(true)}>
+            <GradientButton
+              type="button"
+              onClick={() => setIsCreateModalOpen(true)}
+            >
               <div className="flex items-center space-x-2">
                 <Plus className="h-5 w-5" />
                 <span>Create Team</span>
@@ -293,11 +309,16 @@ const TeamDashboard = () => {
             </GradientButton>
           </div>
           <div className="space-y-4">
-            {teams.map(team => (
-              <div key={team.team_id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
+            {teams.map((team) => (
+              <div
+                key={team.team_id}
+                className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200"
+              >
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h3 className="font-medium text-white text-lg">{team.team_name}</h3>
+                    <h3 className="font-medium text-white text-lg">
+                      {team.team_name}
+                    </h3>
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
@@ -340,13 +361,20 @@ const TeamDashboard = () => {
         <div className="backdrop-blur-xl bg-black/30 p-8 rounded-2xl border border-gray-800 shadow-xl">
           <div className="flex items-center gap-2 mb-6">
             <UserPlus className="text-primary-cyan" size={24} />
-            <h2 className="text-xl font-semibold text-white">Teams You're Part Of</h2>
+            <h2 className="text-xl font-semibold text-white">
+              Teams You're Part Of
+            </h2>
           </div>
           <div className="space-y-4">
-            {memberTeams.map(team => (
-              <div key={team.team_id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
+            {memberTeams.map((team) => (
+              <div
+                key={team.team_id}
+                className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200"
+              >
                 <div className="mb-2">
-                  <h3 className="font-medium text-white text-lg">{team.team_name}</h3>
+                  <h3 className="font-medium text-white text-lg">
+                    {team.team_name}
+                  </h3>
                 </div>
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex -space-x-2">
@@ -374,13 +402,20 @@ const TeamDashboard = () => {
         <div className="backdrop-blur-xl bg-black/30 p-8 rounded-2xl border border-gray-800 shadow-xl">
           <div className="flex items-center gap-2 mb-6">
             <Send className="text-primary-cyan" size={24} />
-            <h2 className="text-xl font-semibold text-white">Team Invitations</h2>
+            <h2 className="text-xl font-semibold text-white">
+              Team Invitations
+            </h2>
           </div>
           <div className="space-y-4">
-            {invitations.map(invitation => (
-              <div key={invitation.request_id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200">
+            {invitations.map((invitation) => (
+              <div
+                key={invitation.request_id}
+                className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200"
+              >
                 <div className="mb-3">
-                  <h3 className="font-medium text-white text-lg">{invitation.teamName}</h3>
+                  <h3 className="font-medium text-white text-lg">
+                    {invitation.teamName}
+                  </h3>
                   <p className="text-gray-400 text-sm">
                     Invited by {invitation.team_leader}
                   </p>
@@ -390,10 +425,20 @@ const TeamDashboard = () => {
                     Sent {formatDate(invitation.request_time)}
                   </span>
                   <div className="space-x-2">
-                    <button onClick={()=>{acceptInvitation(invitation.request_id, true)}} className="bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white px-4 py-2 rounded-md text-sm transition-colors">
+                    <button
+                      onClick={() => {
+                        acceptInvitation(invitation.request_id, true);
+                      }}
+                      className="bg-gradient-to-r from-primary-blue to-primary-cyan hover:from-primary-blue/90 hover:to-primary-cyan/90 text-white px-4 py-2 rounded-md text-sm transition-colors"
+                    >
                       Accept
                     </button>
-                    <button onClick={()=>{acceptInvitation(invitation.request_id, false)}} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition-colors">
+                    <button
+                      onClick={() => {
+                        acceptInvitation(invitation.request_id, false);
+                      }}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition-colors"
+                    >
                       Decline
                     </button>
                   </div>

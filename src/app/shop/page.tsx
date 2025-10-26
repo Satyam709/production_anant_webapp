@@ -1,15 +1,17 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Navbar from "@/components/Navbar";
-import ShopHeader from "@/components/merch/shop/ShopHeader";
-import MerchandiseSection from "@/components/merch/shop/MerchandiseSection";
-import Cart from "@/components/merch/shop/Cart";
-import "@/styles/bganimations.css";
-import Footer from "@/components/Footer";
-import { ShoppingCart } from "lucide-react";
-import { useMerchandise } from "@/components/merch/hooks/useMerchandise";
-import MathSymbols from "@/components/floating/MathSymbols";
+import '@/styles/bganimations.css';
+
+import { ShoppingCart } from 'lucide-react';
+import React, { useState } from 'react';
+
+import MathSymbols from '@/components/floating/MathSymbols';
+import Footer from '@/components/Footer';
+import { useMerchandise } from '@/components/merch/hooks/useMerchandise';
+import Cart from '@/components/merch/shop/Cart';
+import MerchandiseSection from '@/components/merch/shop/MerchandiseSection';
+import ShopHeader from '@/components/merch/shop/ShopHeader';
+import Navbar from '@/components/Navbar';
 
 export default function Shop() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -50,11 +52,11 @@ export default function Shop() {
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute w-[500px] h-[500px] bg-indigo-500/30 rounded-full mix-blend-multiply filter blur-[128px] animate-blob "
-          style={{ top: "10%", right: "70%" }}
+          style={{ top: '10%', right: '70%' }}
         />
         <div
           className="absolute w-[500px] h-[500px] bg-blue-500/30 rounded-full mix-blend-multiply filter blur-[128px] animate-blob "
-          style={{ top: "50%", right: "-10%" }}
+          style={{ top: '50%', right: '-10%' }}
         />
       </div>
       <MathSymbols></MathSymbols>

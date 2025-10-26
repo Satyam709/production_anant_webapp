@@ -1,17 +1,18 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Calendar, Clock, MapPin } from "lucide-react";
-import GradientButton from "../ui/GradientButton";
-import { Events } from "@prisma/client";
-import { placeholder } from "@/lib/images/placeholder";
+import { Events } from '@prisma/client';
+import { Calendar, Clock, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+
+import { placeholder } from '@/lib/images/placeholder';
+
+import GradientButton from '../ui/GradientButton';
 
 const EventCard: React.FC<Events> = (event) => {
+  console.log('card data', event);
 
-  console.log("card data" ,event);
-  
   const router = useRouter();
   const isRegistrationOpen = new Date(event.registration_deadline) > new Date();
 
@@ -53,13 +54,13 @@ const EventCard: React.FC<Events> = (event) => {
                 {new Date(event.conductedOn).toLocaleTimeString('en-US', {
                   hour: '2-digit',
                   minute: '2-digit',
-                  hour12: true
+                  hour12: true,
                 })}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin size={16} />
-              <span>{event.venue || "Venue not specified"}</span>
+              <span>{event.venue || 'Venue not specified'}</span>
             </div>
           </div>
         </div>
@@ -69,7 +70,7 @@ const EventCard: React.FC<Events> = (event) => {
           onClick={() => router.push(`/events/${event.event_id}`)}
           disabled={!isRegistrationOpen}
         >
-          {isRegistrationOpen ? "View Details" : "Registration Closed"}
+          {isRegistrationOpen ? 'View Details' : 'Registration Closed'}
         </GradientButton>
       </div>
     </div>

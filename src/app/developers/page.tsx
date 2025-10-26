@@ -1,19 +1,20 @@
-"use client";
-import { developers } from "@/data/devs";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+'use client';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useEffect,useState } from 'react';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import {
-  BarChart,
   Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Image from "next/image";
+} from 'recharts';
+
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import { developers } from '@/data/devs';
 
 interface CommitData {
   month: string;
@@ -36,7 +37,7 @@ interface DeveloperCardProps {
   rank: number;
 }
 
-const months = ["Dec", "Jan", "Feb", "Mar", "Apr","May"];
+const months = ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
 
 const DeveloperCard = ({ dev, loading, index, rank }: DeveloperCardProps) => {
   // Convert the commit history array to the format required by the chart
@@ -67,7 +68,7 @@ const DeveloperCard = ({ dev, loading, index, rank }: DeveloperCardProps) => {
         <motion.div
           className="relative w-40 h-40 group"
           whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-blue-500/50 to-purple-500/50 rounded-2xl blur-xl opacity-50"
@@ -128,15 +129,15 @@ const DeveloperCard = ({ dev, loading, index, rank }: DeveloperCardProps) => {
                 <Tooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    borderRadius: "0.5rem",
-                    color: "#E5E7EB",
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '0.5rem',
+                    color: '#E5E7EB',
                   }}
                 />
-                <Bar 
-                  dataKey="commits" 
-                  fill="#8B5CF6" 
+                <Bar
+                  dataKey="commits"
+                  fill="#8B5CF6"
                   radius={[4, 4, 0, 0]}
                   onMouseOver={() => {
                     document.body.style.cursor = 'pointer';
@@ -205,7 +206,7 @@ export default function DevelopersPage() {
             className="aspect-[801/1036] w-[50.0625rem] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30"
             style={{
               clipPath:
-                "polygon(63.1% 29.5%, 100% 17.1%, 76.6% 3%, 48.4% 0%, 44.6% 4.7%, 54.5% 25.3%, 59.8% 49%, 55.2% 57.8%, 44.4% 57.2%, 27.8% 47.9%, 35.1% 81.5%, 0% 97.7%, 39.2% 100%, 35.2% 81.4%, 97.2% 52.8%, 63.1% 29.5%)",
+                'polygon(63.1% 29.5%, 100% 17.1%, 76.6% 3%, 48.4% 0%, 44.6% 4.7%, 54.5% 25.3%, 59.8% 49%, 55.2% 57.8%, 44.4% 57.2%, 27.8% 47.9%, 35.1% 81.5%, 0% 97.7%, 39.2% 100%, 35.2% 81.4%, 97.2% 52.8%, 63.1% 29.5%)',
             }}
           />
         </div>
@@ -218,7 +219,7 @@ export default function DevelopersPage() {
             className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
             style={{
               clipPath:
-                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
             }}
           />
         </div>
