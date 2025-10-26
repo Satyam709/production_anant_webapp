@@ -1,5 +1,5 @@
 'use client';
-import { Package, Settings,ShoppingBag } from 'lucide-react';
+import { Package, Settings, ShoppingBag } from 'lucide-react';
 import React from 'react';
 
 import SideBarItems from '@/components/merch/clientUi/SideBarItems';

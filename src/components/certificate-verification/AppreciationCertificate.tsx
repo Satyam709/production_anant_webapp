@@ -1,5 +1,5 @@
 import { Certificate } from '@prisma/client';
-import { Award, BookOpen, Calendar, Hash, Trophy,User } from 'lucide-react';
+import { Award, BookOpen, Calendar, Hash, Trophy, User } from 'lucide-react';
 import React from 'react';
 
 interface AppreciationCertificateProps {

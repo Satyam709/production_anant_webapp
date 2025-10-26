@@ -3,7 +3,7 @@ import { Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { Instagram,Linkedin } from 'react-feather';
+import { Instagram, Linkedin } from 'react-feather';
 
 import { TeamMember } from '@/lib/actions/AnantTeam';
 

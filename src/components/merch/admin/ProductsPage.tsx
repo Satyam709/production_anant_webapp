@@ -1,4 +1,4 @@
-import { Pencil, Plus, Search,Trash2 } from 'lucide-react';
+import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 

@@ -2,7 +2,7 @@ import { club_dept_options } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { GitHub, Instagram,Linkedin } from 'react-feather';
+import { GitHub, Instagram, Linkedin } from 'react-feather';
 
 import { TeamMember } from '@/lib/actions/AnantTeam';
 

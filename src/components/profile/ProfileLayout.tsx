@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback,useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileInfo from '@/components/profile/ProfileInfo';

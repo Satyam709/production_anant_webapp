@@ -1,6 +1,6 @@
 'use client';
 
-import { InternshipClass,InternshipDepartment } from '@prisma/client';
+import { InternshipClass, InternshipDepartment } from '@prisma/client';
 import { useState } from 'react';
 
 interface InternshipFormData {

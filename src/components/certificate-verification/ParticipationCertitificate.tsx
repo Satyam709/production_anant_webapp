@@ -1,5 +1,5 @@
 import { Certificate } from '@prisma/client';
-import { ArrowUpRight,Calendar, Medal, User } from 'lucide-react';
+import { ArrowUpRight, Calendar, Medal, User } from 'lucide-react';
 import React from 'react';
 
 interface ParticipationCertificateListProps {

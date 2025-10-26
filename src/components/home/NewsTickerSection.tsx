@@ -2,7 +2,7 @@
 import { useAnimationFrame } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import React, { useRef,useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 export interface NewsItem {
   id: string | number;

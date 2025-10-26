@@ -1,7 +1,7 @@
 'use client';
 import { Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Register_Button({
   compi_id,

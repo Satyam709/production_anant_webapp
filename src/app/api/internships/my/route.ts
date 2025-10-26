@@ -1,4 +1,4 @@
-import {NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import isSuperAdmin from '@/lib/actions/Admin';
 import { getSession } from '@/lib/actions/Sessions';

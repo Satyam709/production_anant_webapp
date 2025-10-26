@@ -5,7 +5,7 @@ import 'katex/dist/katex.min.css';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Editor } from '@tiptap/react';
 import katex from 'katex';
-import { useCallback,useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';

@@ -1,4 +1,4 @@
-import { Events,Prisma } from '@prisma/client';
+import { Events, Prisma } from '@prisma/client';
 import axios from 'axios';
 import {
   Calendar,

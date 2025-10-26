@@ -31,7 +31,7 @@ import GDriveGalleryManage from '@/components/gallery/admin/GDriveGalleryManage'
 import InternshipDashboard from '@/components/internship/Dashboard';
 import NewsLetterDashboard from '@/components/newsletter/NewsLetterDashboard';
 import TeamDashboard from '@/components/teams/TeamDashboard';
-import  isAdmin ,{isSuperAdmin} from '@/lib/actions/Admin';
+import isAdmin, { isSuperAdmin } from '@/lib/actions/Admin';
 
 type TabType =
   | 'competitions'

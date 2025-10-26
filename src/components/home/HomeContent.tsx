@@ -1,8 +1,10 @@
 'use client';
-import { Events,Notice } from '@prisma/client';
+import { Events, Notice } from '@prisma/client';
 import React, { useEffect, useState } from 'react';
 
-import NewsTickerSection, { NewsItem } from '@/components/home/NewsTickerSection';
+import NewsTickerSection, {
+  NewsItem,
+} from '@/components/home/NewsTickerSection';
 
 import HomeBlogsSection from './HomeBlogsSection';
 import HomeEventsSection from './HomeEventsSection';

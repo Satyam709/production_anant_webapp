@@ -1,10 +1,10 @@
 'use client';
 
-import { ChevronRight,Menu, X } from 'lucide-react';
+import { ChevronRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import NavDropdown from '@/components/navigation/NavDropdown';
 import { navItems } from '@/constants/navigation';

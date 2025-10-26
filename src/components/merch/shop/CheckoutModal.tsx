@@ -1,4 +1,4 @@
-import { ArrowLeft,Check, Copy, X } from 'lucide-react';
+import { ArrowLeft, Check, Copy, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 

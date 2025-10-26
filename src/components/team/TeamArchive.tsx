@@ -2,7 +2,7 @@
 
 import { position_options } from '@prisma/client';
 import React, { useState } from 'react';
-import { Archive, Calendar,ChevronDown } from 'react-feather';
+import { Archive, Calendar, ChevronDown } from 'react-feather';
 
 import Members from '@/components/team/Members';
 import OfficeBearers from '@/components/team/OfficeBearers';

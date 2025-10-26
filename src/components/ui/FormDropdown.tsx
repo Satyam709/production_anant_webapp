@@ -2,7 +2,7 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
-import React, { useEffect,useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface FormDropdownProps {
   label: string;

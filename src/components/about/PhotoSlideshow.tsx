@@ -1,8 +1,8 @@
 'use client';
 
-import { AnimatePresence,motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface PhotoSlideshowProps {
   photos: string[];

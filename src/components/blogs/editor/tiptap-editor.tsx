@@ -11,13 +11,13 @@ import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
-import { EditorContent, JSONContent,useEditor } from '@tiptap/react';
+import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { EditorMenuBar } from '@/components/blogs/editor/editor-menu-bar';
 import { Card } from '@/components/ui/Card';
-import { MathBlock,MathInline } from '@/extensions/math-extension';
+import { MathBlock, MathInline } from '@/extensions/math-extension';
 import { cn } from '@/lib/utils';
 
 export interface EditorProps {
