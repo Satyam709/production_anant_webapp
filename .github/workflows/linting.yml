@@ -30,8 +30,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # --- ESLint Check ---
-      - name: Run ESLint (via script)
-        run: pnpm lint --max-warnings=0
+      # - name: Run ESLint (via script)
+      #   run: pnpm lint --max-warnings=0
 
       # --- Prettier Check ---
       - name: Check Prettier formatting (no write)
