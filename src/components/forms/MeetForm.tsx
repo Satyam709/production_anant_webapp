@@ -307,6 +307,7 @@ RenderAttendees.displayName = 'RenderAttendees';
 
 const MeetForm = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [pastMeetings, setPastMeetings] = useState<Meeting[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAttendeesModalOpen, setIsAttendeesModalOpen] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
@@ -362,9 +363,11 @@ const MeetForm = () => {
       const res = await axios.get('/api/meetings');
       if (!res.data || !res.data.meetings) {
         setMeetings([]);
+        setPastMeetings([]);
         throw new Error('Failed to fetch meetings');
       }
       setMeetings(res.data.meetings.upcoming);
+      setPastMeetings(res.data.meetings.past);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to fetch meetings');
     } finally {
@@ -527,20 +530,46 @@ const MeetForm = () => {
         <div className="flex justify-center p-8">
           <Loader className="h-8 w-8 animate-spin text-primary-cyan" />
         </div>
-      ) : meetings.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {meetings.map((meeting) => (
-            <MeetingCard
-              key={meeting.meeting_id}
-              meeting={meeting}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onDownload={handleDownload}
-              onShowAttendees={handleShowAttendees}
-              onGenerateQR={handleGenerateQR}
-              formatTime={formatTime}
-            />
-          ))}
+      ) : meetings.length || pastMeetings.length > 0 ? (
+        <div>
+          {meetings.length > 0 && (
+          <section>
+            <h1 className='text-xl font-semibold text-white'>Upcoming Meetings</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {meetings.map((meeting) => (
+                <MeetingCard
+                  key={meeting.meeting_id}
+                  meeting={meeting}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onDownload={handleDownload}
+                  onShowAttendees={handleShowAttendees}
+                  onGenerateQR={handleGenerateQR}
+                  formatTime={formatTime}
+                />
+              ))}
+            </div>
+          </section>
+          )}
+          {pastMeetings.length > 0 && (
+          <section>
+            <h1 className='text-xl font-semibold text-white mt-8'>Past Meetings</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {pastMeetings.map((meeting) => (
+                <MeetingCard
+                  key={meeting.meeting_id}
+                  meeting={meeting}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onDownload={handleDownload}
+                  onShowAttendees={handleShowAttendees}
+                  onGenerateQR={handleGenerateQR}
+                  formatTime={formatTime}
+                />
+              ))}
+            </div>
+          </section>
+          )}
         </div>
       ) : (
         <div className="text-center text-gray-400 py-8">

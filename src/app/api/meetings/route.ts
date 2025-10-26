@@ -4,7 +4,7 @@ import prisma from '@/lib/PrismaClient/db';
 
 export async function GET(req: NextRequest) {
   try {
-    const pageSize = 5;
+    const pageSize = 9999; // Large number to fetch all meetings(no pagination for now)
     const url = new URL(req.url);
     const searchParams = url.searchParams;
 

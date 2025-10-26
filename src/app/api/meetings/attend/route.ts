@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
   const userId = session.user.id;
   let parseToken: attendanceData;
-  const timeoutSeconds = 600; // Set timeout (e.g., 300 seconds = 5 minutes)
+  const timeoutSeconds = 3600; // Set timeout (e.g., 3600 seconds = 1 hour)
 
   try {
     const decodedToken = await decodeAttendanceJwt(token);
