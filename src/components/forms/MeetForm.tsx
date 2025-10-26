@@ -533,42 +533,46 @@ const MeetForm = () => {
       ) : meetings.length || pastMeetings.length > 0 ? (
         <div>
           {meetings.length > 0 && (
-          <section>
-            <h1 className='text-xl font-semibold text-white'>Upcoming Meetings</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {meetings.map((meeting) => (
-                <MeetingCard
-                  key={meeting.meeting_id}
-                  meeting={meeting}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onDownload={handleDownload}
-                  onShowAttendees={handleShowAttendees}
-                  onGenerateQR={handleGenerateQR}
-                  formatTime={formatTime}
-                />
-              ))}
-            </div>
-          </section>
+            <section>
+              <h1 className="text-xl font-semibold text-white">
+                Upcoming Meetings
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {meetings.map((meeting) => (
+                  <MeetingCard
+                    key={meeting.meeting_id}
+                    meeting={meeting}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onDownload={handleDownload}
+                    onShowAttendees={handleShowAttendees}
+                    onGenerateQR={handleGenerateQR}
+                    formatTime={formatTime}
+                  />
+                ))}
+              </div>
+            </section>
           )}
           {pastMeetings.length > 0 && (
-          <section>
-            <h1 className='text-xl font-semibold text-white mt-8'>Past Meetings</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {pastMeetings.map((meeting) => (
-                <MeetingCard
-                  key={meeting.meeting_id}
-                  meeting={meeting}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onDownload={handleDownload}
-                  onShowAttendees={handleShowAttendees}
-                  onGenerateQR={handleGenerateQR}
-                  formatTime={formatTime}
-                />
-              ))}
-            </div>
-          </section>
+            <section>
+              <h1 className="text-xl font-semibold text-white mt-8">
+                Past Meetings
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {pastMeetings.map((meeting) => (
+                  <MeetingCard
+                    key={meeting.meeting_id}
+                    meeting={meeting}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onDownload={handleDownload}
+                    onShowAttendees={handleShowAttendees}
+                    onGenerateQR={handleGenerateQR}
+                    formatTime={formatTime}
+                  />
+                ))}
+              </div>
+            </section>
           )}
         </div>
       ) : (

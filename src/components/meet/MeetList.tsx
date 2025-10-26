@@ -28,14 +28,15 @@ const MeetList = () => {
     fetchMeets();
   }, []);
 
-  return (<>
-    {meets && meets.length > 0 && (
-      <MeetDisplay meets={meets} title="Upcoming Meetings" />
-    )}
-    {pastMeets && pastMeets.length > 0 && (
-      <MeetDisplay meets={pastMeets} title="Past Meetings" />
-    )}
-  </>
+  return (
+    <>
+      {meets && meets.length > 0 && (
+        <MeetDisplay meets={meets} title="Upcoming Meetings" />
+      )}
+      {pastMeets && pastMeets.length > 0 && (
+        <MeetDisplay meets={pastMeets} title="Past Meetings" />
+      )}
+    </>
   );
 };
 
