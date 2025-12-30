@@ -8,8 +8,8 @@ const SponsorHeader = () => {
         Our Partners
       </h1>
       <p className="text-gray-400 max-w-2xl mx-auto">
-        We are proud to be supported by these industry-leading organizations 
-        who help make our community events possible.
+        We are proud to be supported by these industry-leading organizations who
+        help make our community events possible.
       </p>
     </div>
   );

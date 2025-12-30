@@ -26,7 +26,7 @@ const groupSponsorsByYear = (sponsors: Sponsor[]) => {
 export default async function SponsorPage() {
   // Call the server action instead of prisma directly
   const sponsors = await getSponsors();
-  
+
   const sponsorsByYear = groupSponsorsByYear(sponsors);
 
   return (

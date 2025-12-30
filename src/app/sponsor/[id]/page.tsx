@@ -17,7 +17,7 @@ export default async function SponsorDetails({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
+
   // Call the server action
   const sponsor = await getSponsorById(id);
 
