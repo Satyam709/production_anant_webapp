@@ -111,7 +111,7 @@ export default function ForgetPasswordForm() {
                 disabled={isLoading || otpSent}
                 className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-primary-blue/20 hover:bg-primary-blue/30 text-primary-blue rounded-md transition-colors duration-200 disabled:opacity-50"
               >
-                {isLoading ? 'Verifying...' : otpSent ? 'Verified' : 'Verify'}
+                {isLoading ? 'Verifying...' : otpSent ? 'OTP Sent' : 'Verify'}
               </button>
             </div>
           </div>

@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import z from 'zod';
 
-import redis from '@/helpers/redis';
+import keystore from '@/lib/keystore/store';
 import prisma from '@/lib/PrismaClient/db';
 
 const RegistrationSchema = z.object({
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    const value = await redis.get(roll_number);
+    const value = await keystore.get(roll_number);
     if (!value) {
       return NextResponse.json(
         {
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
     }
 
     // delete OTP from redis
-    await redis.del(roll_number);
+    await keystore.delete(roll_number);
 
     // hash password
     const salt = await bcryptjs.genSalt(10);

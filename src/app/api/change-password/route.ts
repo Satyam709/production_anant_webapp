@@ -2,7 +2,7 @@ import bcryptjs from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 
-import redis from '@/helpers/redis';
+import keystore from '@/lib/keystore/store';
 import prisma from '@/lib/PrismaClient/db';
 
 const changePasswordSchema = z
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     // check OTP
     else {
       otp = otp.trim();
-      const val = await redis.get(roll_number);
+      const val = await keystore.get(roll_number);
       if (!val) {
         return NextResponse.json(
           { error: 'OTP not found in database! Unverified' },
@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
       if (!isOTPCorrect) {
         return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
       }
-      // delete OTP from redis
-      await redis.del(roll_number);
+      // delete OTP from keystore
+      await keystore.delete(roll_number);
     }
 
     // hash password
