@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 
 import sendEmail, { mailOptions } from '@/helpers/mailer';
-import redis from '@/helpers/redis';
+import keystore from '@/lib/keystore/store';
 import prisma from '@/lib/PrismaClient/db';
 
 const ForgetPasswordSchema = z.object({
@@ -22,28 +22,27 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const result = ForgetPasswordSchema.safeParse(body);
+    
 
     // email-missing or invalid
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
+      console.log(errorMessages.join(', '));
       return NextResponse.json({
-        status: 400,
         message: errorMessages.join(', '),
-      });
+      },{status: 400});
     }
 
-    let { roll_number } = body;
-    roll_number = roll_number.trim();
+    let roll_number = result.data.roll_number;
     const to = roll_number + '@nitkkr.ac.in';
-    roll_number = Number(roll_number);
 
     // check for registered user
     const user = await prisma.user.findUnique({
-      where: { roll_number: roll_number },
+      where: { roll_number: Number(roll_number) },
     });
 
     if (!user) {
-      return NextResponse.json({ status: 400, message: 'User not found' });
+      return NextResponse.json({ message: 'User not found' },{status: 400});
     }
 
     const max = 1000000;
@@ -51,6 +50,8 @@ export async function POST(req: NextRequest) {
       6,
       '0'
     );
+    console.log('OTP: ', OTP);
+    
 
     // hashing OTP
     const salt = await bcryptjs.genSalt(10);
@@ -61,8 +62,8 @@ export async function POST(req: NextRequest) {
       hashedOTP: hashedOTP,
       time: Date.now(),
     };
-    await redis.set(roll_number, JSON.stringify(value));
-    console.log(OTP);
+    console.log('storing OTP in redis');
+    await keystore.set(roll_number, JSON.stringify(value));
 
     if (!process.env.MAIL_ID) {
       return NextResponse.json({ message: '.env missing' }, { status: 500 });
@@ -78,7 +79,7 @@ export async function POST(req: NextRequest) {
     try {
       await sendEmail(maildata);
     } catch (err) {
-      console.log('error occured\n', err);
+      console.log('mail cannot be sent\n', err);
       return NextResponse.json(
         { message: 'Internal Server Error: Sending email-failed' },
         { status: 500 }
@@ -91,6 +92,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ status: 500, message: 'Internal server error' });
+    return NextResponse.json({ message: 'Internal server error' },{status: 500});
   }
 }

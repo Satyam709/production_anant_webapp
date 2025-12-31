@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { isRollNumberValid } from '@/helpers/extras';
 import sendEmail, { mailOptions } from '@/helpers/mailer';
-import redis from '@/helpers/redis';
+import keystore from '@/lib/keystore/store';
 
 type redis_value = {
   hashedOTP: string;
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       time: Date.now(),
     };
     console.log('OTP: ', OTP);
-    await redis.set(roll_number, JSON.stringify(value));
+    await keystore.set(roll_number, JSON.stringify(value));
 
     if (!process.env.MAIL_ID) {
       return NextResponse.json({ message: '.env missing' }, { status: 500 });
