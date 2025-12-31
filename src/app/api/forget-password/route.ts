@@ -22,15 +22,17 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const result = ForgetPasswordSchema.safeParse(body);
-    
 
     // email-missing or invalid
     if (!result.success) {
       const errorMessages = result.error.errors.map((err) => err.message);
       console.log(errorMessages.join(', '));
-      return NextResponse.json({
-        message: errorMessages.join(', '),
-      },{status: 400});
+      return NextResponse.json(
+        {
+          message: errorMessages.join(', '),
+        },
+        { status: 400 }
+      );
     }
 
     let roll_number = result.data.roll_number;
@@ -42,7 +44,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ message: 'User not found' },{status: 400});
+      return NextResponse.json({ message: 'User not found' }, { status: 400 });
     }
 
     const max = 1000000;
@@ -51,7 +53,6 @@ export async function POST(req: NextRequest) {
       '0'
     );
     console.log('OTP: ', OTP);
-    
 
     // hashing OTP
     const salt = await bcryptjs.genSalt(10);
@@ -92,6 +93,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: 'Internal server error' },{status: 500});
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
