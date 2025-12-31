@@ -1,0 +1,6 @@
+# Keep line endings consistent for everyone (Linux style)
+* text=auto eol=lf
+
+# Explicitly force Prisma migration files to be LF
+prisma/migrations/* text eol=lf
+*.toml text eol=lf

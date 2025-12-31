@@ -1059,6 +1059,80 @@ async function main() {
     ],
   });
 
+  const sponsors = [
+    // --- 2025 SPONSORS ---
+    {
+      name: 'Nexus AI Solutions',
+      event: 'HackWait 2025',
+      category: 'Title Sponsor',
+      link: 'https://example.com',
+      about: 'Leading the way in generative AI solutions for enterprise.',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Nexus+AI&background=0D8ABC&color=fff&size=200',
+      createdAt: new Date('2025-03-15T10:00:00Z'), // Force Year 2025
+    },
+    {
+      name: 'Quantum Leap Labs',
+      event: 'TechWeek 2025',
+      category: 'Gold Sponsor',
+      link: 'https://example.com',
+      about: 'Quantum computing research and development.',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Quantum&background=6366f1&color=fff&size=200',
+      createdAt: new Date('2025-01-20T10:00:00Z'), // Force Year 2025
+    },
+
+    // --- 2024 SPONSORS ---
+    {
+      name: 'Cyberdyne Systems',
+      event: 'CodeFest 2024',
+      category: 'Tech Partner',
+      link: 'https://example.com',
+      about: 'Building the future of robotics and automation.',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Cyberdyne&background=10b981&color=fff&size=200',
+      createdAt: new Date('2024-11-05T10:00:00Z'), // Force Year 2024
+    },
+    {
+      name: 'BlueSky Clouds',
+      event: 'Cloud Summit 2024',
+      category: 'Silver Sponsor',
+      link: 'https://example.com',
+      about: 'Scalable cloud infrastructure for everyone.',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=BlueSky&background=3b82f6&color=fff&size=200',
+      createdAt: new Date('2024-06-12T10:00:00Z'), // Force Year 2024
+    },
+    {
+      name: 'Pixel Perfect',
+      event: 'DesignDay 2024',
+      category: 'Community Partner',
+      link: 'https://example.com',
+      about: 'A design agency focused on UI/UX excellence.',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Pixel&background=ec4899&color=fff&size=200',
+      createdAt: new Date('2024-02-28T10:00:00Z'), // Force Year 2024
+    },
+
+    // --- 2023 SPONSORS ---
+    {
+      name: 'Retro Arcade',
+      event: 'Gaming Night 2023',
+      category: 'Venue Partner',
+      link: 'https://example.com',
+      about: 'Preserving the history of video games.',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Retro&background=f59e0b&color=fff&size=200',
+      createdAt: new Date('2023-08-15T10:00:00Z'), // Force Year 2023
+    },
+  ];
+
+  for (const sponsor of sponsors) {
+    await prisma.sponsor.create({
+      data: sponsor,
+    });
+  }
+
   await prisma.blog.createMany({
     data: [
       {

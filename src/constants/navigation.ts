@@ -35,6 +35,7 @@ export const navItems = {
       { label: 'News Letter', href: '/newsletter' },
       { label: 'Internships', href: '/internship' },
       { label: 'Shop', href: '/shop' },
+      { label: 'Our Sponsors', href: '/sponsor' },
     ],
   },
   ContactUs: {

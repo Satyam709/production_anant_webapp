@@ -444,3 +444,15 @@ model Certificate{
   SerialNumber String?
   cop Boolean? @default(false)
 }
+
+model Sponsor {
+  id        String   @id @default(cuid())
+  name      String
+  event     String
+  link      String?  // Optional Link
+  category  String   // "Where they sponsored" (e.g., Gold, Title, Tech)
+  about     String?  // Optional About
+  imageUrl  String?  // for logos
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
