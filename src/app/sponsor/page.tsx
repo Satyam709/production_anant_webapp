@@ -7,13 +7,12 @@ import SponsorCard from '@/components/sponsor/SponsorCard';
 import SponsorHeader from '@/components/sponsor/SponsorHeader';
 import { getSponsors } from '@/lib/actions/Sponsor';
 
-
 const groupSponsorsByYear = (sponsors: Sponsor[]) => {
   const groups: Record<string, Sponsor[]> = {};
 
   sponsors.forEach((sponsor) => {
-    const year = sponsor.year 
-      ? sponsor.year.toString() 
+    const year = sponsor.year
+      ? sponsor.year.toString()
       : new Date(sponsor.createdAt).getFullYear().toString();
 
     if (!groups[year]) {

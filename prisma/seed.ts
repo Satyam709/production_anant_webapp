@@ -1067,7 +1067,8 @@ async function main() {
       category: 'Title Sponsor',
       link: 'https://example.com',
       about: 'Leading the way in generative AI solutions for enterprise.',
-      imageUrl: 'https://ui-avatars.com/api/?name=Nexus+AI&background=0D8ABC&color=fff&size=200',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Nexus+AI&background=0D8ABC&color=fff&size=200',
       createdAt: new Date('2025-03-15T10:00:00Z'),
       year: 2025, // Explicitly set to 2025
     },
@@ -1077,7 +1078,8 @@ async function main() {
       category: 'Gold Sponsor',
       link: 'https://example.com',
       about: 'Quantum computing research and development.',
-      imageUrl: 'https://ui-avatars.com/api/?name=Quantum&background=6366f1&color=fff&size=200',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Quantum&background=6366f1&color=fff&size=200',
       createdAt: new Date('2025-01-20T10:00:00Z'),
       year: 2025, // Explicitly set to 2025
     },
@@ -1089,7 +1091,8 @@ async function main() {
       category: 'Tech Partner',
       link: 'https://example.com',
       about: 'Building the future of robotics and automation.',
-      imageUrl: 'https://ui-avatars.com/api/?name=Cyberdyne&background=10b981&color=fff&size=200',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Cyberdyne&background=10b981&color=fff&size=200',
       createdAt: new Date('2024-11-05T10:00:00Z'),
       year: 2024, // Explicitly set to 2024
     },
@@ -1099,7 +1102,8 @@ async function main() {
       category: 'Silver Sponsor',
       link: 'https://example.com',
       about: 'Scalable cloud infrastructure for everyone.',
-      imageUrl: 'https://ui-avatars.com/api/?name=BlueSky&background=3b82f6&color=fff&size=200',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=BlueSky&background=3b82f6&color=fff&size=200',
       createdAt: new Date('2024-06-12T10:00:00Z'),
       year: 2024, // Explicitly set to 2024
     },
@@ -1109,7 +1113,8 @@ async function main() {
       category: 'Community Partner',
       link: 'https://example.com',
       about: 'A design agency focused on UI/UX excellence.',
-      imageUrl: 'https://ui-avatars.com/api/?name=Pixel&background=ec4899&color=fff&size=200',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Pixel&background=ec4899&color=fff&size=200',
       createdAt: new Date('2024-02-28T10:00:00Z'),
       year: 2024, // Explicitly set to 2024
     },
@@ -1121,7 +1126,8 @@ async function main() {
       category: 'Venue Partner',
       link: 'https://example.com',
       about: 'Preserving the history of video games.',
-      imageUrl: 'https://ui-avatars.com/api/?name=Retro&background=f59e0b&color=fff&size=200',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Retro&background=f59e0b&color=fff&size=200',
       createdAt: new Date('2023-08-15T10:00:00Z'),
       year: 2023, // Explicitly set to 2023
     },
@@ -1134,11 +1140,12 @@ async function main() {
       category: 'Bronze Sponsor',
       link: 'https://example.com',
       about: 'Testing the default year fallback logic.',
-      imageUrl: 'https://ui-avatars.com/api/?name=Future&background=ff5722&color=fff&size=200',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Future&background=ff5722&color=fff&size=200',
       createdAt: new Date(), // Defaults to NOW
       year: null, // Left empty to test your fallback code
     },
-];
+  ];
 
   for (const sponsor of sponsors) {
     await prisma.sponsor.create({
