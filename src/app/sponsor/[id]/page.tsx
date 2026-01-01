@@ -11,7 +11,6 @@ import GradientButton from '@/components/ui/GradientButton';
 import { getSponsorById } from '@/lib/actions/Sponsor';
 import { placeholder } from '@/lib/images/placeholder';
 
-// ... SponsorDetails function and data fetching remain the same ...
 export default async function SponsorDetails({
   params,
 }: {
@@ -21,9 +20,10 @@ export default async function SponsorDetails({
   const sponsor = await getSponsorById(id);
   if (!sponsor) notFound();
 
+  const displayYear = sponsor.year || new Date(sponsor.createdAt).getFullYear();
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
-      {/* ... background blobs and navbar ... */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-blue/10 rounded-full blur-[100px]" />
       </div>
@@ -40,20 +40,16 @@ export default async function SponsorDetails({
         <div className="max-w-5xl mx-auto">
           <div className="bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-800 shadow-2xl">
             {/* Sponsor Hero Image/Logo Container */}
-            {/* Removed padding (p-8) from container so image hits the edges */}
             <div className="relative h-64 md:h-80 w-full bg-white/5 flex items-center justify-center p-0">
               <Image
                 src={sponsor.imageUrl || placeholder}
                 alt={sponsor.name}
                 fill
-                // Changed from object-contain to object-cover
                 className="object-cover"
               />
             </div>
 
-            {/* ... Rest of the content (p-8 md:p-12) remains the same ... */}
             <div className="p-8 md:p-12">
-              {/* ... header, grid, etc. ... */}
               <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
                 <div>
                   <h1 className="text-4xl font-bold mb-2">{sponsor.name}</h1>
@@ -105,9 +101,8 @@ export default async function SponsorDetails({
                         <p className="font-semibold text-sm text-gray-400 uppercase">
                           Year
                         </p>
-                        <p className="text-lg">
-                          {new Date(sponsor.createdAt).getFullYear()}
-                        </p>
+                        {/* 2. Update the Display here */}
+                        <p className="text-lg">{displayYear}</p>
                       </div>
                     </div>
                   </div>
