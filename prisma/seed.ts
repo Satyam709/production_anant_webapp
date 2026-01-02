@@ -1069,7 +1069,8 @@ async function main() {
       about: 'Leading the way in generative AI solutions for enterprise.',
       imageUrl:
         'https://ui-avatars.com/api/?name=Nexus+AI&background=0D8ABC&color=fff&size=200',
-      createdAt: new Date('2025-03-15T10:00:00Z'), // Force Year 2025
+      createdAt: new Date('2025-03-15T10:00:00Z'),
+      year: 2025, // Explicitly set to 2025
     },
     {
       name: 'Quantum Leap Labs',
@@ -1079,7 +1080,8 @@ async function main() {
       about: 'Quantum computing research and development.',
       imageUrl:
         'https://ui-avatars.com/api/?name=Quantum&background=6366f1&color=fff&size=200',
-      createdAt: new Date('2025-01-20T10:00:00Z'), // Force Year 2025
+      createdAt: new Date('2025-01-20T10:00:00Z'),
+      year: 2025, // Explicitly set to 2025
     },
 
     // --- 2024 SPONSORS ---
@@ -1091,7 +1093,8 @@ async function main() {
       about: 'Building the future of robotics and automation.',
       imageUrl:
         'https://ui-avatars.com/api/?name=Cyberdyne&background=10b981&color=fff&size=200',
-      createdAt: new Date('2024-11-05T10:00:00Z'), // Force Year 2024
+      createdAt: new Date('2024-11-05T10:00:00Z'),
+      year: 2024, // Explicitly set to 2024
     },
     {
       name: 'BlueSky Clouds',
@@ -1101,7 +1104,8 @@ async function main() {
       about: 'Scalable cloud infrastructure for everyone.',
       imageUrl:
         'https://ui-avatars.com/api/?name=BlueSky&background=3b82f6&color=fff&size=200',
-      createdAt: new Date('2024-06-12T10:00:00Z'), // Force Year 2024
+      createdAt: new Date('2024-06-12T10:00:00Z'),
+      year: 2024, // Explicitly set to 2024
     },
     {
       name: 'Pixel Perfect',
@@ -1111,7 +1115,8 @@ async function main() {
       about: 'A design agency focused on UI/UX excellence.',
       imageUrl:
         'https://ui-avatars.com/api/?name=Pixel&background=ec4899&color=fff&size=200',
-      createdAt: new Date('2024-02-28T10:00:00Z'), // Force Year 2024
+      createdAt: new Date('2024-02-28T10:00:00Z'),
+      year: 2024, // Explicitly set to 2024
     },
 
     // --- 2023 SPONSORS ---
@@ -1123,7 +1128,22 @@ async function main() {
       about: 'Preserving the history of video games.',
       imageUrl:
         'https://ui-avatars.com/api/?name=Retro&background=f59e0b&color=fff&size=200',
-      createdAt: new Date('2023-08-15T10:00:00Z'), // Force Year 2023
+      createdAt: new Date('2023-08-15T10:00:00Z'),
+      year: 2023, // Explicitly set to 2023
+    },
+
+    // --- TEST: FALLBACK LOGIC (No Year Provided) ---
+    // This should appear under the current year (e.g., 2025 or 2026 depending on when you run it)
+    {
+      name: 'Future Corp',
+      event: 'General Support',
+      category: 'Bronze Sponsor',
+      link: 'https://example.com',
+      about: 'Testing the default year fallback logic.',
+      imageUrl:
+        'https://ui-avatars.com/api/?name=Future&background=ff5722&color=fff&size=200',
+      createdAt: new Date(), // Defaults to NOW
+      year: null, // Left empty to test your fallback code
     },
   ];
 

@@ -449,6 +449,7 @@ model Sponsor {
   category  String // "Where they sponsored" (e.g., Gold, Title, Tech)
   about     String? // Optional About
   imageUrl  String? // for logos
+  year      Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
