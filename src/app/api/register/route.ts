@@ -170,11 +170,11 @@ export async function POST(req: NextRequest) {
           branch_options[user_details['branch'] as keyof typeof branch_options],
         position:
           position_options[
-            user_details['position'] as keyof typeof position_options
+          user_details['position'] as keyof typeof position_options
           ],
         club_dept: [
           club_dept_options[
-            user_details['club_dept'] as keyof typeof club_dept_options
+          user_details['club_dept'] as keyof typeof club_dept_options
           ],
         ],
       };
