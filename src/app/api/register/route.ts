@@ -64,7 +64,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let { roll_number, username, password, confirmpassword, otp, branch } = body;
+    let { roll_number, username, password, confirmpassword, otp, branch } =
+      body;
 
     // trimming whitespaces
     password = password.trim();
@@ -182,19 +183,21 @@ export async function POST(req: NextRequest) {
         name: username,
         password: hashedPassword,
         batch: user_details['batch'],
-        branch: branch_options[csvBranch] || branch_options[branch as keyof typeof branch_options], // Fallback to selected branch if CSV fails? Or just trust CSV.
-        // Actually, user said admins strictly use CSV info potentially. 
+        branch:
+          branch_options[csvBranch] ||
+          branch_options[branch as keyof typeof branch_options], // Fallback to selected branch if CSV fails? Or just trust CSV.
+        // Actually, user said admins strictly use CSV info potentially.
         // "I think if they are in the admins they already have their branch so there is no issues with that"
         // Let's stick to existing logic for admins but maybe fallback if undefined in CSV?
         // existing logic: branch: branch_options[user_details['branch'] as keyof typeof branch_options],
 
         position:
           position_options[
-          user_details['position'] as keyof typeof position_options
+            user_details['position'] as keyof typeof position_options
           ],
         club_dept: [
           club_dept_options[
-          user_details['club_dept'] as keyof typeof club_dept_options
+            user_details['club_dept'] as keyof typeof club_dept_options
           ],
         ],
       };
