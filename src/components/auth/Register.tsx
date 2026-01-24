@@ -1,5 +1,6 @@
 'use client';
 
+import { branch_options } from '@prisma/client';
 import {
   BookOpen,
   KeyRound,
@@ -9,9 +10,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import GradientButton from '@/components/ui/GradientButton';
+import FormDropdown from '@/components/ui/FormDropdown';
 
 import { InputField } from './InputField';
 
@@ -24,7 +26,17 @@ export default function RegisterForm() {
   const [otpSent, setOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [branch, setBranch] = useState<string>('');
+  const [branchOptions, setBranchOptions] = useState<string[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    // Dynamically load branch options and filter unwanted ones
+    const options = Object.values(branch_options).filter(
+      (b) => b !== 'MSC'
+    );
+    setBranchOptions(options);
+  }, []);
 
   const handleVerify = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,11 +59,22 @@ export default function RegisterForm() {
     }
   };
 
+  const setBranchValue = (option: string) => {
+    if (branchOptions.includes(option)) {
+      setBranch(option);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      return;
+    }
+
+    if (!branch) {
+      setError('Please select a branch');
       return;
     }
 
@@ -68,6 +91,7 @@ export default function RegisterForm() {
           password,
           otp,
           confirmpassword: confirmPassword,
+          branch,
         }),
       });
 
@@ -129,6 +153,7 @@ export default function RegisterForm() {
                 onClick={handleVerify}
                 disabled={isLoading || otpSent}
                 className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-primary-blue/20 hover:bg-primary-blue/30 text-primary-blue rounded-md transition-colors duration-200 disabled:opacity-50"
+                style={{ zIndex: 10 }}
               >
                 {isLoading ? 'Verifying...' : otpSent ? 'OTP Sent' : 'Verify'}
               </button>
@@ -147,6 +172,23 @@ export default function RegisterForm() {
               disabled={isLoading}
             />
           )}
+
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              Branch
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" style={{ zIndex: 10 }}>
+                <BookOpen className="h-5 w-5 text-gray-500" />
+              </div>
+              <FormDropdown
+                label="Select Branch"
+                options={branchOptions}
+                value={branch}
+                onSelect={setBranchValue}
+              />
+            </div>
+          </div>
 
           <InputField
             id="password"

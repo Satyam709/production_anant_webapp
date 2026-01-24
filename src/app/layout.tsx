@@ -64,6 +64,8 @@ const martel = Martel({
   display: 'swap',
 });
 
+import BranchGuard from '@/components/auth/BranchGuard';
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -74,7 +76,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${martel.variable}`}>
-        <Provider session={session}>{children}</Provider>
+        <Provider session={session}>
+          <BranchGuard>{children}</BranchGuard>
+        </Provider>
       </body>
     </html>
   );

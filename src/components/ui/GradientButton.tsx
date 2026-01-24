@@ -8,6 +8,7 @@ interface GradientButtonProps {
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
@@ -16,6 +17,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   onClick,
   className = '',
   disabled = false,
+  type = 'button',
 }) => {
   const [gsap, setGsap] = useState<typeof GSAP>();
 
@@ -64,6 +66,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
 
   return (
     <button
+      type={type}
       onClick={handleClick}
       className={buttonClassName}
       disabled={disabled}
