@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
-import EventCard from '@/components/events/EventCard';
+import EventCard from '@/components/events/EventCardDashboard';
 
 interface HomeEventsSectionProps {
   events: Events[];

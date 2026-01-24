@@ -18,7 +18,7 @@ import React, {
 } from 'react';
 
 import TiptapEditor from '@/components/blogs/editor/tiptap-editor';
-import EventCard from '@/components/events/EventCard';
+import EventCard from '@/components/events/EventCardDashboard';
 import Modal from '@/components/ui/Modal';
 import { toLocalDatetimeString } from '@/helpers/toLocalDTString';
 import { deleteEvent } from '@/lib/actions/Events';

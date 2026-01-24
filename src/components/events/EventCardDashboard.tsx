@@ -6,8 +6,29 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { placeholder } from '@/lib/images/placeholder';
 import GradientButton from '../ui/GradientButton';
+import GradientDownloadButton from '../ui/GradientDownloadButton';
 
-const EventCard: React.FC<Events> = (event) => {
+const downloadCsv = async (event: Events) => {
+    try {
+      const res = await fetch(`/api/events/get_registrations/${event.event_id}`);
+
+      if (!res.ok) throw new Error('Download failed');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `event-${event.event_id}-registrations.csv`; // adjust filename
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+const EventCardDashboard: React.FC<Events> = (event) => {
   console.log('card data', event);
 
   const router = useRouter();
@@ -70,6 +91,8 @@ const EventCard: React.FC<Events> = (event) => {
           >
             {isRegistrationOpen ? 'View Details' : 'Registration Closed'}
           </GradientButton>
+
+          <GradientDownloadButton onClick={() => downloadCsv(event)} />
         </div>
 
       </div>
@@ -77,4 +100,4 @@ const EventCard: React.FC<Events> = (event) => {
   );
 };
 
-export default EventCard;
+export default EventCardDashboard;
