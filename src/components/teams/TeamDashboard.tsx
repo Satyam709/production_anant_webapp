@@ -151,7 +151,7 @@ const TeamDashboard = () => {
           request_time: invitations[i].request_time,
         });
       }
-      console.log(invitations[0]);
+      // console.log(invitations[0]);
 
       setInvitations(modified_invitations);
       setTeams(modified_teams_leaded);
