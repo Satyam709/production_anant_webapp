@@ -30,6 +30,7 @@ import { placeholder } from '@/lib/images/placeholder';
 import GradientButton from '../ui/GradientButton';
 import Modal from '../ui/Modal';
 import { ConfirmModal } from './ConfirmModal';
+import TiptapEditor from '@/components/blogs/editor/tiptap-editor';
 
 type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, 'createdBy'>;
 
@@ -576,16 +577,16 @@ const CompForm = () => {
             <label className="block text-sm font-medium text-gray-300">
               Description
             </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={4}
-              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-              placeholder="Enter competition description"
-              required
+            <TiptapEditor
+              content={formData.description}
+              onChange={(html) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  description: html,
+                }));
+              }}
+              placeholder="Enter event description"
+              className="min-h-[200px]"
             />
           </div>
 
@@ -614,7 +615,7 @@ const CompForm = () => {
             >
               Cancel
             </button>
-            <GradientButton disabled={loading}>
+            <GradientButton disabled={loading} type='submit'>
               <div className="flex items-center space-x-2">
                 {loading ? (
                   <Loader className="h-5 w-5 animate-spin" />
