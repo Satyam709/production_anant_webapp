@@ -250,6 +250,9 @@ enum branch_options {
   AIML
   MNC
   MSC
+  MSCMath
+  MSCPhy
+  MSCChem
   CSE
   IT
   ECE
@@ -261,6 +264,8 @@ enum branch_options {
   VLSI
   RA
   SET
+  AD
+  BArch
 }
 
 enum position_options {

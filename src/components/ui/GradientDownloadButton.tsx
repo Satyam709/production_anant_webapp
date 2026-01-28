@@ -53,9 +53,13 @@ const GradientDownloadButton: React.FC<GradientIconButtonProps> = ({
   };
 
   return (
-    <button onClick={handleClick} className={buttonClassName} disabled={disabled}>
+    <button
+      onClick={handleClick}
+      className={buttonClassName}
+      disabled={disabled}
+    >
       <div className="absolute inset-0 bg-gradient-to-r from-primary-blue/10 via-primary-cyan/10 to-primary-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
+
       <div className="relative z-10">
         {/* Download Icon */}
         <svg

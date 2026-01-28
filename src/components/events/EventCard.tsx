@@ -71,7 +71,6 @@ const EventCard: React.FC<Events> = (event) => {
             {isRegistrationOpen ? 'View Details' : 'Registration Closed'}
           </GradientButton>
         </div>
-
       </div>
     </div>
   );
