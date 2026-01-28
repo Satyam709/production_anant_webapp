@@ -73,7 +73,7 @@ const CompCard: React.FC<CompetitionCardProps> = ({
               <span>{venue}</span>
             </div>
           </div>
-          <p className="text-gray-400 mb-4 line-clamp-2">{description}</p>
+          {/* <p className="text-gray-400 mb-4 line-clamp-2">{description}</p> */}
         </div>
         <GradientButton
           onClick={() => router.push(`/compete/${id}`)}
