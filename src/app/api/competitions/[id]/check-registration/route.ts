@@ -20,8 +20,10 @@ export async function GET(
 
     const userId = session.user.id;
 
-    const my_teams = await prisma.team.findMany({
+    const already_registered = await prisma.team.findMany({
       where: {
+        competition_id: id,
+        is_registered: true,
         OR: [
           { team_leader_id: userId }, // Teams where you are the leader
           { team_members: { some: { id: userId } } }, // Teams where you are a member
@@ -33,42 +35,12 @@ export async function GET(
       },
     });
 
-    const comp = await prisma.competitions.findUnique({
-      where: { competition_id: id },
-      select: {
-        users_participated: {
-          select: { id: true },
-        },
-        teams_participated: {
-          select: {
-            team_id: true,
-            team_name: true,
-          },
-        },
-      },
-    });
-
-    if (!comp) {
+    if (already_registered.length > 0) {
       return NextResponse.json(
-        { error: 'Compitition not found!' },
-        { status: 404 }
-      );
-    }
-
-    const registered = await comp.users_participated;
-    const teams_registered = await comp.teams_participated;
-    const users_registered = registered.map((obj) => obj.id);
-
-    if (users_registered.find((id) => id === userId)) {
-      const matches = teams_registered.filter((team) =>
-        my_teams.some((myTeam) => myTeam.team_id === team.team_id)
-      );
-      return NextResponse.json(
-        { registered: true, team_registered: matches[0] },
+        { registered: true, team_registered: already_registered[0] },
         { status: 200 }
       );
     }
-
     return NextResponse.json({ registered: false }, { status: 200 });
   } catch (e) {
     return NextResponse.json(

@@ -46,16 +46,21 @@ export async function POST(
         { status: 400 }
       );
     }
+    if(team.competition_id !== id){
+      return NextResponse.json(
+        { error: 'Team does not belong to this competition. ' },
+        { status: 400 }
+      );
+    }
 
     const comp = await prisma.competitions.findUnique({
       where: { competition_id: id },
       include: {
         users_participated: {
-          select: { id: true },
-        },
-        teams_participated: {
-          select: { team_id: true },
-        },
+          select: { id: true,
+            roll_number: true,
+           },
+        }
       },
     });
 
@@ -86,11 +91,7 @@ export async function POST(
         { status: 400 }
       );
     }
-
-    const is_team_registered = comp.teams_participated.some(
-      (team) => team.team_id == team_id
-    );
-    if (is_team_registered) {
+    if(team.is_registered){
       return NextResponse.json(
         { error: 'Team already registered!' },
         { status: 400 }
@@ -101,10 +102,10 @@ export async function POST(
     if (comp.users_participated) {
       for (const el of comp.users_participated) {
         if (team?.team_members.some((member) => member.id === el.id) || false) {
-          users_registered.push(el.id);
+          users_registered.push(el.roll_number);
         }
         if (el.id === team.team_leader_id) {
-          users_registered.push(el.id);
+          users_registered.push(el.roll_number);
         }
       }
     }
@@ -125,16 +126,20 @@ export async function POST(
     const register_team = await prisma.competitions.update({
       where: { competition_id: id },
       data: {
-        teams_participated: {
-          connect: { team_id: team_id },
-        },
         users_participated: {
           connect: members.map((userId) => ({ id: userId })),
         },
       },
     });
 
-    if (!register_team) {
+    const update_team_status = await prisma.team.update({
+      where: { team_id: team_id },
+      data: {
+        is_registered: true,
+      },
+    });
+
+    if (!register_team || !update_team_status) {
       return NextResponse.json(
         { error: 'Failed to register' },
         { status: 500 }

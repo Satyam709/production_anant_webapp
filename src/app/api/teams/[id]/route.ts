@@ -9,13 +9,23 @@ export async function GET(
   try {
     const { id } = await params;
     const team = await prisma.team.findUnique({
-      where: {
-        team_id: id,
-      },
+      where: { team_id: id },
       include: {
-        team_members: true,
+        team_members: {
+          select: {
+            id: true,
+            name: true,
+            roll_number: true,
+          },
+        },
+        competition: {
+          select: {
+            competitionName: true,
+          },
+        },
       },
     });
+
     if (!team)
       return NextResponse.json({ status: 404, message: 'Team not found' });
 

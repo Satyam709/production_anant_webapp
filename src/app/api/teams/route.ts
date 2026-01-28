@@ -13,13 +13,19 @@ export async function GET(req: NextRequest) {
 
     const teams_leaded = await prisma.team.findMany({
       where: { team_leader_id: userId },
-      select: {
-        team_name: true,
-        team_id: true,
+      include: {
+        team_leader: {
+          select: {
+            id: true,
+            name: true,
+            roll_number: true,
+          },
+        },
         team_members: {
           select: {
-            roll_number: true,
+            id: true,
             name: true,
+            roll_number: true,
           },
         },
       },
@@ -33,11 +39,18 @@ export async function GET(req: NextRequest) {
         team_members: {
           select: {
             roll_number: true,
+            name: true,
           },
+        },
+        competition: {
+          select: {
+            competitionName: true,
+          }
         },
         team_leader: {
           select: {
             roll_number: true,
+            name: true,
           },
         },
       },
@@ -53,8 +66,13 @@ export async function GET(req: NextRequest) {
         team_id: true,
         team: {
           select: {
-            team_leader_id: true,
             team_name: true,
+            team_leader: {
+              select: {
+                name: true,
+                roll_number: true,
+              }
+            },
           },
         },
       },

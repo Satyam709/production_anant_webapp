@@ -7,12 +7,14 @@ import SponsorCard from '@/components/sponsor/SponsorCard';
 import SponsorHeader from '@/components/sponsor/SponsorHeader';
 import { getSponsors } from '@/lib/actions/Sponsor';
 
-// Helper to group by Year
 const groupSponsorsByYear = (sponsors: Sponsor[]) => {
   const groups: Record<string, Sponsor[]> = {};
 
   sponsors.forEach((sponsor) => {
-    const year = new Date(sponsor.createdAt).getFullYear().toString();
+    const year = sponsor.year
+      ? sponsor.year.toString()
+      : new Date(sponsor.createdAt).getFullYear().toString();
+
     if (!groups[year]) {
       groups[year] = [];
     }
@@ -22,7 +24,6 @@ const groupSponsorsByYear = (sponsors: Sponsor[]) => {
   // Return entries sorted by year descending (2025, then 2024...)
   return Object.entries(groups).sort((a, b) => Number(b[0]) - Number(a[0]));
 };
-
 export default async function SponsorPage() {
   // Call the server action instead of prisma directly
   const sponsors = await getSponsors();

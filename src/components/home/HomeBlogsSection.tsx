@@ -1,15 +1,9 @@
 'use client';
+import { Blog } from '@prisma/client';
 import { ArrowRight, User } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-
-interface Blog {
-  id: number;
-  title: string;
-  author: string;
-  cover_picture: string;
-  category: string;
-}
+import { placeholder } from '@/lib/images/placeholder';
 
 interface HomeBlogsSectionProps {
   blogs: Blog[];
@@ -39,7 +33,7 @@ const HomeBlogsSection = ({ blogs }: HomeBlogsSectionProps) => {
             >
               <div className="relative">
                 <img
-                  src={blog.cover_picture}
+                  src={blog.cover_picture || placeholder}
                   alt={blog.title}
                   className="w-full h-48 object-cover"
                 />
@@ -51,10 +45,10 @@ const HomeBlogsSection = ({ blogs }: HomeBlogsSectionProps) => {
                 <h3 className="text-xl font-bold text-blue-100 mb-3">
                   {blog.title}
                 </h3>
-                <div className="flex items-center text-blue-200/80 mb-4">
+                {/* <div className="flex items-center text-blue-200/80 mb-4">
                   <User className="h-4 w-4 mr-2" />
                   <span>{blog.author}</span>
-                </div>
+                </div> */}
                 <Link
                   href={`/blogs/${blog.id}`}
                   className="inline-flex items-center text-[#00E0FF] hover:text-[#f7d452]"

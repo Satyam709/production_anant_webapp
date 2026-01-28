@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-import { getSession } from '@/lib/actions/Sessions';
 import prisma from '@/lib/PrismaClient/db';
 
 export async function GET(
@@ -9,7 +7,6 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const session = await getSession();
     const { searchParams } = new URL(req.url);
     const participant = searchParams.get('participant');
 

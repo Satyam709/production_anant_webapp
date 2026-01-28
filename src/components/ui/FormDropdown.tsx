@@ -55,7 +55,7 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
         />
       </button>
       {isOpen && (
-        <div className="absolute mt-1 w-full bg-black/90 backdrop-blur-sm border border-gray-800 rounded-xl shadow-lg z-10 transform transition-all duration-300 ease-out origin-top">
+        <div className="absolute mt-1 w-full max-h-[300px] overflow-y-auto bg-zinc-900 border border-gray-800 rounded-xl shadow-lg z-50 transform transition-all duration-300 ease-out origin-top">
           {options.map((option, index) => (
             <div
               key={index}

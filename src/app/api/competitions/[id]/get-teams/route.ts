@@ -21,7 +21,10 @@ export async function GET(
     const userId = session.user.id;
 
     const teams = await prisma.team.findMany({
-      where: { team_leader_id: userId },
+      where: { 
+        team_leader_id: userId,
+        competition_id: id
+      },
       select: {
         team_id: true,
         team_name: true,

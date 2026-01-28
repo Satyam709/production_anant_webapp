@@ -19,7 +19,6 @@ import React, {
   useState,
 } from 'react';
 
-import { convertToCSV } from '@/helpers/convertToCsv';
 import { toLocalDatetimeString } from '@/helpers/toLocalDTString';
 import {
   deleteCompetition,
@@ -31,6 +30,7 @@ import { placeholder } from '@/lib/images/placeholder';
 import GradientButton from '../ui/GradientButton';
 import Modal from '../ui/Modal';
 import { ConfirmModal } from './ConfirmModal';
+import TiptapEditor from '@/components/blogs/editor/tiptap-editor';
 
 type CompetitionFormInput = Omit<Prisma.CompetitionsCreateInput, 'createdBy'>;
 
@@ -119,6 +119,7 @@ const CompForm = () => {
   }, [refetchCompetitions]);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('Submitting form with data:', formData, 'and file:', file);
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -127,6 +128,7 @@ const CompForm = () => {
     try {
       if (!file && !editingCompetition?.imageURL) {
         setError('Please upload an image');
+        setLoading(false);
         return;
       }
 
@@ -218,37 +220,22 @@ const CompForm = () => {
 
   const handleDownload = useCallback(async (id: string) => {
     try {
-      // Fetch the attendees for the meeting
-      const res = await getCompetitionParticipants(id);
-      if (!res) {
-        setError('Failed to fetch participants');
-      } else {
-        setSuccess('Participants fetched successfully!');
-      }
+    const res = await fetch(`/api/competitions/get_registrations/${id}`);
 
-      if (res.length === 0) {
-        setError('No participants found');
-        return;
-      }
+    if (!res.ok) throw new Error('Download failed');
 
-      // Convert the attendees data to CSV
-      const csv = convertToCSV(res);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
 
-      // Trigger the download of the CSV file
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `competition_participants_${id}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (error) {
-      console.error('Error downloading attendees:', error);
-    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `competition-${id}-registrations.csv`; // adjust filename
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+  }
   }, []);
 
   const handleInputChange = (
@@ -592,16 +579,16 @@ const CompForm = () => {
             <label className="block text-sm font-medium text-gray-300">
               Description
             </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={4}
-              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
-              placeholder="Enter competition description"
-              required
+            <TiptapEditor
+              content={formData.description}
+              onChange={(html) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  description: html,
+                }));
+              }}
+              placeholder="Enter event description"
+              className="min-h-[200px]"
             />
           </div>
 
@@ -630,7 +617,7 @@ const CompForm = () => {
             >
               Cancel
             </button>
-            <GradientButton disabled={loading}>
+            <GradientButton disabled={loading} type='submit'>
               <div className="flex items-center space-x-2">
                 {loading ? (
                   <Loader className="h-5 w-5 animate-spin" />

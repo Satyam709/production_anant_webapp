@@ -7,10 +7,21 @@ import GradientButton from '../ui/GradientButton';
 import Modal from '../ui/Modal';
 import StatusModal from '../ui/StatusModal';
 
+interface Competition {
+  competition_id: string;
+  competitionName: string;
+}
+
+interface leader {
+  id: string;
+  name: string;
+  roll_number: string;
+}
+
 interface Team {
   team_id: string;
   team_name: string;
-  team_leader: string;
+  team_leader: leader;
   team_members: string[];
 }
 
@@ -42,6 +53,51 @@ const TeamDashboard = () => {
   const [statusModal, setStatusModal] = useState<StatusMessage | null>(null);
   const [teamToDelete, setTeamToDelete] = useState<string | null>(null);
   const [refresh, set_refresh] = useState<boolean>(false);
+
+  // New state for team details modal
+  const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
+
+  // state variable for active competitions/events
+  const [activeCompetitions, setActiveCompetitions] = useState<Competition[]>([]);
+  const [selectedCompetition, setSelectedCompetition] = useState('');
+  const [loadingCompetitions, setLoadingCompetitions] = useState(false);
+
+  // fetch active competitions
+  // useEffect(() => {
+  //   async function fetchActiveCompetitions() {
+  //     try {
+  //       setLoadingCompetitions(true);
+  //       const res = await fetch('/api/competitions/get_active');
+  //       const data = await res.json();
+
+  //       if (data.status === 200) {
+  //         setActiveCompetitions(data.activeCompetitions);
+  //       }
+  //     } catch (err) {
+  //       console.error('Failed to fetch active competitions');
+  //     } finally {
+  //       setLoadingCompetitions(false);
+  //     }
+  //   }
+
+  //   fetchActiveCompetitions();
+  // }, []);
+
+  async function fetchActiveCompetitions() {
+      try {
+        setLoadingCompetitions(true);
+        const res = await fetch('/api/competitions/get_active');
+        const data = await res.json();
+
+        if (data.status === 200) {
+          setActiveCompetitions(data.activeCompetitions);
+        }
+      } catch (err) {
+        console.error('Failed to fetch active competitions');
+      } finally {
+        setLoadingCompetitions(false);
+      }
+    }
 
   const [formData, setFormData] = useState({
     name: '',
@@ -80,7 +136,7 @@ const TeamDashboard = () => {
           team_members: teams_leaded[i].team_members.map((el: any) =>
             String(el.roll_number)
           ),
-          team_leader: teams_leaded[i].team_leader,
+          team_leader: (teams_leaded[i].team_leader.name),
         });
       }
 
@@ -91,10 +147,11 @@ const TeamDashboard = () => {
           request_id: invitations[i].request_id,
           teamName: invitations[i].team.team_name,
           team_id: invitations[i].team_id,
-          team_leader: invitations[i].team.team_leader_id,
+          team_leader: invitations[i].team.team_leader.name,
           request_time: invitations[i].request_time,
         });
       }
+      // console.log(invitations[0]);
 
       setInvitations(modified_invitations);
       setTeams(modified_teams_leaded);
@@ -118,7 +175,11 @@ const TeamDashboard = () => {
         const createTeam = await fetch(`/api/teams/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ team_name: formData.name }),
+          body: JSON.stringify({
+            team_name: formData.name,
+            compitition_id: selectedCompetition,
+          }),
+
         });
 
         if (!createTeam.ok) {
@@ -151,15 +212,15 @@ const TeamDashboard = () => {
     }
   };
 
-  const confirmDeleteTeam = async (teamId: string) => {
-    setTeamToDelete(teamId);
-    setStatusModal({
-      type: 'confirm',
-      title: 'Delete Team',
-      message:
-        'Are you sure you want to delete this team? This action cannot be undone.',
-    });
-  };
+  // const confirmDeleteTeam = async (teamId: string) => {
+  //   setTeamToDelete(teamId);
+  //   setStatusModal({
+  //     type: 'confirm',
+  //     title: 'Delete Team',
+  //     message:
+  //       'Are you sure you want to delete this team? This action cannot be undone.',
+  //   });
+  // };
 
   const deleteTeam = async () => {
     if (teamToDelete) {
@@ -279,6 +340,11 @@ const TeamDashboard = () => {
     }).format(new Date(date));
   };
 
+  const handleTeamClick = (team: Team) => {
+    setSelectedTeam(team);
+    setIsTeamDetailsOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -293,7 +359,10 @@ const TeamDashboard = () => {
             </div>
             <GradientButton
               type="button"
-              onClick={() => setIsCreateModalOpen(true)}
+              onClick={() => {
+                setIsCreateModalOpen(true);
+                fetchActiveCompetitions();
+              }}
             >
               <div className="flex items-center space-x-2">
                 <Plus className="h-5 w-5" />
@@ -305,7 +374,9 @@ const TeamDashboard = () => {
             {teams.map((team) => (
               <div
                 key={team.team_id}
-                className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200"
+                onClick={() => handleTeamClick(team)}
+                className="cursor-pointer bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 
+             hover:border-primary-blue/50 transition-all duration-200"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
@@ -314,14 +385,20 @@ const TeamDashboard = () => {
                     </h3>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => confirmDeleteTeam(team.team_id)}
+                    {/* <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        confirmDeleteTeam(team.team_id);
+                      }}
                       className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <Trash2 className="h-5 w-5" />
-                    </button>
+                    </button> */}
                     <button
-                      onClick={() => handleAddMemberClick(team)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddMemberClick(team);
+                      }}
                       className="text-primary-cyan hover:text-primary-blue text-sm bg-gray-900/50 px-3 py-1 rounded-md transition-colors"
                     >
                       Add Member
@@ -362,7 +439,9 @@ const TeamDashboard = () => {
             {memberTeams.map((team) => (
               <div
                 key={team.team_id}
-                className="bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 hover:border-primary-blue/50 transition-all duration-200"
+                onClick={() => handleTeamClick(team)}
+                className="cursor-pointer bg-gray-900/50 p-4 rounded-lg border border-gray-800/30 
+             hover:border-primary-blue/50 transition-all duration-200"
               >
                 <div className="mb-2">
                   <h3 className="font-medium text-white text-lg">
@@ -408,9 +487,11 @@ const TeamDashboard = () => {
                 <div className="mb-3">
                   <h3 className="font-medium text-white text-lg">
                     {invitation.teamName}
+                    {/* "hello" */}
                   </h3>
                   <p className="text-gray-400 text-sm">
                     Invited by {invitation.team_leader}
+                    {/* "hello" */}
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
@@ -452,6 +533,7 @@ const TeamDashboard = () => {
         title="Create New Team"
       >
         <form onSubmit={createTeam} className="space-y-6">
+          {/* Team Name */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-300">
               Team Name
@@ -462,12 +544,48 @@ const TeamDashboard = () => {
               value={formData.name}
               onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
+               focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+               text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
               placeholder="Enter team name"
               required
             />
           </div>
+
+          {/* Active Competition Dropdown */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Select Active Competition
+            </label>
+
+            <select
+              value={selectedCompetition}
+              onChange={(e) => setSelectedCompetition(e.target.value)}
+              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+               text-white focus:ring-2 focus:ring-primary-blue/50
+               focus:border-primary-blue/50 transition-all duration-200"
+              required
+            >
+              <option value="" disabled>
+                {loadingCompetitions
+                  ? 'Loading competitions...'
+                  : 'Select a competition'}
+              </option>
+
+              {activeCompetitions.map((comp) => (
+                <option key={comp.competition_id} value={comp.competition_id}>
+                  {comp.competitionName}
+                </option>
+              ))}
+            </select>
+
+            {!loadingCompetitions && activeCompetitions.length === 0 && (
+              <p className="text-sm text-gray-500">
+                No active competitions available
+              </p>
+            )}
+          </div>
+
+          {/* Buttons */}
           <div className="flex justify-end gap-4">
             <button
               type="button"
@@ -488,6 +606,7 @@ const TeamDashboard = () => {
             </GradientButton>
           </div>
         </form>
+
       </Modal>
 
       {/* Add Member Modal */}
@@ -539,6 +658,56 @@ const TeamDashboard = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Team Details Modal */}
+      <Modal
+        isOpen={isTeamDetailsOpen}
+        onClose={() => {
+          setIsTeamDetailsOpen(false);
+          setSelectedTeam(null);
+        }}
+        title="Team Details"
+      >
+        {selectedTeam && (
+          <div className="space-y-6">
+            {/* Team Name */}
+            <div>
+              <h3 className="text-lg font-semibold text-white">
+                {selectedTeam.team_name}
+              </h3>
+            </div>
+
+            {/* Team Leader */}
+            <div>
+              <p className="text-sm text-gray-400 mb-1">Team Leader</p>
+              <div className="px-4 py-2 rounded-lg bg-gray-900/60 text-white">
+                {selectedTeam.team_leader}
+              </div>
+            </div>
+
+            {/* Team Members */}
+            <div>
+              <p className="text-sm text-gray-400 mb-2">Team Members</p>
+
+              {selectedTeam.team_members.length === 0 ? (
+                <p className="text-gray-500 text-sm">No members yet</p>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {selectedTeam.team_members.map((member, idx) => (
+                    <div
+                      key={idx}
+                      className="px-4 py-2 rounded-lg bg-gray-900/60 text-white text-sm"
+                    >
+                      Roll No: {member}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </Modal>
+
 
       {/* Status Modal */}
       <StatusModal

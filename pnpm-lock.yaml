@@ -174,13 +174,13 @@ importers:
         version: 15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next-auth:
         specifier: ^4.24.11
-        version: 4.24.11(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@6.10.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 4.24.11(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@7.0.12)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next-sitemap:
         specifier: ^4.2.3
         version: 4.2.3(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))
       nodemailer:
-        specifier: ^6.9.16
-        version: 6.10.1
+        specifier: ^7.0.12
+        version: 7.0.12
       prisma:
         specifier: ^6.3.1
         version: 6.17.1(typescript@5.9.3)
@@ -238,7 +238,7 @@ importers:
         version: 9.0.10
       '@types/next-auth':
         specifier: ^3.13.0
-        version: 3.15.0(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@6.10.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 3.15.0(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@7.0.12)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/node':
         specifier: ^20
         version: 20.19.23
@@ -5104,10 +5104,10 @@ packages:
         integrity: sha512-S2M9YimhSjBSvYnlr5/+umAnPHE++ODwt5e2Ij6FoX45HA/s4vHdkDx1eax2pAPeAOqu4s9b7ppahsyEFdVqQA==,
       }
 
-  nodemailer@6.10.1:
+  nodemailer@7.0.12:
     resolution:
       {
-        integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==,
+        integrity: sha512-H+rnK5bX2Pi/6ms3sN4/jRQvYSMltV6vqup/0SFOrxYYY/qoNvhXPlYq3e+Pm9RFJRwrMGbMIwi81M4dxpomhA==,
       }
     engines: { node: '>=6.0.0' }
 
@@ -8314,9 +8314,9 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/next-auth@3.15.0(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@6.10.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@types/next-auth@3.15.0(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@7.0.12)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
-      next-auth: 4.24.11(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@6.10.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      next-auth: 4.24.11(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@7.0.12)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
     transitivePeerDependencies:
       - '@auth/core'
       - next
@@ -9996,7 +9996,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-auth@4.24.11(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@6.10.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+  next-auth@4.24.11(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(nodemailer@7.0.12)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
       '@babel/runtime': 7.28.4
       '@panva/hkdf': 1.2.1
@@ -10011,7 +10011,7 @@ snapshots:
       react-dom: 19.2.0(react@19.2.0)
       uuid: 8.3.2
     optionalDependencies:
-      nodemailer: 6.10.1
+      nodemailer: 7.0.12
 
   next-sitemap@4.2.3(next@15.1.11(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)):
     dependencies:
@@ -10061,7 +10061,7 @@ snapshots:
 
   node-releases@2.0.26: {}
 
-  nodemailer@6.10.1: {}
+  nodemailer@7.0.12: {}
 
   nopt@5.0.0:
     dependencies:
