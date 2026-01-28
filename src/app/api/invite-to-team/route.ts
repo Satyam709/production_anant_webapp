@@ -45,7 +45,21 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
-    if (userId == invitee_roll_number) {
+    const me = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        roll_number: true,
+      },
+    });
+
+    if(!me){
+      return NextResponse.json(
+        { error: 'User not found!' },
+        { status: 404 }
+      );
+    }
+
+    if (me.roll_number== invitee_roll_number) {
       return NextResponse.json(
         { error: 'You cannot invite yourself!' },
         { status: 400 }
