@@ -1,5 +1,5 @@
 'use client';
-import { Events, Notice } from '@prisma/client';
+import { Events, Notice, Competitions, Blog } from '@prisma/client';
 import React, { useEffect, useState } from 'react';
 
 import NewsTickerSection, {
@@ -8,16 +8,10 @@ import NewsTickerSection, {
 
 import HomeBlogsSection from './HomeBlogsSection';
 import HomeEventsSection from './HomeEventsSection';
+import HomeCompetitionsSection from './HomeCompetitionSection';
 import HomeInternshipSection from './HomeInternshipSection';
 import WelcomeSection from './WelcomeSection';
 
-interface Blog {
-  id: number;
-  title: string;
-  author: string;
-  image: string;
-  category: string;
-}
 
 const defaultNews = ['Welcome to the Mathematics Department!'];
 const photos = [
@@ -39,6 +33,7 @@ const photos = [
 const HomeContent = () => {
   const [latestEvents, setLatestEvents] = useState<Events[]>([]);
   const [latestBlogs, setLatestBlogs] = useState<Blog[]>([]);
+  const [latestCompi, setLatestCompi] = useState<Competitions[]>([]);
   const [news, setNews] = useState<NewsItem[]>([
     {
       id: '0',
@@ -50,10 +45,11 @@ const HomeContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [noticesRes, eventsRes, blogsRes] = await Promise.all([
+        const [noticesRes, eventsRes, blogsRes, competitionsRes] = await Promise.all([
           fetch('/api/notices'),
           fetch('/api/events'),
           fetch('/api/blogs'),
+          fetch('/api/competitions'),
         ]);
 
         if (!eventsRes.ok) {
@@ -87,6 +83,13 @@ const HomeContent = () => {
         const eventsData = await eventsRes.json();
         const parsedEvents = eventsData.upcomingEvents as Events[];
         setLatestEvents(parsedEvents.slice(0, 3));
+
+        // Handle competitions
+        if (competitionsRes.ok) {
+          const competitionsData = await competitionsRes.json();
+          setLatestCompi(competitionsData.upcoming_comp.slice(0, 3));
+        }
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -104,6 +107,7 @@ const HomeContent = () => {
       <NewsTickerSection news={news} />
       <WelcomeSection photos={photos} />
       <HomeEventsSection events={latestEvents} />
+      <HomeCompetitionsSection competitions={latestCompi} />
       <HomeBlogsSection blogs={latestBlogs} />
       <div className="bg-black/15 backdrop-blur-sm">
         <HomeInternshipSection />
