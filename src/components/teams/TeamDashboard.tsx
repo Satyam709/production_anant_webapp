@@ -29,7 +29,7 @@ interface Invitation {
   request_id: string;
   teamName: string;
   team_id: string;
-  team_leader: any;
+  team_leader: string;
   request_time: Date;
 }
 
@@ -147,10 +147,11 @@ const TeamDashboard = () => {
           request_id: invitations[i].request_id,
           teamName: invitations[i].team.team_name,
           team_id: invitations[i].team_id,
-          team_leader: invitations[i].team.team_leader_id,
+          team_leader: invitations[i].team.team_leader.name,
           request_time: invitations[i].request_time,
         });
       }
+      console.log(invitations[0]);
 
       setInvitations(modified_invitations);
       setTeams(modified_teams_leaded);
@@ -486,9 +487,11 @@ const TeamDashboard = () => {
                 <div className="mb-3">
                   <h3 className="font-medium text-white text-lg">
                     {invitation.teamName}
+                    {/* "hello" */}
                   </h3>
                   <p className="text-gray-400 text-sm">
                     Invited by {invitation.team_leader}
+                    {/* "hello" */}
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
