@@ -17,7 +17,7 @@ const GradientButton: React.FC<GradientButtonProps> = ({
   onClick,
   className = '',
   disabled = false,
-  type = 'button',
+  type = 'submit',
 }) => {
   const [gsap, setGsap] = useState<typeof GSAP>();
 

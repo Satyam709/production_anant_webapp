@@ -118,6 +118,7 @@ const CompForm = () => {
   }, [refetchCompetitions]);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('Submitting form with data:', formData, 'and file:', file);
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -126,6 +127,7 @@ const CompForm = () => {
     try {
       if (!file && !editingCompetition?.imageURL) {
         setError('Please upload an image');
+        setLoading(false);
         return;
       }
 

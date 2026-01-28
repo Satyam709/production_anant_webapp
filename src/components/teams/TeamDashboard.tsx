@@ -7,6 +7,11 @@ import GradientButton from '../ui/GradientButton';
 import Modal from '../ui/Modal';
 import StatusModal from '../ui/StatusModal';
 
+interface Competition {
+  competition_id: string;
+  competitionName: string;
+}
+
 interface leader {
   id: string;
   name: string;
@@ -24,7 +29,7 @@ interface Invitation {
   request_id: string;
   teamName: string;
   team_id: string;
-  team_leader: string;
+  team_leader: any;
   request_time: Date;
 }
 
@@ -52,6 +57,47 @@ const TeamDashboard = () => {
   // New state for team details modal
   const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
 
+  // state variable for active competitions/events
+  const [activeCompetitions, setActiveCompetitions] = useState<Competition[]>([]);
+  const [selectedCompetition, setSelectedCompetition] = useState('');
+  const [loadingCompetitions, setLoadingCompetitions] = useState(false);
+
+  // fetch active competitions
+  // useEffect(() => {
+  //   async function fetchActiveCompetitions() {
+  //     try {
+  //       setLoadingCompetitions(true);
+  //       const res = await fetch('/api/competitions/get_active');
+  //       const data = await res.json();
+
+  //       if (data.status === 200) {
+  //         setActiveCompetitions(data.activeCompetitions);
+  //       }
+  //     } catch (err) {
+  //       console.error('Failed to fetch active competitions');
+  //     } finally {
+  //       setLoadingCompetitions(false);
+  //     }
+  //   }
+
+  //   fetchActiveCompetitions();
+  // }, []);
+
+  async function fetchActiveCompetitions() {
+      try {
+        setLoadingCompetitions(true);
+        const res = await fetch('/api/competitions/get_active');
+        const data = await res.json();
+
+        if (data.status === 200) {
+          setActiveCompetitions(data.activeCompetitions);
+        }
+      } catch (err) {
+        console.error('Failed to fetch active competitions');
+      } finally {
+        setLoadingCompetitions(false);
+      }
+    }
 
   const [formData, setFormData] = useState({
     name: '',
@@ -128,7 +174,11 @@ const TeamDashboard = () => {
         const createTeam = await fetch(`/api/teams/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ team_name: formData.name }),
+          body: JSON.stringify({
+            team_name: formData.name,
+            compitition_id: selectedCompetition,
+          }),
+
         });
 
         if (!createTeam.ok) {
@@ -161,15 +211,15 @@ const TeamDashboard = () => {
     }
   };
 
-  const confirmDeleteTeam = async (teamId: string) => {
-    setTeamToDelete(teamId);
-    setStatusModal({
-      type: 'confirm',
-      title: 'Delete Team',
-      message:
-        'Are you sure you want to delete this team? This action cannot be undone.',
-    });
-  };
+  // const confirmDeleteTeam = async (teamId: string) => {
+  //   setTeamToDelete(teamId);
+  //   setStatusModal({
+  //     type: 'confirm',
+  //     title: 'Delete Team',
+  //     message:
+  //       'Are you sure you want to delete this team? This action cannot be undone.',
+  //   });
+  // };
 
   const deleteTeam = async () => {
     if (teamToDelete) {
@@ -308,7 +358,10 @@ const TeamDashboard = () => {
             </div>
             <GradientButton
               type="button"
-              onClick={() => setIsCreateModalOpen(true)}
+              onClick={() => {
+                setIsCreateModalOpen(true);
+                fetchActiveCompetitions();
+              }}
             >
               <div className="flex items-center space-x-2">
                 <Plus className="h-5 w-5" />
@@ -477,6 +530,7 @@ const TeamDashboard = () => {
         title="Create New Team"
       >
         <form onSubmit={createTeam} className="space-y-6">
+          {/* Team Name */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-300">
               Team Name
@@ -487,12 +541,48 @@ const TeamDashboard = () => {
               value={formData.name}
               onChange={handleInputChange}
               className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
-                       focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
-                       text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
+               focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue/50
+               text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-200"
               placeholder="Enter team name"
               required
             />
           </div>
+
+          {/* Active Competition Dropdown */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Select Active Competition
+            </label>
+
+            <select
+              value={selectedCompetition}
+              onChange={(e) => setSelectedCompetition(e.target.value)}
+              className="w-full px-4 py-2.5 bg-black/30 border border-gray-700 rounded-lg
+               text-white focus:ring-2 focus:ring-primary-blue/50
+               focus:border-primary-blue/50 transition-all duration-200"
+              required
+            >
+              <option value="" disabled>
+                {loadingCompetitions
+                  ? 'Loading competitions...'
+                  : 'Select a competition'}
+              </option>
+
+              {activeCompetitions.map((comp) => (
+                <option key={comp.competition_id} value={comp.competition_id}>
+                  {comp.competitionName}
+                </option>
+              ))}
+            </select>
+
+            {!loadingCompetitions && activeCompetitions.length === 0 && (
+              <p className="text-sm text-gray-500">
+                No active competitions available
+              </p>
+            )}
+          </div>
+
+          {/* Buttons */}
           <div className="flex justify-end gap-4">
             <button
               type="button"
@@ -513,6 +603,7 @@ const TeamDashboard = () => {
             </GradientButton>
           </div>
         </form>
+
       </Modal>
 
       {/* Add Member Modal */}

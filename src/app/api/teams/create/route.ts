@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { team_name, competition_id } = body;
+    const { team_name, compitition_id } = body;
     const session = await getSession();
 
     if (!session?.user) {
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     }
 
     const competition = await prisma.competitions.findUnique({
-      where: { competition_id: competition_id },
+      where: { competition_id: compitition_id },
     });
 
     if (!competition) {
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     const findName = await prisma.team.findUnique({
       where: { 
         team_name: team_name,
-        competition_id: competition_id
+        competition_id: compitition_id
       },
     });
 
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       data: {
         team_name: team_name,
         team_leader_id: userId,
-        competition_id: competition_id,
+        competition_id: compitition_id,
       },
     });
 
