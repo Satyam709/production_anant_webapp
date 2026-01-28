@@ -19,7 +19,6 @@ import React, {
   useState,
 } from 'react';
 
-import { convertToCSV } from '@/helpers/convertToCsv';
 import { toLocalDatetimeString } from '@/helpers/toLocalDTString';
 import {
   deleteCompetition,
@@ -218,37 +217,22 @@ const CompForm = () => {
 
   const handleDownload = useCallback(async (id: string) => {
     try {
-      // Fetch the attendees for the meeting
-      const res = await getCompetitionParticipants(id);
-      if (!res) {
-        setError('Failed to fetch participants');
-      } else {
-        setSuccess('Participants fetched successfully!');
-      }
+    const res = await fetch(`/api/competitions/get_registrations/${id}`);
 
-      if (res.length === 0) {
-        setError('No participants found');
-        return;
-      }
+    if (!res.ok) throw new Error('Download failed');
 
-      // Convert the attendees data to CSV
-      const csv = convertToCSV(res);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
 
-      // Trigger the download of the CSV file
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `competition_participants_${id}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (error) {
-      console.error('Error downloading attendees:', error);
-    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `competition-${id}-registrations.csv`; // adjust filename
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+  }
   }, []);
 
   const handleInputChange = (
