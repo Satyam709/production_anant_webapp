@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
     let upcoming_comp, past_comp;
 
     if (!time || time == 'upcoming') {
-      console.log('here');
       upcoming_comp = await prisma.competitions.findMany({
         where: {
           conductedOn: {
@@ -41,7 +40,6 @@ export async function GET(req: NextRequest) {
       });
     }
     if (!time || time == 'past') {
-      console.log('back');
       past_comp = await prisma.competitions.findMany({
         where: {
           conductedOn: {
