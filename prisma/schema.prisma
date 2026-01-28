@@ -120,9 +120,12 @@ model Team {
   team_id          String             @id @default(uuid())
   team_name        String             @unique
   team_leader_id   String
+  competition_id     String?
+  is_registered    Boolean            @default(false)
   team_leader      User               @relation(name: "team-leaded", fields: [team_leader_id], references: [id])
   team_members     User[]             @relation(name: "team-member")
-  participated     Competitions[]     @relation(name: "participant_team")
+  competition      Competitions?   @relation(fields: [competition_id], references: [competition_id])
+
   // Pending requests
   pending_requests Pending_requests[]
 }
@@ -159,7 +162,7 @@ model Competitions {
   third_prize_name  String?
 
   createdBy          User   @relation(fields: [creator_id], references: [id])
-  teams_participated Team[] @relation(name: "participant_team")
+  teams              Team[] 
   users_participated User[] @relation(name: "participant_member")
 
   first_prize  User[] @relation(name: "first_prize_comp")

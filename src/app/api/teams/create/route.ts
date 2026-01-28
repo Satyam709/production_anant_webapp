@@ -6,6 +6,7 @@ import prisma from '@/lib/PrismaClient/db';
 
 const teamSchema = z.object({
   team_name: z.string(),
+  compitition_id: z.string().uuid('Invalid competition ID'),
 });
 
 export async function POST(req: NextRequest) {
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { team_name } = body;
+    const { team_name, competition_id } = body;
     const session = await getSession();
 
     if (!session?.user) {
@@ -40,13 +41,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User not found!' }, { status: 400 });
     }
 
+    const competition = await prisma.competitions.findUnique({
+      where: { competition_id: competition_id },
+    });
+
+    if (!competition) {
+      return NextResponse.json(
+        { error: 'Competition not found!' },
+        { status: 404 }
+      );
+    }
+
     const findName = await prisma.team.findUnique({
-      where: { team_name: team_name },
+      where: { 
+        team_name: team_name,
+        competition_id: competition_id
+      },
     });
 
     if (findName) {
       return NextResponse.json(
-        { error: 'Team name already exists!' },
+        { error: `Team name already exists in the competition ${competition.competitionName}!` },
         { status: 409 }
       );
     }
@@ -55,6 +70,7 @@ export async function POST(req: NextRequest) {
       data: {
         team_name: team_name,
         team_leader_id: userId,
+        competition_id: competition_id,
       },
     });
 

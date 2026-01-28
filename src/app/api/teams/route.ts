@@ -16,6 +16,11 @@ export async function GET(req: NextRequest) {
       select: {
         team_name: true,
         team_id: true,
+        competition:{
+          select:{
+            competitionName:true,
+          }
+        },
         team_members: {
           select: {
             roll_number: true,
@@ -33,11 +38,18 @@ export async function GET(req: NextRequest) {
         team_members: {
           select: {
             roll_number: true,
+            name: true,
           },
+        },
+        competition:{
+          select:{
+            competitionName:true,
+          }
         },
         team_leader: {
           select: {
             roll_number: true,
+            name: true,
           },
         },
       },
@@ -53,8 +65,13 @@ export async function GET(req: NextRequest) {
         team_id: true,
         team: {
           select: {
-            team_leader_id: true,
             team_name: true,
+            team_leader:{
+              select:{
+                name:true,
+                roll_number:true,
+              }
+            },
           },
         },
       },
