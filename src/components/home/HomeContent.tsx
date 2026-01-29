@@ -106,9 +106,9 @@ const HomeContent = () => {
     <div className="pt-[70px] flex flex-col w-full space-y-24" id="content">
       <NewsTickerSection news={news} />
       <WelcomeSection photos={photos} />
-      <HomeEventsSection events={latestEvents} />
-      <HomeCompetitionsSection competitions={latestCompi} />
-      <HomeBlogsSection blogs={latestBlogs} />
+      {latestEvents && latestEvents.length > 0 && <HomeEventsSection events={latestEvents} />}
+      {latestCompi && latestCompi.length > 0 && <HomeCompetitionsSection competitions={latestCompi} />}
+      {latestBlogs && latestBlogs.length > 0 && <HomeBlogsSection blogs={latestBlogs} />}
       <div className="bg-black/15 backdrop-blur-sm">
         <HomeInternshipSection />
       </div>
