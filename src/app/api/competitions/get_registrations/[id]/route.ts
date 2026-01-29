@@ -22,6 +22,9 @@ export async function GET(
       where: { competition_id: id },
       include: {
         teams: {
+          where: {
+            is_registered: true, 
+          },
           include: {
             team_leader: {
               select: {
