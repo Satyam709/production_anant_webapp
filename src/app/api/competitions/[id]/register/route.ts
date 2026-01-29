@@ -139,6 +139,14 @@ export async function POST(
       },
     });
 
+    // clear pending invitations of the team ---
+      const clear_invitations = await prisma.pending_requests.deleteMany({
+        where: { 
+          team_id: team_id 
+        },
+      });
+    // ---------------------------------------
+
     if (!register_team || !update_team_status) {
       return NextResponse.json(
         { error: 'Failed to register' },
